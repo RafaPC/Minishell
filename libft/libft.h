@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:42:43 by rprieto-          #+#    #+#             */
-/*   Updated: 2020/12/16 12:47:59 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/03 12:30:52 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,31 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 15
+# endif
+
 typedef struct		s_list
 {
 	void			*content;
 	struct s_list	*next;
 }					t_list;
+
 typedef enum	e_bool
 {false, true}	t_bool;
+
+typedef struct		s_gnl
+{
+	void			*line;
+	int				fd;
+	struct s_gnl	*next;
+}					t_gnl;
+
+typedef struct		s_gnl_bf
+{
+	char			*line;
+	struct s_gnl_bf	*next;
+}					t_gnl_buffer;
 
 void				*ft_memset(void *b, int c, size_t len);
 void				ft_bzero(void *s, size_t n);
@@ -73,5 +91,12 @@ t_bool				ft_checkchar(char c, char *set);
 int					ft_get_index_of(char *string, char c);
 int					ft_nbrlen(int n);
 long				ft_abs(long n);
-int					get_next_line(int fd, char **line);
+char				*ft_strncat_in(char *s1, char *s2, int n);
+int					get_next_line	(int fd, char **line);
+void				end_get_next_line(int fd);
+int					gnl_buffer(int fd, int n, t_gnl_buffer **buffer);
+void				free_gnl_buffer(t_gnl_buffer *buffer, t_bool erase_mode);
+int					fill_gnl_buffer(t_gnl_buffer **buffer, char *line);
+int					ft_extract(char **line, unsigned int index, unsigned int lenght);
+int					ft_insert(char **line, char *addendum, unsigned int index, unsigned int lenght);
 #endif

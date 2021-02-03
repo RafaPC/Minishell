@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+         #
+#    By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/21 18:09:12 by rprieto-          #+#    #+#              #
-#    Updated: 2020/12/16 16:43:24 by rprieto-         ###   ########.fr        #
+#    Updated: 2021/02/03 12:34:31 by aiglesia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,10 @@ SRCS =	ft_atoi.c			\
 		ft_checkchar.c		\
 		ft_nbrlen.c			\
 		ft_abs.c			\
-		get_next_line.c
+		get_next_line.c		\
+		gnl_buffer.c        \
+		ft_insert.c			\
+		ft_strncat_in.c
 OBJS = ${SRCS:.c=.o};
 CC = gcc -c
 CFLAGS = -Wall -Werror -Wextra
