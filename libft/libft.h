@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:42:43 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/03 12:30:52 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/07 13:39:47 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,10 @@ void				end_get_next_line(int fd);
 int					gnl_buffer(int fd, int n, t_gnl_buffer **buffer);
 void				free_gnl_buffer(t_gnl_buffer *buffer, t_bool erase_mode);
 int					fill_gnl_buffer(t_gnl_buffer **buffer, char *line);
-int					ft_extract(char **line, unsigned int index, unsigned int lenght);
-int					ft_insert(char **line, char *addendum, unsigned int index, unsigned int lenght);
+int					ft_extract(char **line, unsigned int index,
+unsigned int lenght);
+int					ft_insert(char **line, char *addendum, unsigned int index,
+unsigned int lenght);
+int					ft_array_size(void **array);
+void				ft_array_clear(void **array, void (*del)(void *));
 #endif
