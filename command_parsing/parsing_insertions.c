@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/10 20:41:14 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/10 21:00:18 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 **
 ** I = Index to the current parsing location.
 **
-** Same as the double quote function, with the exception that no conversions are done.
+** Same as the double quote function, with the exception
+** that no conversions are done.
 */
 
 void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
@@ -47,7 +48,8 @@ void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
 ** Therefore, given how 'j' in the super function is located at the beggining
 ** of the argument, the complete quoted content shall be copied as an argument
 ** 
-** Might consider stopping the parsing and printing an error if no closing quotation is found. 
+** Might consider stopping the parsing and printing an error
+** if no closing quotation is found. 
 */
 
 void	handle_double_quotations(char **input, t_command_parsing *cmd_pars)
@@ -97,10 +99,13 @@ void	handle_quotations(char **input, t_command_parsing *cmd_pars)
 **
 ** Index = Index to the '$'.
 **
-** Called when a '$' is found. It removes said '$' and any alphanumeric and '_' characters that may preceed it.
-** Said characters are saved to a temporal string to search for any stored variable that may match it.
+** Called when a '$' is found. It removes said '$' and any
+** alphanumeric and '_' characters that may preceed it.
+** Said characters are saved to a temporal string to search
+** for any stored variable that may match it.
 ** If one is found, the value of said variable is inserted.
-** In any case, an index is returned pointing to the char preceeding the insertion (or lack thereof);
+** In any case, an index is returned pointing to the char
+** preceeding the insertion (or lack thereof);
 */
 
 int	insert_variable(char **input, int index) //Add t_list *envp_list

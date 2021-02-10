@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/24 13:12:36 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/09 20:35:07 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/10 20:55:04 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int			gnl_buffer(int fd, int n, t_gnl_buffer **buffer)
 	char	*line;
 	int		continuous;
 	int		i;
-	int 	lenght;
+	int		lenght;
 
 	lenght = 0;
 	if (n < 0)
