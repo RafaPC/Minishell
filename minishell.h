@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/07 14:04:18 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/10 20:34:37 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,44 @@
 
 #include "libft/libft.h"
 /*
+** Declares
+*/
+typedef struct			s_command
+{
+	char				**command;
+	struct s_command	*next;
+	int					relation;
+}						t_command;
+
+typedef struct 			split_commands
+{
+	int					i;
+	int 				j;
+	t_list				*arguments;
+	int					error;
+	int					error_index;
+}              			t_command_parsing;
+
+/*
 **		EXECUTABLES PATHS
 */
-int		execute_command(char **exec_paths, char *buffer);
-char	**get_command_directories(char **exec_paths, char *command);
-int		get_exec_paths_legnth(char **exec_paths);
-char	**get_path(t_list *envp);
+int			execute_command(char **exec_paths, char *buffer);
+char		**get_command_directories(char **exec_paths, char *command);
+int			get_exec_paths_legnth(char **exec_paths);
+char		**get_path(t_list *envp);
 /*
 **		READ INPUT
 */
-void	tabs_to_spaces(char *string);
-void	read_input(char *buffer);
-void	empty_buffer(char *buffer);
+void		tabs_to_spaces(char *string);
+void		read_input(char *buffer);
+void		empty_buffer(char *buffer);
+int			insert_variable(char **input, int index);
+int			split_commands(char *input, t_command	**commands);
+void 		handle_quotations(char **input, t_command_parsing *cmd_pars);
+void		add_command(t_command **commands, char **arguments, int relation);
+t_bool		command_split(t_command_parsing *cmd_pars, t_command **commmands, char *input);
+char 		**load_command_args(t_command_parsing *cmd_pars, char *input);
+
 /*
 **		MINISHELL UTILS
 */

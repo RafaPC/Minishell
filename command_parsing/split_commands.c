@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/03 12:22:44 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/10 20:42:21 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,6 @@ void	add_command_argument(t_command_parsing *cmd_pars, char *input)
 int		split_commands(char *input, t_command **commands)
 {
 	t_command_parsing	cmd_pars;
-	char				*test;
 
 	*commands = 0;
 	ft_memset(&cmd_pars, 0, sizeof(cmd_pars));
@@ -138,7 +137,7 @@ int		split_commands(char *input, t_command **commands)
 		if (input[cmd_pars.i] == '$')
 			insert_variable(&input, cmd_pars.i);
 		else if (input[cmd_pars.i] == '\"' || input[cmd_pars.i] == '\'')
-			cmd_pars.i = handle_quotations(&input, cmd_pars.i);
+			handle_quotations(&input, &cmd_pars);
 		else if (ft_isspace(input[cmd_pars.i]))
 			add_command_argument(&cmd_pars, input);
 		else if (ft_strchr(";>|", input[cmd_pars.i]) || !input[cmd_pars.i])

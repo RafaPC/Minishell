@@ -1,19 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
+/*   ft_alloc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/20 18:32:24 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/09 22:13:11 by aiglesia         ###   ########.fr       */
+/*   Created: 2021/02/04 11:09:30 by aiglesia          #+#    #+#             */
+/*   Updated: 2021/02/04 11:41:01 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstadd_front(t_list **lst, t_list *new)
+/*
+** Allocates a memory segment of count * size + 1 and null terminates the result.
+*/
+
+void	*ft_alloc(size_t count, size_t size)
 {
-	new->next = *lst;
-	*lst = new;
+	char	*array;
+
+	if (!(array = malloc(1 + count * size)))
+		return (NULL);
+	array[count * size] = 0;
+	return ((void*)array);
 }

@@ -2,13 +2,16 @@
 NAME = minishell
 # HEADER FILES DIRECTORIES
 INCLUDES = -Ilibft/ -I.
-SRCS =	main.c		\
-		executables_paths.c	\
-		read_input.c		\
-		minishell_utils.c	\
-		builtins/builtins.c	\
-		builtins/export.c	\
-		builtins/unset.c
+SRCS =	main.c									\
+		executables_paths.c						\
+		read_input.c							\
+		minishell_utils.c						\
+		builtins/builtins.c						\
+		builtins/export.c						\
+		builtins/unset.c						\
+		command_parsing/command_split.c			\
+		command_parsing/parsing_insertions.c	\
+		command_parsing/split_commands.c
 LIBFT_A = libft.a
 # COMPILER FLAGS
 FLAGS = -Wall -Wextra -Werror

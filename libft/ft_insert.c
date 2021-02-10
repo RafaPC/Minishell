@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_insert.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:49 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/07 13:28:33 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/10 20:51:33 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ unsigned int lenght)
 {
 	char	*aux;
 
+	if (index < 1 || lenght < 1 || !(*addendum))
+		return (index);
 	if (!(aux = malloc(ft_strlen(*line) + lenght + 1)))
 		return (0);
 	if (index > ft_strlen(*line) + 1)

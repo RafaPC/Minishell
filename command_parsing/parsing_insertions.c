@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/03 12:16:18 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/10 20:41:14 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,19 @@
 ** Same as the double quote function, with the exception that no conversions are done.
 */
 
-int	handle_single_quotations(char **input, int i)
+void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
 {
-	i = ft_extract(input, i, 1);
-	while ((*input)[i])
+	cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
+	while ((*input)[cmd_pars->i])
 	{
-		if ((*input)[i] == '\'')
-			return (ft_extract(input, i, 1));
-		i++;
+		if ((*input)[cmd_pars->i] == '\'')
+		{
+		cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
+		return ;
+		}
+		cmd_pars->i++;
 	}
-	return (i);
+		cmd_pars->error = 5;
 }
 
 /*
@@ -47,26 +50,29 @@ int	handle_single_quotations(char **input, int i)
 ** Might consider stopping the parsing and printing an error if no closing quotation is found. 
 */
 
-int	handle_double_quotations(char **input, int i)
+void	handle_double_quotations(char **input, t_command_parsing *cmd_pars)
 {
-	i = ft_extract(input, i, 1);
-	while ((*input)[i])
+	cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
+	while ((*input)[cmd_pars->i])
 	{
-		if ((*input)[i] == '\\')
+		if ((*input)[cmd_pars->i] == '\\')
 		{
-			if (ft_strchr("$`\"", (*input)[i + 1]))
-				i = ft_extract(input, i, 1) + 1;
+			if (ft_strchr("$`\"", (*input)[cmd_pars->i + 1]))
+				cmd_pars->i = ft_extract(input, cmd_pars->i, 1) + 1;
 			else
-				i++;
+				cmd_pars->i++;
 		}
-		if ((*input)[i] == '$')
-			i = insert_variable(input, i);
-		if ((*input)[i] == '\"')
-			return (ft_extract(input, i, 1));
+		if ((*input)[cmd_pars->i] == '$')
+			cmd_pars->i = insert_variable(input, cmd_pars->i);
+		if ((*input)[cmd_pars->i] == '\"')
+		{
+		cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
+		return ;
+		}
 		else
-			i++;
+			cmd_pars->i++;
 	}
-	return (i);
+		cmd_pars->error = 6;
 }
 
 /*
@@ -78,13 +84,12 @@ int	handle_double_quotations(char **input, int i)
 ** Consider removal if enough space in the father function.
 */
 
-int	handle_quotations(char **input, int i)
+void	handle_quotations(char **input, t_command_parsing *cmd_pars)
 {
-	if ((*input)[i] == '\"')
-		return (handle_double_quotations(input, i));
-	else if ((*input)[i] == '\'')
-		return (handle_single_quotations(input, i));
-	return (i);
+	if ((*input)[cmd_pars->i] == '\"')
+		handle_double_quotations(input, cmd_pars);
+	else if ((*input)[cmd_pars->i] == '\'')
+		handle_single_quotations(input, cmd_pars);
 }
 
 /*
@@ -98,7 +103,7 @@ int	handle_quotations(char **input, int i)
 ** In any case, an index is returned pointing to the char preceeding the insertion (or lack thereof);
 */
 
-int	insert_variable(char **input, int index)
+int	insert_variable(char **input, int index) //Add t_list *envp_list
 {
 	int		j;
 	char	*aux;
@@ -107,9 +112,11 @@ int	insert_variable(char **input, int index)
 	j = 1;
 	while (ft_isalnum((*input)[index + j]) || (*input)[index + j] == '_')
 		j++;
-	aux = ft_strncat_in(0, &(*input)[index + 1], j - 1);
+	if (!(aux = malloc((j - 1) * sizeof(char)))) // TODO: check it works!
+		return (index);
+	ft_strlcpy(aux, &(*input)[index + 1], j - 1);
 	variable = ft_strdup("listen"); //remove
-	//variable = get_variable(); // Returns a string with the contents of the variable. If none is found, it returns an empty string.
+	//variable = get_env_var(aux, envp_list); // Returns a string with the contents of the variable. If none is found, it returns a 0.
 	index = ft_extract(input, index + j - 1, j);
 	if (variable)
 	{
@@ -118,4 +125,5 @@ int	insert_variable(char **input, int index)
 	}
 	free(aux);
 	return (index);
+	
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:42:43 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:39:47 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/09 21:25:31 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 t_list				*ft_lstnew(void const *content);
-void				ft_lstadd_front(t_list **alst, t_list *new);
+void				ft_lstadd_front(t_list **lst, t_list *new);
 int					ft_lstsize(t_list *lst);
 t_list				*ft_lstlast(t_list *lst);
-void				ft_lstadd_back(t_list **alst, t_list *new);
+void				ft_lstadd_back(t_list **lst, t_list *new);
 void				ft_lstdelone(t_list *lst, void (*del)(void*));
 void				ft_lstclear(t_list **lst, void (*del)(void*));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
@@ -98,9 +98,12 @@ int					gnl_buffer(int fd, int n, t_gnl_buffer **buffer);
 void				free_gnl_buffer(t_gnl_buffer *buffer, t_bool erase_mode);
 int					fill_gnl_buffer(t_gnl_buffer **buffer, char *line);
 int					ft_extract(char **line, unsigned int index,
-unsigned int lenght);
+					unsigned int lenght);
 int					ft_insert(char **line, char *addendum, unsigned int index,
-unsigned int lenght);
+					unsigned int lenght);
 int					ft_array_size(void **array);
 void				ft_array_clear(void **array, void (*del)(void *));
+void				*ft_alloc(size_t count, size_t size);
+char				*ft_buffer_fd(int fd);
+int					ft_fdsize(int fd);
 #endif

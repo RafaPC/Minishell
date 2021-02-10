@@ -1,28 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back_bonus.c                             :+:      :+:    :+:   */
+/*   ft_buffer_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/21 17:51:34 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/09 22:16:50 by aiglesia         ###   ########.fr       */
+/*   Created: 2021/02/04 11:23:53 by aiglesia          #+#    #+#             */
+/*   Updated: 2021/02/10 20:30:59 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdio.h>
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+char *ft_buffer_fd(int fd)
 {
-	t_list	*p;
+	t_list	*buffer;
+	t_list 	*aux;
+	int		lenght;
+	char	*str;
 
-	p = *lst;
-	if (!p)
-		*lst = new;
-	else
+	lenght = 0;
+	buffer = buffer_text(fd, &lenght);
+	aux = buffer;
+	lenght = 1887;
+	str = ft_alloc(lenght, sizeof(char)); //protect
+	lenght = 0;
+	while (buffer)
 	{
-		p = ft_lstlast(p);
-		p->next = new;
+		lenght += ft_strlcpy(&str[lenght], buffer->content, ft_strlen(buffer->content) + 1);
+		aux = buffer;
+		free(aux->content);
+		free(aux);
+		buffer = buffer->next;
 	}
-}
