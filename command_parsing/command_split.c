@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/12 16:14:22 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/12 19:22:21 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,9 @@ t_command **commands, char *input)
 		cmd_pars->error_index = cmd_pars->i + counter;
 		return ;
 	}
-	add_command(commands, load_command_args(cmd_pars, input), counter);
-	cmd_pars->i += counter + counter_aux - 1;
-	cmd_pars->j = cmd_pars->i + 1;
+	add_command(commands, load_command_args(cmd_pars, input), counter + 1);
+	cmd_pars->i += counter + counter_aux;
+	cmd_pars->j = cmd_pars->i;
 }
 
 /*
@@ -181,9 +181,8 @@ t_command **commands, char *input)
 t_bool	command_split(t_command_parsing *cmd_pars,
 t_command **commands, char *input)
 {
-	if (cmd_pars->i != cmd_pars->j)
-		if (!(input[cmd_pars->i]) || input[cmd_pars->i] == ';')
-			handle_simple_command_split(cmd_pars, commands, input);
+	if (!(input[cmd_pars->i]) || input[cmd_pars->i] == ';')
+		handle_simple_command_split(cmd_pars, commands, input);
 	if (input[cmd_pars->i] == '>')
 		handle_redirections_split(cmd_pars, commands, input);
 	if (input[cmd_pars->i] == '|')

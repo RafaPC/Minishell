@@ -16,21 +16,19 @@ int main(int argc, char **argv)
 	{
 		while (true)
 		{
-			buffer = (char*)malloc(sizeof(char) * 1025);
-			read_input(buffer);
-			tabs_to_spaces(buffer);
-			aux = buffer;
-			buffer = ft_strtrim(buffer, " ");
-			free(aux);
+			ft_putstr_fd("Minishell-> ", 1); //TODO change so it dynamically allocates things?
+			get_next_line(1, &buffer);
 			split_commands(buffer, &commands);
+			if (!ft_strncmp(*(commands->command), "exit", 5)) //Change later on
+				break;
 			for (t_command *temp = commands; temp; temp = temp->next)
 				printf("Comando: %s - Relacion: %i\n", *(temp->command), temp->relation);
-			empty_buffer(buffer);
+			free(buffer);
 		}
 	}
 	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
-		buffer = "hola ; holo";
+		buffer = "hello > test";
 		split_commands(buffer, &commands);
 		// PARA VER COMO QUEDA LA LISTA DE COMMANDS
 		for (t_command *aux = commands; aux; aux = aux->next)
