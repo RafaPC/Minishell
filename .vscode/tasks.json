@@ -1,0 +1,25 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "debug minishell",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-g",
+                "-I/home/user42/Desktop/minishell/libft/",
+                "-I/home/user42/Desktop/minishell/",
+                "/home/user42/Desktop/minishell/libft/*.c",
+                "/home/user42/Desktop/minishell/test_main.c",
+                "/home/user42/Desktop/minishell/utils/*.c",
+                "/home/user42/Desktop/minishell/builtins/*.c",
+                "/home/user42/Desktop/minishell/command_parsing/*.c",
+                "-o",
+                "/home/user42/Desktop/minishell/debug.out"
+            ],
+            "options": {
+                "cwd": "/usr/bin"
+            }
+        }
+    ],
+    "version": "2.0.0"
+}

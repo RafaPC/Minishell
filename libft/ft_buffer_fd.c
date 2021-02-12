@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_buffer_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/04 11:23:53 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/10 20:30:59 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/11 12:51:06 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
 char *ft_buffer_fd(int fd)
 {
@@ -21,10 +20,12 @@ char *ft_buffer_fd(int fd)
 	char	*str;
 
 	lenght = 0;
-	buffer = buffer_text(fd, &lenght);
+	// buffer = buffer_text(fd, &lenght); FIXME:
+	buffer = malloc(fd); // esto está hecho para quitar el error de que no se utiliza el fd y el buffer
+
 	aux = buffer;
 	lenght = 1887;
-	str = ft_alloc(lenght, sizeof(char)); //protect
+	str = ft_alloc(lenght, sizeof(char)); //he protect
 	lenght = 0;
 	while (buffer)
 	{
@@ -34,3 +35,5 @@ char *ft_buffer_fd(int fd)
 		free(aux);
 		buffer = buffer->next;
 	}
+	return (str);
+}

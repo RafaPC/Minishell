@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_split.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/03 11:57:49 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/12 16:14:22 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,14 +179,14 @@ t_command **commands, char *input)
 */
 
 t_bool	command_split(t_command_parsing *cmd_pars,
-t_command **commmands, char *input)
+t_command **commands, char *input)
 {
 	if (cmd_pars->i != cmd_pars->j)
 		if (!(input[cmd_pars->i]) || input[cmd_pars->i] == ';')
-			handle_simple_command_split(cmd_pars, commmands, input);
+			handle_simple_command_split(cmd_pars, commands, input);
 	if (input[cmd_pars->i] == '>')
-		handle_redirections_split(cmd_pars, commmands, input);
+		handle_redirections_split(cmd_pars, commands, input);
 	if (input[cmd_pars->i] == '|')
-		handle_pipe_split(cmd_pars, commmands, input);
+		handle_pipe_split(cmd_pars, commands, input);
 	return (input[cmd_pars->i] ? false : true);
 }

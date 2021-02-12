@@ -6,22 +6,30 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/18 01:52:02 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:53:03 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/11 12:25:08 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "libft.h"
 #include "minishell.h"
+#include <signal.h>
+
+void	signal_interrump(int signal)
+{
+	ft_putstr_fd("\nPrompt:", 1);
+}
 
 int		main(int argc, char const **argv, char const **envp)
 {
 	char	*buffer;
-	char	*aux;
+	char	*aux; 
 	t_list	*envp_list;
+
 
 	buffer = (char*)malloc(sizeof(char) * 1025);
 	envp_list = create_env_list(envp);
+	signal(SIGINT, signal_interrump);
 	while (true)
 	{
 		read_input(buffer);
@@ -60,13 +68,7 @@ int		main(int argc, char const **argv, char const **envp)
 		else
 			printf("Command %s doesn't exist\n", buffer);
 		//Libera memoria
-		for (int i = 0; command_and_args[i]; i++)
-		{
-			free(command_and_args[i]);
-			if (!command_and_args[i + 1])
-				free(command_and_args[i + 1]);
-		}
-		free(command_and_args);
+		ft_array_clear((void**)command_and_args, free);
 		empty_buffer(buffer);
 	}
 	return (0);

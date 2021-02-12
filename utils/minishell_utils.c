@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 12:23:34 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:46:56 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/12 16:11:22 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,22 @@ char	*get_env_var(char *var, t_list *envp)
 	}
 	free(var_equal);
 	return (NULL);
+}
+
+/*
+**	FIXME: ESTO SOLO TIENE FINES DEBUGILES
+*/
+
+char **get_false_env_list(void)
+{
+	char	**env_list;
+
+	env_list = malloc(sizeof(char**) * 6); // 5 más el nulo
+	env_list[0] = ft_strdup("PATH=/home/user42/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin");
+	env_list[1] = ft_strdup("USER=user42");
+	env_list[2] = ft_strdup("PWD=/home/user42/Desktop/minishell");
+	env_list[3] = ft_strdup("LANGUAGE=en");
+	env_list[4] = ft_strdup("HOME=/home/user42");
+	env_list[5] = NULL;
+	return (env_list);
 }

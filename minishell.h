@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/10 20:34:37 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/12 15:38:03 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,7 @@ char	*get_env_string_pointer(t_list *envp);
 void	unset(t_list **envp, char *var_name);
 void	unset_recursive(t_list *envp, t_list *previous_aux,
 char *var_name, int compare_length);
+
+/* TEMPORARY */
+char **get_false_env_list(void);
 #endif
