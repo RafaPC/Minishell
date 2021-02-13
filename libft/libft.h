@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:42:43 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/09 21:25:31 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/13 11:11:15 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,5 @@ int					ft_array_size(void **array);
 void				ft_array_clear(void **array, void (*del)(void *));
 void				*ft_alloc(size_t count, size_t size);
 char				*ft_buffer_fd(int fd);
-int					ft_fdsize(int fd);
+char				*ft_strncpy(char *s2, int n);
 #endif

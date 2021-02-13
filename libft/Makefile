@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+         #
+#    By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/21 18:09:12 by rprieto-          #+#    #+#              #
-#    Updated: 2021/02/11 12:29:51 by rprieto-         ###   ########.fr        #
+#    Updated: 2021/02/13 10:54:06 by aiglesia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,8 @@ SRCS =	ft_atoi.c				\
 		ft_array_size.c			\
 		ft_alloc.c				\
 		ft_buffer_fd.c			\
-		ft_array_clear.c
+		ft_array_clear.c		\
+		ft_strncpy.c
 OBJS = ${SRCS:.c=.o};
 CC = gcc -c
 CFLAGS = -Wall -Werror -Wextra
