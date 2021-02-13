@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/10 20:42:21 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/12 19:39:32 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	**load_command_args(t_command_parsing *cmd_pars, char *input)
 	char	**command;
 
 	argc = ft_lstsize(cmd_pars->arguments) + (cmd_pars->i > cmd_pars->j);
-	if (!(command = malloc((argc + 1) * sizeof(char*))))
+	if (!(command = ft_alloc(argc, sizeof(char*))))
 		return (0);
 	command[argc] = 0;
 	argc = 0;
