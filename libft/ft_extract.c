@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_extract.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 13:28:47 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/07 13:30:45 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/13 11:38:59 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ft_extract(char **line, unsigned int index, unsigned int lenght)
 	char	*aux;
 	int		i;
 
-	if (!(aux = malloc(ft_strlen(*line) + lenght + 1)))
+	if (!(aux = malloc(ft_strlen(*line) - lenght + 1)))
 		return (0);
 	i = lenght < index + 1 ? index + 1 - lenght : 0;
 	ft_strlcpy(aux, *line, i + 1);
