@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/12 19:22:21 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/13 12:20:56 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,35 @@ t_command **commands, char *input)
 	cmd_pars->j = cmd_pars->i;
 }
 
+char	**get_redirection_command(t_command_parsing *cmd_pars, char **input, int index)
+{
+	int lenght;
+	char **command_args;
+	int start;
+	int end;
+
+	lenght = 0;
+	start = cmd_pars->i;
+	cmd_pars->i = index;
+	while (!(ft_isspace((*input)[cmd_pars->i]) || !(*input)[cmd_pars->i]))
+	{
+		if (ft_strchr("\"\'", (*input)[cmd_pars->i]))
+			handle_quotations(input, cmd_pars); //TODO also add variable insertion!
+		else
+			cmd_pars->i++;
+	}
+	lenght = cmd_pars->i - index;
+	end = index + lenght;
+	if (!(command_args = ft_alloc(2, sizeof(char *))))
+	{
+		cmd_pars->i = ft_extract(input, end - 1, end - start);
+		return (0);
+	}
+	*command_args = ft_strncpy(&(*input)[index], lenght);
+	cmd_pars->i = ft_extract(input, end - 1, end - start);
+	return (command_args);
+}
+
 /*
 ** CMD_PARS = Struct holding cmd pars info.
 ** -i: index to the location of the redirection.
@@ -78,19 +107,20 @@ t_command **commands, char *input)
 */
 
 void	handle_redirections_split(t_command_parsing *cmd_pars,
-t_command **commands, char *input)
+t_command **commands, char **input)
 {
 	int		counter;
 	int		counter_aux;
 	int		error;
+	char	**command;
 
 	counter = 1;
 	counter_aux = 0;
-	while (input[cmd_pars->i + counter] == '>')
+	while ((*input)[cmd_pars->i + counter] == '>')
 		counter++;
-	while (ft_isspace(input[cmd_pars->i + counter + counter_aux]))
+	while (ft_isspace((*input)[cmd_pars->i + counter + counter_aux]))
 		counter_aux++;
-	error = (!input[cmd_pars->i + counter + counter_aux] ||
+	error = (!(*input)[cmd_pars->i + counter + counter_aux] ||
 	counter > 2) ? 1 : 0;
 	if (error)
 	{
@@ -99,9 +129,9 @@ t_command **commands, char *input)
 		cmd_pars->error_index = cmd_pars->i + counter;
 		return ;
 	}
-	add_command(commands, load_command_args(cmd_pars, input), counter + 1);
-	cmd_pars->i += counter + counter_aux;
-	cmd_pars->j = cmd_pars->i;
+	command = get_redirection_command(cmd_pars, input,
+	cmd_pars->i + counter + counter_aux);
+	add_command(commands, command, counter + 1);
 }
 
 /*
@@ -183,8 +213,6 @@ t_command **commands, char *input)
 {
 	if (!(input[cmd_pars->i]) || input[cmd_pars->i] == ';')
 		handle_simple_command_split(cmd_pars, commands, input);
-	if (input[cmd_pars->i] == '>')
-		handle_redirections_split(cmd_pars, commands, input);
 	if (input[cmd_pars->i] == '|')
 		handle_pipe_split(cmd_pars, commands, input);
 	return (input[cmd_pars->i] ? false : true);

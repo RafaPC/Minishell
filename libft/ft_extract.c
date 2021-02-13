@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 13:28:47 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/13 11:38:59 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/13 12:03:22 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	ft_extract(char **line, unsigned int index, unsigned int lenght)
 	i = lenght < index + 1 ? index + 1 - lenght : 0;
 	ft_strlcpy(aux, *line, i + 1);
 	ft_strlcpy(&aux[i], &(*line)[index + 1], ft_strlen(&(*line)[index]));
-	free(*line);
+	//free(*line);
 	*line = aux;
 	return (i);
 }

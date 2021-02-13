@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/12 15:38:03 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/13 10:58:39 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void 		handle_quotations(char **input, t_command_parsing *cmd_pars);
 void		add_command(t_command **commands, char **arguments, int relation);
 t_bool		command_split(t_command_parsing *cmd_pars, t_command **commmands, char *input);
 char 		**load_command_args(t_command_parsing *cmd_pars, char *input);
+void		handle_redirections_split(t_command_parsing *cmd_pars,
+			t_command **commands, char **input);
 
 /*
 **		MINISHELL UTILS
