@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 		{
 			ft_putstr_fd("Minishell-> ", 1); //TODO change so it dynamically allocates things?
 			get_next_line(1, &buffer);
-			split_commands(buffer, &commands); // TODO Check return value to see if there was a parsing error.
+			split_commands(&buffer, &commands); // TODO Check return value to see if there was a parsing error.
  			if (!ft_strncmp(*(commands->command), "exit", 5)) //Change later on
  				break;
  			for (t_command *temp = commands; temp; temp = temp->next)
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
 		buffer = "hello world > patata frita";
-		split_commands(buffer, &commands);
+		split_commands(&buffer, &commands);
 		// PARA VER COMO QUEDA LA LISTA DE COMMANDS
 		for (t_command *aux = commands; aux; aux = aux->next)
 		{

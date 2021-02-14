@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/13 10:59:10 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/14 09:41:49 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	add_command_argument(t_command_parsing *cmd_pars, char *input)
 ** NOTE: Assumes that *input is malloced.
 */
 
-int		split_commands(char *input, t_command **commands)
+int		split_commands(char **input, t_command **commands)
 {
 	t_command_parsing	cmd_pars;
 
@@ -134,17 +134,17 @@ int		split_commands(char *input, t_command **commands)
 	{
 		if (cmd_pars.error)
 			return (cmd_pars.error);
-		if (input[cmd_pars.i] == '$')
-			insert_variable(&input, cmd_pars.i);
-		else if (input[cmd_pars.i] == '\"' || input[cmd_pars.i] == '\'')
-			handle_quotations(&input, &cmd_pars);
-		else if (input[cmd_pars.i] == '>')
-			handle_redirections_split(&cmd_pars, commands, &input);
-		else if (ft_isspace(input[cmd_pars.i]))
-			add_command_argument(&cmd_pars, input);
-		else if (ft_strchr(";|", input[cmd_pars.i]) || !input[cmd_pars.i])
+		if ((*input)[cmd_pars.i] == '$')
+			insert_variable(input, cmd_pars.i);
+		else if ((*input)[cmd_pars.i] == '\"' || (*input)[cmd_pars.i] == '\'')
+			handle_quotations(input, &cmd_pars);
+		else if ((*input)[cmd_pars.i] == '>')
+			handle_redirections_split(&cmd_pars, commands, input);
+		else if (ft_isspace((*input)[cmd_pars.i]))
+			add_command_argument(&cmd_pars, *input);
+		else if (ft_strchr(";|", (*input)[cmd_pars.i]) || !(*input)[cmd_pars.i])
 		{
-			if (command_split(&cmd_pars, commands, input))
+			if (command_split(&cmd_pars, commands, *input))
 				return (0);
 		}
 		else
