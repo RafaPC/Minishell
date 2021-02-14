@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/13 12:20:56 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/14 09:50:33 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,9 @@ char	**get_redirection_command(t_command_parsing *cmd_pars, char **input, int in
 	while (!(ft_isspace((*input)[cmd_pars->i]) || !(*input)[cmd_pars->i]))
 	{
 		if (ft_strchr("\"\'", (*input)[cmd_pars->i]))
-			handle_quotations(input, cmd_pars); //TODO also add variable insertion!
+			handle_quotations(input, cmd_pars);
+		else if ((*input)[cmd_pars->i] == '$')
+			insert_variable(input, cmd_pars->i);
 		else
 			cmd_pars->i++;
 	}
