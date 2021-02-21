@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/14 09:41:49 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/21 12:24:30 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ int		split_commands(char **input, t_command **commands)
 			insert_variable(input, cmd_pars.i);
 		else if ((*input)[cmd_pars.i] == '\"' || (*input)[cmd_pars.i] == '\'')
 			handle_quotations(input, &cmd_pars);
+		else if (((*input)[cmd_pars.i] == '<'))
+			handle_input_redirection(&cmd_pars, commands, input);
 		else if ((*input)[cmd_pars.i] == '>')
 			handle_redirections_split(&cmd_pars, commands, input);
 		else if (ft_isspace((*input)[cmd_pars.i]))

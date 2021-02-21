@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/16 20:38:41 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/21 17:21:33 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ t_bool			command_split(t_command_parsing *cmd_pars, t_command
 char			**load_command_args(t_command_parsing *cmd_pars, char *input);
 void			handle_redirections_split(t_command_parsing *cmd_pars,
 					t_command **commands, char **input);
+void			handle_input_redirection(t_command_parsing *cmd_pars,
+				t_command **commands, char **input);
 
 /*
 **		MINISHELL UTILS

@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/14 09:50:33 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/21 12:24:26 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,34 @@ t_command **commands, char **input)
 	command = get_redirection_command(cmd_pars, input,
 	cmd_pars->i + counter + counter_aux);
 	add_command(commands, command, counter + 1);
+}
+
+void	handle_input_redirection(t_command_parsing *cmd_pars,
+t_command **commands, char **input)
+{
+	int		counter_aux;
+	int		error;
+	char	**command;
+
+	counter_aux = 0;
+	if (ft_isspace((*input)[cmd_pars->i + 1]))
+	{
+	while (ft_isspace((*input)[cmd_pars->i + 1 + counter_aux]))
+		counter_aux++;
+	error = (!(*input)[cmd_pars->i + 1 + counter_aux]) ? 1 : 0;
+	}
+	else
+		error = 1;
+	if (error)
+	{
+		ft_lstclear(&cmd_pars->arguments, free);
+		cmd_pars->error = 1;
+		cmd_pars->error_index = cmd_pars->i + 1;
+		return ;
+	}
+	command = get_redirection_command(cmd_pars, input,
+	cmd_pars->i + 1 + counter_aux);
+	add_command(commands, command, 4);
 }
 
 /*
