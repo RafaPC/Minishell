@@ -3,23 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/21 16:56:14 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/21 17:27:26 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
-
-typedef enum e_parser_flags
-{
-		input_redirection,
-		output_redirection,
-		pipe_redirection,
-		simple_command
-}			t_parser_flags;
 
 void execute_commands(t_command *commands)
 {

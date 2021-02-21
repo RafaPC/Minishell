@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/21 17:21:33 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/21 17:29:14 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@
 /*
 ** Declares
 */
+
+typedef enum e_parser_flags
+{
+		simple_command,
+		input_redirection,
+		output_redirection,
+		output_redirection_app,
+		pipe_redirection
+}			t_parser_flags;
+
 typedef struct	s_command
 {
 	char				**command;

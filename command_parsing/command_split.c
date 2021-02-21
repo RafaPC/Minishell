@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/21 12:24:26 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/21 17:34:28 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@
 **INPUT = Parse input.
 **
 ** Self explanatory name.
-** If a pipe immediately follows the current one, an error is issued 
-** Additionally, the redirections must be followed by some sort of alphanumeric content.
+** If a pipe immediately follows the current one, an error is issued.
+** Additionally, the redirections must be followed by some sort of alphanumeric
+** content.
 ** Therefore, if only spaces are found preceding the pipe, an error is issued.
 **
 **  Should an error be found, the linked argument list is freed.
@@ -50,7 +51,7 @@ t_command **commands, char *input)
 		cmd_pars->error_index = cmd_pars->i;
 		return ;
 	}
-	add_command(commands, load_command_args(cmd_pars, input), 3);
+	add_command(commands, load_command_args(cmd_pars, input), pipe_redirection);
 	cmd_pars->i += counter_aux + 1;
 	cmd_pars->j = cmd_pars->i;
 }
@@ -133,7 +134,7 @@ t_command **commands, char **input)
 	}
 	command = get_redirection_command(cmd_pars, input,
 	cmd_pars->i + counter + counter_aux);
-	add_command(commands, command, counter + 1);
+	add_command(commands, command, counter == 1 ? output_redirection : output_redirection_app);
 }
 
 void	handle_input_redirection(t_command_parsing *cmd_pars,
@@ -161,7 +162,7 @@ t_command **commands, char **input)
 	}
 	command = get_redirection_command(cmd_pars, input,
 	cmd_pars->i + 1 + counter_aux);
-	add_command(commands, command, 4);
+	add_command(commands, command, input_redirection);
 }
 
 /*
@@ -173,7 +174,7 @@ t_command **commands, char **input)
 **
 ** COMMANDS = points to the commands structure. Used to add the parsed command.
 **
-**INPUT = Parse input.
+** INPUT = Parse input.
 **
 ** Adds a command structure with the stored arguments to the command linked list.
 ** Sets the i to skip the ';' if needded, also setting j to the i value, so it may copy the following argument.
@@ -212,7 +213,7 @@ t_command **commands, char *input)
 			return ;
 		}
 	}
-	add_command(commands, load_command_args(cmd_pars, input), 0);
+	add_command(commands, load_command_args(cmd_pars, input), simple_command);
 	if (input[cmd_pars->i])
 		cmd_pars->i += 1;
 	cmd_pars->j = cmd_pars->i;
