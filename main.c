@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/18 01:52:02 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/16 19:25:44 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/16 20:39:42 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int		main(int argc, char const **argv, char const **envp)
 			env(envp_list, 0, 0);
 		else if (!ft_strncmp(command_and_args[0], "exit", 4))
 			ft_exit(&envp_list);
+		else if (!ft_strncmp(command_and_args[0], "echo", 4))
+			echo(&command_and_args[1]);
 		else if (execute_command(get_path(envp_list), command_and_args[0]))
 		{
 			printf("Command %s exists\n", buffer);

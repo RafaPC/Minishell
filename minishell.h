@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/16 19:54:10 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/16 20:38:41 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ char			*get_env_var(char *var, t_list *envp);
 /*
 **		BUILTINS
 */
-char			*env(t_list *envp, int length, int i);
+char			*env(t_list *envp);
+void			echo(char **args);
 void			ft_exit(t_list **envp);
 /*
 **				EXPORT

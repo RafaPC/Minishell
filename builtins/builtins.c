@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/16 20:14:50 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/16 21:00:10 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** Adds a '\n' to the end of each variable
 */
 
-void	env(t_list *envp, int length, int i)
+void	env(t_list *envp)
 {
 	char	*check;
 	char	*content;
@@ -43,4 +43,35 @@ void	ft_exit(t_list **envp)
 {
 	ft_lstclear(envp, free);
 	exit(0);
+}
+
+/*
+**	Prints all the arguments to standart output
+*/
+
+void	echo(char **args)
+{
+	t_bool	newline_flag;
+	int		i;
+
+	i = 0;
+	newline_flag = false;
+	if (!ft_strncmp(*args, "-n", 2))
+	{
+		while ((*args)[i] && (*args)[i] == 'n')
+			i++;
+		if (!(*args)[i])
+		{
+			newline_flag = true;
+			args++;
+		}
+			
+	}
+	while (args)
+	{
+		ft_putstr_fd(*args++, STDOUT_FILENO);
+		write(STDOUT_FILENO, " ", 1);
+	}
+	if (newline_flag)
+		write(STDOUT_FILENO, "\n", 1);
 }
