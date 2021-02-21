@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/21 17:29:14 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/21 19:01:54 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,16 @@ typedef enum e_parser_flags
 		output_redirection_app,
 		pipe_redirection
 }			t_parser_flags;
+
+typedef enum e_fd_array
+{
+		stdin_bkp,
+		stdout_bkp,
+		std_in_tmp,
+		std_out_tmp,
+		pipe_in,
+		pipe_out
+}			t_fd_array;
 
 typedef struct	s_command
 {
