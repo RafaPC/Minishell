@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/21 19:01:54 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/22 17:14:27 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,29 @@
 ** Declares
 */
 
-typedef enum e_parser_flags
+typedef enum 	e_parser_flags
 {
 		simple_command,
 		input_redirection,
 		output_redirection,
 		output_redirection_app,
 		pipe_redirection
-}			t_parser_flags;
+}				t_parser_flags;
 
-typedef enum e_fd_array
+typedef	struct	s_fd_struct
 {
-		stdin_bkp,
-		stdout_bkp,
-		std_in_tmp,
-		std_out_tmp,
-		pipe_in,
-		pipe_out
-}			t_fd_array;
+	int	stdin_copy;
+	int	stdout_copy;
+	int	std_in_tmp;
+	int	std_out_tmp;
+	int	pipe_in;
+	int	pipe_out;
+}				t_fd_struct;
+
 
 typedef struct	s_command
 {
-	char				**command;
+	char				**tokens;
 	struct s_command	*next;
 	int					relation;
 }				t_command;
@@ -114,4 +115,5 @@ char *var_name, int compare_length);
 ** TEMPORARY
 */
 char			**get_false_env_list(void);
+void	execute_commands(t_command *commands, char **envp);
 #endif

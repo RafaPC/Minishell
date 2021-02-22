@@ -1,7 +1,7 @@
 # PROGRAM NAME
 NAME = minishell.out
 # HEADER FILES DIRECTORIES
-INCLUDES = -Ilibft/ -I.
+INCLUDES = -Ilibft/ -Ift_printf/ -I.
 SRCS =	utils/executables_paths.c				\
 		utils/read_input.c						\
 		utils/minishell_utils.c					\
@@ -10,29 +10,30 @@ SRCS =	utils/executables_paths.c				\
 		builtins/unset.c						\
 		command_parsing/command_split.c			\
 		command_parsing/parsing_insertions.c	\
-		command_parsing/split_commands.c
+		command_parsing/split_commands.c		\
+		temp/execute_commands.c
 
-LIBFT_A = libft.a
+LIBFTPRINTF_A = libftprintf.a
 # COMPILER FLAGS
 FLAGS = -Wall -Wextra -Werror
 
 all: ${NAME}
 
-${NAME}: main.c ${SRCS} ${LIBFT_A}
-			gcc ${INCLUDES} main.c ${SRCS} ${LIBFT_A} -o ${NAME}
+${NAME}: main.c ${SRCS} ${LIBFTPRINTF_A}
+			gcc ${INCLUDES} main.c ${SRCS} ${LIBFTPRINTF_A} -o ${NAME}
 
-test: test_main.c ${SRCS} ${LIBFT_A}
-			gcc ${INCLUDES} test_main.c ${SRCS} ${LIBFT_A} -o minishell_test.out
+test: test_main.c ${SRCS} ${LIBFTPRINTF_A}
+			gcc ${INCLUDES} test_main.c ${SRCS} ${LIBFTPRINTF_A} -o minishell_test.out
 
-${LIBFT_A}:
-		make bonus -C libft/
-		cp libft/libft.a .
-
+${LIBFTPRINTF_A}:
+		make -C ft_printf
+		cp ft_printf/libftprintf.a .
 clean:
 		rm -f *.o
 		rm -f ${NAME}
 		rm -f minishell_test.out
 		rm -f debug.out
+		make -C ft_printf/ clean
 re:
 		make clean
 		make

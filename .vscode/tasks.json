@@ -13,8 +13,25 @@
                 "/home/user42/Desktop/minishell/utils/*.c",
                 "/home/user42/Desktop/minishell/builtins/*.c",
                 "/home/user42/Desktop/minishell/command_parsing/*.c",
+                "/home/user42/Desktop/minishell/temp/execute_commands.c",
                 "-o",
                 "/home/user42/Desktop/minishell/debug.out"
+            ],
+            "options": {
+                "cwd": "/usr/bin"
+            }
+        },
+        {
+            "type": "shell",
+            "label": "debug test",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-g",
+                "-I/home/user42/Desktop/minishell/libft/",
+                "/home/user42/Desktop/minishell/libft/*.c",
+                "/home/user42/Desktop/minishell/command_test.c",
+                "-o",
+                "/home/user42/Desktop/minishell/command_test.out"
             ],
             "options": {
                 "cwd": "/usr/bin"

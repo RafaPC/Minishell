@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/21 12:24:30 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/22 16:30:52 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	add_command(t_command **commands, char **arguments, int relation)
 	{
 		if (!(*commands = ft_calloc(1, sizeof(t_command))))
 			return ;
-		(*commands)->command = arguments;
+		(*commands)->tokens = arguments;
 		(*commands)->relation = relation;
 		return ;
 	}
@@ -81,7 +81,7 @@ void	add_command(t_command **commands, char **arguments, int relation)
 		aux = aux->next;
 	if (!(aux->next = ft_calloc(1, sizeof(t_command))))
 		return ;
-	aux->next->command = arguments;
+	aux->next->tokens = arguments;
 	aux->next->relation = relation;
 }
 
