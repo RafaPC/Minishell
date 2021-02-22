@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 			get_next_line(1, &buffer);
 			// buffer = ft_strdup("< hello echo");
 			split_commands(&buffer, &commands); // TODO Check return value to see if there was a parsing error.
- 			if (!ft_strncmp(*(commands->tokens), "exit", 5)) //Change later on
+ 			if (commands->tokens[0] && !ft_strncmp(*(commands->tokens), "exit", 5)) //Change later on
  				break;
  			execute_commands(commands, get_false_env_list());
 			// for (t_command *temp = commands; temp; temp = temp->next)
@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	}
 	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
-		buffer = ft_strdup("echo hola");
+		buffer = ft_strdup("");
 		split_commands(&buffer, &commands);
 		execute_commands(commands, get_false_env_list());
 		// PARA VER COMO QUEDA LA LISTA DE COMMANDS

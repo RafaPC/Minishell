@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/22 17:14:27 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/22 20:59:03 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,6 @@ typedef enum 	e_parser_flags
 		output_redirection_app,
 		pipe_redirection
 }				t_parser_flags;
-
-typedef	struct	s_fd_struct
-{
-	int	stdin_copy;
-	int	stdout_copy;
-	int	std_in_tmp;
-	int	std_out_tmp;
-	int	pipe_in;
-	int	pipe_out;
-}				t_fd_struct;
-
 
 typedef struct	s_command
 {
