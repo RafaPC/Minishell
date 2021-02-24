@@ -6,22 +6,29 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/16 21:00:10 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/24 17:13:34 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "ft_printf.h"
 
 /*
 ** Prints all the environment variables with values
 ** Adds a '\n' to the end of each variable
+** TODO: checkear
 */
 
-void	env(t_list *envp)
+t_bool	env(t_list *envp, char **args)
 {
 	char	*check;
 	char	*content;
 
+	if (*args)
+	{
+		ft_printf("env: %s: No such file or directory\n");
+		return (true);
+	}
 	while (envp)
 	{
 		content = (char*)envp->content;
@@ -32,6 +39,7 @@ void	env(t_list *envp)
 		}
 		envp = envp->next;
 	}
+	return (true);
 }
 
 /*
@@ -49,14 +57,14 @@ void	ft_exit(t_list **envp)
 **	Prints all the arguments to standart output
 */
 
-void	echo(char **args)
+t_bool	echo(char **args)
 {
 	t_bool	newline_flag;
 	int		i;
 
-	i = 0;
+	i = 1;
 	newline_flag = false;
-	if (!ft_strncmp(*args, "-n", 2))
+	if (*args && !ft_strncmp(*args, "-n", 2))
 	{
 		while ((*args)[i] && (*args)[i] == 'n')
 			i++;
@@ -65,13 +73,47 @@ void	echo(char **args)
 			newline_flag = true;
 			args++;
 		}
-			
 	}
-	while (args)
+	while (*args)
 	{
 		ft_putstr_fd(*args++, STDOUT_FILENO);
-		write(STDOUT_FILENO, " ", 1);
+		if (*args)
+			write(STDOUT_FILENO, " ", 1);
 	}
-	if (newline_flag)
+	if (!newline_flag)
 		write(STDOUT_FILENO, "\n", 1);
+	return (true);
+}
+
+/*
+** Prints the current working directory to the standart output
+*/
+
+t_bool	pwd(void)
+{
+	char	*cwd;
+
+	cwd = getcwd(NULL, 0);
+	ft_putstr_fd(cwd, STDOUT_FILENO);
+	free(cwd);
+	return (true);
+}
+
+/*
+**		Changes the current working directory
+*/
+
+t_bool	cd(char **args)
+{
+	if (args[0] && args[1])
+		ft_putstr_fd("minishell: cd: too many arguments\n", STDOUT_FILENO);
+	else if (args[0])
+	{
+		if (chdir(args[0]) == -1)
+		{
+			//TODO: coger el errno y eso
+			return (false);
+		}
+	}
+	return (true);
 }

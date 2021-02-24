@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 14:39:56 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/06 12:31:10 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/24 16:39:06 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,29 +33,35 @@
 ** sets the t_list variable accordingly wether there are more elements or not
 ** If it doesn't match the first element then calls a function that iterates
 ** recursively over the list and deletes a variable if it matches the name
+** TODO: checkear si podría abstraer esto para que el primer caso fuera igual que otro cualquiera
 */
 
-void	unset(t_list **envp, char *var_name)
+t_bool	unset(t_list **env_list, char **args)
 {
 	t_list	*aux;
 	int		compare_length;
 	int		compare_result;
 
-	if (ft_strchr(var_name, '='))
-		printf("unset: '%s': not a valid identifier\n", var_name);
-	else if (*envp)
+	while (*args)
 	{
-		compare_length = ft_strlen(var_name) + 1;
-		compare_result = ft_strncmp(
-			(char*)(*envp)->content, var_name, compare_length);
-		if (compare_result == 0 || compare_result == 61)
+		if (!valid_env_characters(*args) || ft_strchr(*args, '='))
+			printf("unset: '%s': not a valid identifier\n", *args);
+		else if (*env_list)
 		{
-			aux = *envp;
-			*envp = NULL;
-			ft_lstdelone(aux, free);
+			compare_length = ft_strlen(*args) + 1;
+			compare_result = ft_strncmp(
+				(char*)(*env_list)->content, *args, compare_length);
+			if (compare_result == 0 || compare_result == 61)
+			{
+				aux = *env_list;
+				*env_list = NULL;
+				ft_lstdelone(aux, free);
+			}
+			else if ((*env_list)->next)
+				unset_recursive((*env_list)->next, *env_list, *args,
+					compare_length);
 		}
-		else if ((*envp)->next)
-			unset_recursive((*envp)->next, *envp, var_name, compare_length);
+		args++;
 	}
 }
 
@@ -67,7 +73,7 @@ void	unset(t_list **envp, char *var_name)
 ** compare_length -> number of chars to compare equal to strlen(var_name) + 1
 */
 
-void	unset_recursive(t_list *envp, t_list *previous_aux,
+t_bool	unset_recursive(t_list *envp, t_list *previous_aux,
 char *var_name, int compare_length)
 {
 	int		compare_result;
@@ -78,7 +84,10 @@ char *var_name, int compare_length)
 	{
 		previous_aux->next = envp->next;
 		ft_lstdelone(envp, free);
+		return (true);
 	}
 	else if (envp->next)
-		unset_recursive(envp->next, envp, var_name, compare_length);
+		return (unset_recursive(envp->next, envp, var_name, compare_length));
+	else
+		return (false);
 }

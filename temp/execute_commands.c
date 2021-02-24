@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/22 20:55:51 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/24 17:44:55 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,38 +49,53 @@ int get_input_and_output(char *file, int mode)
 ** Executes the builtin command if found and return either 1 or errnum;
 */
 
-t_bool is_builtin(char **command)
+t_bool is_builtin(char **command, char ***env_array, t_list *env_list)
 {
+	int	result;
+
+	result = -1;
 	if (!command[0])
-		return (true);
-	// if (!ft_strncmp(command, "echo", 5))
-	// //	return (echo());
-	// else if (!ft_strncmp(command, "cd", 3))
-	// //	return (cd())
-	// else if (!ft_strncmp(command, "pwd", 4))
-	// //	return (pwd())
-	// else if (!ft_strncmp(command, "export", 7))
-	// 	//	return (export())
-	// else if (!ft_strncmp(command, "unset", 6))
-	// 	//	return (unset())
-	// else if (!ft_strncmp(command, "env", 4))
-	// 	//	return (env())
-	return(false);
+		result = true;
+	else if (!ft_strncmp(*command, "echo", 5))
+		result = (echo(&command[1]));
+	else if (!ft_strncmp(*command, "cd", 3))
+		result = (cd(&command[1]));
+	else if (!ft_strncmp(*command, "pwd", 4))
+		result = (pwd());
+	else if (!ft_strncmp(*command, "export", 7))
+		result = export(&env_list, &command[1]);
+	else if (!ft_strncmp(*command, "unset", 6))
+		result = unset(&env_list, &command[1]);
+	else if (!ft_strncmp(*command, "env", 4))
+		result = (env(env_list, &command[1]));
+	if (result == 2)
+	{
+		free(*env_array);
+		*env_array = env_list_to_array(env_list);
+	}
+	return(result);
 }
 
-int command_execution(char **command, char **envp, int relation)
+/*
+** TODO:	COSILLAS A TENER EN CUENTA
+**			checkear si el comando empieza por /
+**			esi significa que hay que ejecutarlo directamente sin checkear si es builtin o un comando que buscar en el path
+**			si tiene una / pero no en el primer carácter, concatenarlo al directorio actual y checkear si existe el archivo
+*/
+
+int command_execution(char **command, char ***env_array, t_list *env_list, int relation)
 {
-	int pid;
-	int	wstatus;
+	int		pid;
+	int		wstatus;
+	char	*command_path;
 
 	pid = 0;
-	if (is_builtin(command)) //ERROR handling
+	if (is_builtin(command, env_array, env_list) != -1) //ERROR handling
 		pid = 1;
 	else if ((pid = fork()) == -1)
 		ft_printf("Error al forkear");
 	else if (pid == 0) // Hijo
 	{
-		//write(STDIN_FILENO, "Ejecuta\n", 8);
 		execvp(command[0], command);
 	}
 	else
@@ -89,13 +104,11 @@ int command_execution(char **command, char **envp, int relation)
 			ft_printf("Error al esperar");
 		else if (WIFEXITED(wstatus))
 		{
-			// ft_putstr_fd("Returned normally\n", STDIN_FILENO);
 			//ft_printf("Returned normally\n");
 			//ft_printf("Code: %i\n", WEXITSTATUS(wstatus));
 		}
 		else if (WIFSIGNALED(wstatus))
 		{
-			// ft_putstr_fd("Returned by signal\n", STDIN_FILENO);
 			ft_printf("Returned by signal\n");
 			ft_printf("Signal code: %i\n", WTERMSIG(wstatus));
 		}
@@ -104,7 +117,7 @@ int command_execution(char **command, char **envp, int relation)
 	}
 }
 
-void	execute_commands(t_command *commands, char **envp)
+void	execute_commands(t_command *commands, char ***env_array, t_list *env_list)
 {
 	int			stdin_copy;
 	int			stdout_copy;
@@ -123,14 +136,15 @@ void	execute_commands(t_command *commands, char **envp)
 		{
 			pipe(fdpipe);
 			dup2(fdpipe[1], STDOUT_FILENO);
-			command_execution(commands->tokens, envp, commands->relation);
+			command_execution(commands->tokens, env_array, env_list,
+				commands->relation);
 			dup2(fdpipe[0], STDIN_FILENO);
 			close(fdpipe[0]);
 			close(fdpipe[1]);
 		}
 		commands = commands->next;
 	}
-	command_execution(commands->tokens, envp, commands->relation);
+	command_execution(commands->tokens, env_array, env_list, commands->relation);
 	dup2(stdin_copy, STDIN_FILENO);
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);

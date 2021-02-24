@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/22 20:59:03 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/24 17:44:55 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,29 +80,32 @@ void			handle_input_redirection(t_command_parsing *cmd_pars,
 **		MINISHELL UTILS
 */
 t_list			*create_env_list(const char **envp);
-char			**env_list_to_char(t_list *envp);
+char			**env_list_to_array(t_list *envp);
 char			*get_env_var(char *var, t_list *envp);
 /*
 **		BUILTINS
 */
-char			*env(t_list *envp);
-void			echo(char **args);
+t_bool	env(t_list *envp, char **args);
+t_bool			echo(char **args);
 void			ft_exit(t_list **envp);
+t_bool			pwd(void);
+t_bool			cd(char **args);
 /*
 **				EXPORT
 */
-void			export(t_list *envp, char *arg);
-void			export_print(t_list *envp);
+int				export(t_list **env, char **args);
+int				export_print(t_list *envp);
+t_bool			valid_env_characters(char *var_name);
 /*
 **				UNSET
 */
-void			unset(t_list **envp, char *var_name);
-void			unset_recursive(t_list *envp, t_list *previous_aux,
+t_bool			unset(t_list **envp, char **args);
+t_bool			unset_recursive(t_list *envp, t_list *previous_aux,
 char *var_name, int compare_length);
 
 /*
 ** TEMPORARY
 */
-char			**get_false_env_list(void);
-void	execute_commands(t_command *commands, char **envp);
+char			**get_false_env_array(void);
+void			execute_commands(t_command *commands, char ***env_array, t_list *env_list);
 #endif

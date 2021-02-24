@@ -7,7 +7,9 @@
             "args": [
                 "-g",
                 "-I/home/user42/Desktop/minishell/libft/",
+                "-I/home/user42/Desktop/minishell/ft_printf/",
                 "-I/home/user42/Desktop/minishell/",
+                "/home/user42/Desktop/minishell/ft_printf/*.c",
                 "/home/user42/Desktop/minishell/libft/*.c",
                 "/home/user42/Desktop/minishell/test_main.c",
                 "/home/user42/Desktop/minishell/utils/*.c",

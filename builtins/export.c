@@ -6,13 +6,64 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 20:54:28 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/16 20:21:46 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/24 17:42:06 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "libft.h"
 #include "minishell.h"
+#include "ft_printf.h"
+
+/*
+** Receives a string and returns false if it contains a char that is not
+** alphanumeric or '_' (underscore)
+*/
+
+t_bool	valid_env_characters(char *var_name)
+{
+	if (ft_isdigit(*var_name++))
+		return (false);
+	while (*var_name)
+	{
+		if (!ft_isalpha(*var_name) && !ft_isdigit(*var_name)
+			&& *var_name != '_')
+			return (false);
+		var_name++;
+	}
+	return (true);
+}
+
+/*
+** Receives an environment list and an argument and searches if the argument
+** already exists in the list.
+** If it exists it'll modify its value with the new one
+** If it doesn't, it will add to the end of the list
+*/
+
+t_bool	export_variable(t_list **env_list, char *arg)
+{
+	t_list	*aux;
+	char	*string;
+
+	aux = *env_list;
+	while (aux)
+	{
+		if (!ft_strncmp(arg, (char*)aux->content, (ft_strchr(arg, '='))
+			? ft_get_index_of(arg, '=') : ft_strlen(arg)))
+		{
+			free(aux->content);
+			if ((aux->content = ft_strdup(arg)) == NULL) //ERROR de malloc
+				return (0);
+			return (2);
+		}
+		aux = aux->next;
+	}
+	if ((aux = ft_lstnew(ft_strdup(arg))) == NULL) //ERROR de malloc
+		return (false);
+	ft_lstadd_back(env_list, aux);
+	return (true);
+}
 
 /*
 ** Parameters:
@@ -26,35 +77,38 @@
 ** to the list with arg as its content
 */
 
-void	export(t_list *envp, char *arg)
+int		export(t_list **env, char **args)
 {
 	t_list	*aux;
+	char	*str_aux;
 
-	aux = envp;
-	if (arg == NULL || *arg == '\0')
+	if (*args == NULL || **args == '\0')
+		return (export_print(*env));
+	while (*args)
 	{
-		export_print(envp);
-		return ;
-	}
-	while (aux)
-	{
-		if (!ft_strncmp(arg, (char*)aux->content, (ft_strchr(arg, '='))
-			? ft_get_index_of(arg, '=') : ft_strlen(arg)))
+		aux = *env;
+		str_aux = ((ft_strchr(*args, '='))
+		? ft_strncpy(*args, ft_get_index_of(*args, '=') - 1)
+		: ft_strdup(*args));
+		if (**args == '=' || !valid_env_characters(str_aux))
+			ft_printf("minishell: export: `%s': not a valid specifier\n",
+				*args);
+		else if (!export_variable(env, *args))
 		{
-			free(aux->content);
-			aux->content = ft_strdup(arg);
-			return ;
+			ft_printf("Error al alocar memoria\n"); // ERROR
+			return (0);
 		}
-		aux = aux->next;
+		free(str_aux);
+		args++;
 	}
-	ft_lstadd_back(&envp, ft_lstnew(ft_strdup(arg)));
+	return (2);
 }
 
 /*
-** Writes all the environment variables in the standart output fd
+** Writes all the environment variables in the standart output
 */
 
-void	export_print(t_list *envp)
+int		export_print(t_list *envp)
 {
 	char	*content;
 
@@ -75,4 +129,5 @@ void	export_print(t_list *envp)
 		write(STDOUT_FILENO, "\n", 1);
 		envp = envp->next;
 	}
+	return (1);
 }
