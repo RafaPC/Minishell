@@ -34,6 +34,8 @@ clean:
 		rm -f minishell_test.out
 		rm -f debug.out
 		make -C ft_printf/ clean
+fclean: clean
+		rm -f libftprintf.a
 re:
-		make clean
-		make
+		make fclean
+		make test
