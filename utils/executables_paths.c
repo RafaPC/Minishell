@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 23:35:42 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 16:19:43 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/24 21:06:38 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,13 @@ char	*get_command_path(char **paths, char *command)
 ** Returns a strings array of the $PATH variable paths
 */
 
-char	**get_path(t_list *envp)
+char	**get_path(t_list *env_list)
 {
 	char	*path_value;
 	char	**path_splitted;
 
 	path_splitted = NULL;
-	path_value = get_env_var("PATH", envp);
+	path_value = get_env_var("PATH", env_list);
 	if (path_value)
 	{
 		path_splitted = ft_split(path_value, ':');

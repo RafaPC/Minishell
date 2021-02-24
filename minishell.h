@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 17:44:55 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/24 21:06:49 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct	s_split_commands
 int				execute_command(char **exec_paths, char *buffer);
 char			**get_command_directories(char **exec_paths, char *command);
 int				get_exec_paths_legnth(char **exec_paths);
-char			**get_path(t_list *envp);
+char			**get_path(t_list *env_list);
 /*
 **		READ INPUT
 */
@@ -82,6 +82,7 @@ void			handle_input_redirection(t_command_parsing *cmd_pars,
 t_list			*create_env_list(const char **envp);
 char			**env_list_to_array(t_list *envp);
 char			*get_env_var(char *var, t_list *envp);
+char			*get_command_path(char **paths, char *command);
 /*
 **		BUILTINS
 */

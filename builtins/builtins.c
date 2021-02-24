@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 17:13:34 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/24 21:20:00 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ t_bool	pwd(void)
 
 	cwd = getcwd(NULL, 0);
 	ft_putstr_fd(cwd, STDOUT_FILENO);
+	write(STDOUT_FILENO, "\n", 1);
 	free(cwd);
 	return (true);
 }

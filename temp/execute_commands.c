@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 17:44:55 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/24 21:11:15 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ t_bool is_builtin(char **command, char ***env_array, t_list *env_list)
 		result = unset(&env_list, &command[1]);
 	else if (!ft_strncmp(*command, "env", 4))
 		result = (env(env_list, &command[1]));
+	else if (!ft_strncmp(*command, "exit", 5))
+		ft_exit(&env_list); // ERROR liberar memoria y un monton de cosas
 	if (result == 2)
 	{
 		free(*env_array);
@@ -96,7 +98,13 @@ int command_execution(char **command, char ***env_array, t_list *env_list, int r
 		ft_printf("Error al forkear");
 	else if (pid == 0) // Hijo
 	{
-		execvp(command[0], command);
+		if ((command_path = get_command_path(get_path(env_list), command[0])) != NULL)
+		{
+			execve(command_path, command, *env_array);
+			free(command_path);
+		}
+		else
+			ft_printf("%s: command not found\n", command[0]);
 	}
 	else
 	{
