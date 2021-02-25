@@ -19,7 +19,7 @@ int main(int argc, char **argv, const char **env)
 			ft_putstr_fd("Minishell-> ", 1); //TODO change so it dynamically allocates things?
 			get_next_line(1, &buffer);
 			// buffer = ft_strdup("< hello echo");
-			split_commands(&buffer, &commands); // TODO Check return value to see if there was a parsing error.
+			split_commands(&buffer, &commands, env_list); // TODO Check return value to see if there was a parsing error.
  			if (commands->tokens[0] && !ft_strncmp(*(commands->tokens), "exit", 5)) //Change later on
  				break;
  			execute_commands(commands, &env_array, env_list);
@@ -43,7 +43,7 @@ int main(int argc, char **argv, const char **env)
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
 		env_list = create_env_list((const char **)get_false_env_array());
 		buffer = ft_strdup("echo -n hola");
-		split_commands(&buffer, &commands);
+		split_commands(&buffer, &commands, env_list);
 		env_array = env_list_to_array(env_list);
 		execute_commands(commands, &env_array, env_list);
 		// PARA VER COMO QUEDA LA LISTA DE COMMANDS

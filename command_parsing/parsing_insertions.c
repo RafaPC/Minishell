@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/10 21:00:18 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/25 22:36:45 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
 ** if no closing quotation is found. 
 */
 
-void	handle_double_quotations(char **input, t_command_parsing *cmd_pars)
+void	handle_double_quotations(char **input, t_command_parsing *cmd_pars, t_list *env_list)
 {
 	cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
 	while ((*input)[cmd_pars->i])
@@ -65,7 +65,7 @@ void	handle_double_quotations(char **input, t_command_parsing *cmd_pars)
 				cmd_pars->i++;
 		}
 		if ((*input)[cmd_pars->i] == '$')
-			cmd_pars->i = insert_variable(input, cmd_pars->i);
+			cmd_pars->i = insert_variable(input, cmd_pars->i, env_list);
 		if ((*input)[cmd_pars->i] == '\"')
 		{
 		cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
@@ -86,10 +86,10 @@ void	handle_double_quotations(char **input, t_command_parsing *cmd_pars)
 ** Consider removal if enough space in the father function.
 */
 
-void	handle_quotations(char **input, t_command_parsing *cmd_pars)
+void	handle_quotations(char **input, t_command_parsing *cmd_pars, t_list *env_list)
 {
 	if ((*input)[cmd_pars->i] == '\"')
-		handle_double_quotations(input, cmd_pars);
+		handle_double_quotations(input, cmd_pars, env_list);
 	else if ((*input)[cmd_pars->i] == '\'')
 		handle_single_quotations(input, cmd_pars);
 }
@@ -108,7 +108,7 @@ void	handle_quotations(char **input, t_command_parsing *cmd_pars)
 ** preceeding the insertion (or lack thereof);
 */
 
-int	insert_variable(char **input, int index) //Add t_list *envp_list
+int	insert_variable(char **input, int index, t_list *env_list) //Add t_list *envp_list
 {
 	int		j;
 	char	*aux;
@@ -117,11 +117,9 @@ int	insert_variable(char **input, int index) //Add t_list *envp_list
 	j = 1;
 	while (ft_isalnum((*input)[index + j]) || (*input)[index + j] == '_')
 		j++;
-	if (!(aux = malloc((j - 1) * sizeof(char)))) // TODO: check it works!
+	if (!(aux = ft_strncpy(&(*input)[index + 1], j)))
 		return (index);
-	ft_strlcpy(aux, &(*input)[index + 1], j - 1);
-	variable = ft_strdup("listen"); //remove
-	//variable = get_env_var(aux, envp_list); // Returns a string with the contents of the variable. If none is found, it returns a 0.
+	variable = get_env_var(aux, env_list);
 	index = ft_extract(input, index + j - 1, j);
 	if (variable)
 	{

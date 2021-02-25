@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/22 16:30:52 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/25 22:21:35 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void	add_command_argument(t_command_parsing *cmd_pars, char *input)
 ** NOTE: Assumes that *input is malloced.
 */
 
-int		split_commands(char **input, t_command **commands)
+int		split_commands(char **input, t_command **commands, t_list *env_list)
 {
 	t_command_parsing	cmd_pars;
 
@@ -135,13 +135,13 @@ int		split_commands(char **input, t_command **commands)
 		if (cmd_pars.error)
 			return (cmd_pars.error);
 		if ((*input)[cmd_pars.i] == '$')
-			insert_variable(input, cmd_pars.i);
+			insert_variable(input, cmd_pars.i, env_list);
 		else if ((*input)[cmd_pars.i] == '\"' || (*input)[cmd_pars.i] == '\'')
-			handle_quotations(input, &cmd_pars);
+			handle_quotations(input, &cmd_pars, env_list);
 		else if (((*input)[cmd_pars.i] == '<'))
-			handle_input_redirection(&cmd_pars, commands, input);
+			handle_input_redirection(&cmd_pars, commands, input, env_list);
 		else if ((*input)[cmd_pars.i] == '>')
-			handle_redirections_split(&cmd_pars, commands, input);
+			handle_redirections_split(&cmd_pars, commands, input, env_list);
 		else if (ft_isspace((*input)[cmd_pars.i]))
 			add_command_argument(&cmd_pars, *input);
 		else if (ft_strchr(";|", (*input)[cmd_pars.i]) || !(*input)[cmd_pars.i])
