@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/25 22:21:35 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/26 20:48:07 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	**load_command_args(t_command_parsing *cmd_pars, char *input)
 	char	**command;
 
 	argc = ft_lstsize(cmd_pars->arguments) + (cmd_pars->i > cmd_pars->j);
-	if (!(command = ft_alloc(argc, sizeof(char*))))
+	if (!(command = malloc((argc + 1) * sizeof(char*))))
 		return (0);
 	command[argc] = 0;
 	argc = 0;
@@ -48,8 +48,7 @@ char	**load_command_args(t_command_parsing *cmd_pars, char *input)
 	}
 	ft_lstclear(&cmd_pars->arguments, 0); //Use mine!
 	if (cmd_pars->i > cmd_pars->j)
-		command[argc] = ft_strncat_in(0, &input[cmd_pars->j],
-		cmd_pars->i - cmd_pars->j);
+		command[argc] = ft_strncpy(&input[cmd_pars->j], cmd_pars->i - cmd_pars->j);
 	return (command);
 }
 
@@ -144,7 +143,7 @@ int		split_commands(char **input, t_command **commands, t_list *env_list)
 			handle_redirections_split(&cmd_pars, commands, input, env_list);
 		else if (ft_isspace((*input)[cmd_pars.i]))
 			add_command_argument(&cmd_pars, *input);
-		else if (ft_strchr(";|", (*input)[cmd_pars.i]) || !(*input)[cmd_pars.i])
+		else if (ft_strchr(";|", (*input)[cmd_pars.i]))
 		{
 			if (command_split(&cmd_pars, commands, *input))
 				return (0);

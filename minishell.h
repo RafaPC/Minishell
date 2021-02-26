@@ -6,14 +6,14 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/25 22:21:12 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/26 21:27:59 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "libft/libft.h"
+# include "ft_printf/ft_printf.h"
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -61,7 +61,7 @@ char			**get_path(t_list *env_list);
 **		READ INPUT
 */
 void			tabs_to_spaces(char *string);
-void			read_input(char *buffer);
+void			read_input(char **buffer);
 void			empty_buffer(char *buffer);
 int				insert_variable(char **input, int index, t_list *env_list);
 int				split_commands(char **input, t_command	**commands, t_list *env_list);
@@ -75,6 +75,7 @@ void			handle_redirections_split(t_command_parsing *cmd_pars,
 					t_command **commands, char **input, t_list *env_list);
 void			handle_input_redirection(t_command_parsing *cmd_pars,
 				t_command **commands, char **input, t_list *env_list);
+int				print_parsing_error(int return_value);
 
 /*
 **		MINISHELL UTILS
@@ -83,6 +84,7 @@ t_list			*create_env_list(const char **envp);
 char			**env_list_to_array(t_list *envp);
 char			*get_env_var(char *var, t_list *envp);
 char			*get_command_path(char **paths, char *command);
+void			free_commands(t_command *commands);
 /*
 **		BUILTINS
 */

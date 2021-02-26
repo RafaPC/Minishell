@@ -4,6 +4,7 @@ NAME = minishell.out
 INCLUDES = -Ilibft/ -Ift_printf/ -I.
 SRCS =	utils/executables_paths.c				\
 		utils/read_input.c						\
+		utils/memory_handling.c					\
 		utils/minishell_utils.c					\
 		builtins/builtins.c						\
 		builtins/export.c						\
@@ -11,6 +12,7 @@ SRCS =	utils/executables_paths.c				\
 		command_parsing/command_split.c			\
 		command_parsing/parsing_insertions.c	\
 		command_parsing/split_commands.c		\
+		command_parsing/print_parsing_error.c	\
 		temp/execute_commands.c
 
 LIBFTPRINTF_A = libftprintf.a

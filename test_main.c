@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test_main.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
+/*   Updated: 2021/02/26 21:03:36 by aiglesia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 #include "minishell.h"
 #include <stdio.h>
@@ -9,7 +21,6 @@ int main(int argc, char **argv, const char **env)
 	t_command	*commands;
 	char		**env_array;
 
-	commands = NULL;
 	if (argc == 1) // AQUÍ ENTRA SI LO EJECUTAS NORMAL, SE QUEDA EN BUCLE Y PUEDES METER COMANDOS
 	{
 		env_list = create_env_list(env);
@@ -18,34 +29,37 @@ int main(int argc, char **argv, const char **env)
 		{
 			ft_putstr_fd("Minishell-> ", 1); //TODO change so it dynamically allocates things?
 			get_next_line(1, &buffer);
-			// buffer = ft_strdup("< hello echo");
-			split_commands(&buffer, &commands, env_list); // TODO Check return value to see if there was a parsing error.
- 			if (commands->tokens[0] && !ft_strncmp(*(commands->tokens), "exit", 5)) //Change later on
- 				break;
- 			execute_commands(commands, &env_array, env_list);
-			// for (t_command *temp = commands; temp; temp = temp->next)
-			// {
-			// 	command_reader = temp->tokens;
- 			// 	printf("Comando: %s - Relacion: %i\n", *command_reader, temp->relation);
-			// 	if (*(command_reader + 1))
-			// 	{
-			// 		printf("%2sArgumentos:\n", "");
-			// 		while (*(++command_reader))
-			// 			printf("%15s%s\n", "", *command_reader);
-			// 	}
-			// 	printf("\n");
-			// }
-			
+			if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
+			{
+				if (commands->tokens[0] && !ft_strncmp(*(commands->tokens), "exit", 5)) //Change later on
+					break;
+				execute_commands(commands, &env_array, env_list);
+			}
+			free_commands(commands);
+			commands = NULL;
 			free(buffer);
 		}
+		free_commands(commands);
+		ft_lstclear(&env_list, free);
+		free(buffer);
+		ft_array_clear(env_array, free);
 	}
 	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
 		env_list = create_env_list((const char **)get_false_env_array());
-		buffer = ft_strdup("echo -n hola");
+		env_array = env_list_to_array(env_list);
+		buffer = ft_strdup("clear");
+		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
+			execute_commands(commands, &env_array, env_list);
+		free_commands(commands);
+		free(buffer);
+		buffer = ft_strdup("echo hello");
 		split_commands(&buffer, &commands, env_list);
 		env_array = env_list_to_array(env_list);
 		execute_commands(commands, &env_array, env_list);
+		free_commands(commands); // CHange with function!
+		ft_lstclear(&env_list, free);
+		free(buffer);
 		// PARA VER COMO QUEDA LA LISTA DE COMMANDS
 		// for (t_command *aux = commands; aux; aux = aux->next)
 		// {

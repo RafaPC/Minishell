@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/25 22:19:57 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/26 21:31:56 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,15 @@ t_command **commands, char **input, t_list *env_list)
 
 	counter = 1;
 	counter_aux = 0;
+	error = 0;
 	while ((*input)[cmd_pars->i + counter] == '>')
 		counter++;
 	while (ft_isspace((*input)[cmd_pars->i + counter + counter_aux]))
 		counter_aux++;
-	error = (!(*input)[cmd_pars->i + counter + counter_aux] ||
-	counter > 2) ? 1 : 0;
+	if (counter > 3)
+		error = 1;
+	else if (ft_strrchr(";<>|", (*input)[cmd_pars->i + counter + counter_aux]))
+		error = 1;
 	if (error)
 	{
 		ft_lstclear(&cmd_pars->arguments, free);
@@ -145,13 +148,10 @@ t_command **commands, char **input, t_list *env_list)
 	char	**command;
 
 	counter_aux = 0;
-	if (ft_isspace((*input)[cmd_pars->i + 1]))
-	{
 	while (ft_isspace((*input)[cmd_pars->i + 1 + counter_aux]))
 		counter_aux++;
-	error = (!(*input)[cmd_pars->i + 1 + counter_aux]) ? 1 : 0;
-	}
-	else
+	error = 0;
+	if (ft_strrchr(";<>|", (*input)[cmd_pars->i + 1 + counter_aux]))
 		error = 1;
 	if (error)
 	{
