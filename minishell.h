@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/27 11:54:44 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 20:06:38 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,13 @@ char			*get_env_var(char *var, t_list *envp);
 char			*get_command_path(char **paths, char *command);
 t_command		*del_command(t_command *command);
 t_command		*free_commands(t_command *commands);
+t_bool			handle_errors(t_command **command);
 /*
 **		BUILTINS
 */
-t_bool	env(t_list *envp, char **args);
+t_bool			env(t_list *envp, char **args);
 t_bool			echo(char **args);
-void			ft_exit(t_list **envp);
+void			ft_exit(t_command *commands, t_list **env_list, char **env_array);
 t_bool			pwd(void);
 t_bool			cd(char **args);
 /*

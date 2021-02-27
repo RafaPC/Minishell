@@ -3,6 +3,7 @@ NAME = minishell.out
 # HEADER FILES DIRECTORIES
 INCLUDES = -Ilibft/ -Ift_printf/ -I.
 SRCS =	utils/executables_paths.c				\
+		utils/handle_error.c					\
 		utils/memory_handling.c					\
 		utils/minishell_utils.c					\
 		builtins/builtins.c						\

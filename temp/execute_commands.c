@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/27 12:16:16 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 20:17:25 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,27 +49,27 @@ int get_input_and_output(char *file, int mode)
 ** Executes the builtin command if found and return either 1 or errnum;
 */
 
-t_bool is_builtin(char **command, char ***env_array, t_list *env_list)
+t_bool is_builtin(t_command *command, char ***env_array, t_list *env_list)
 {
 	int	result;
 
 	result = -1;
-	if (!command[0])
+	if (!command->tokens[0])
 		result = true;
-	else if (!ft_strncmp(*command, "echo", 5))
-		result = (echo(&command[1]));
-	else if (!ft_strncmp(*command, "cd", 3))
-		result = (cd(&command[1]));
-	else if (!ft_strncmp(*command, "pwd", 4))
+	else if (!ft_strncmp(command->tokens[0], "echo", 5))
+		result = (echo(&command->tokens[1]));
+	else if (!ft_strncmp(command->tokens[0], "cd", 3))
+		result = (cd(&command->tokens[1]));
+	else if (!ft_strncmp(command->tokens[0], "pwd", 4))
 		result = (pwd());
-	else if (!ft_strncmp(*command, "export", 7))
-		result = export(&env_list, &command[1]);
-	else if (!ft_strncmp(*command, "unset", 6))
-		result = unset(&env_list, &command[1]);
-	else if (!ft_strncmp(*command, "env", 4))
-		result = (env(env_list, &command[1]));
-	else if (!ft_strncmp(*command, "exit", 5))
-		ft_exit(&env_list); // ERROR liberar memoria y un monton de cosas
+	else if (!ft_strncmp(command->tokens[0], "export", 7))
+		result = export(&env_list, &command->tokens[1]);
+	else if (!ft_strncmp(command->tokens[0], "unset", 6))
+		result = unset(&env_list, &command->tokens[1]);
+	else if (!ft_strncmp(command->tokens[0], "env", 4))
+		result = (env(env_list, &command->tokens[1]));
+	else if (!ft_strncmp(command->tokens[0], "exit", 5))
+		ft_exit(command, &env_list, *env_array); // ERROR liberar memoria y un monton de cosas
 	if (result == 2)
 	{
 		free(*env_array);
@@ -85,7 +85,7 @@ t_bool is_builtin(char **command, char ***env_array, t_list *env_list)
 **			si tiene una / pero no en el primer carácter, concatenarlo al directorio actual y checkear si existe el archivo
 */
 
-int command_execution(char **command, char ***env_array, t_list *env_list, int relation)
+int command_execution(t_command *command, char ***env_array, t_list *env_list, int relation)
 {
 	int		pid;
 	int		wstatus;
@@ -98,13 +98,13 @@ int command_execution(char **command, char ***env_array, t_list *env_list, int r
 		ft_printf("Error al forkear");
 	else if (pid == 0) // Hijo
 	{
-		if ((command_path = get_command_path(get_path(env_list), command[0])) != NULL)
+		if ((command_path = get_command_path(get_path(env_list), command->tokens[0])) != NULL)
 		{
-			execve(command_path, command, *env_array);
+			execve(command_path, command->tokens, *env_array);
 			free(command_path);
 		}
 		else
-			ft_printf("%s: command not found\n", command[0]);
+			ft_printf("%s: command not found\n", command->tokens[0]);
 	}
 	else
 	{
@@ -142,7 +142,7 @@ t_command	*execute_commands(t_command *commands, char ***env_array, t_list *env_
 		{
 			pipe(fdpipe);
 			dup2(fdpipe[1], STDOUT_FILENO);
-			command_execution(commands->tokens, env_array, env_list,
+			command_execution(commands, env_array, env_list,
 				commands->relation);
 			dup2(fdpipe[0], STDIN_FILENO);
 			close(fdpipe[0]);
@@ -150,7 +150,7 @@ t_command	*execute_commands(t_command *commands, char ***env_array, t_list *env_
 		}
 		commands = del_command(commands);
 	}
-	command_execution(commands->tokens, env_array, env_list, commands->relation);
+	command_execution(commands, env_array, env_list, commands->relation);
 	dup2(stdin_copy, STDIN_FILENO); //Mover a una función aparte;
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);

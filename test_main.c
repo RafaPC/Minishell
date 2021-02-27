@@ -6,14 +6,13 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 12:24:11 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 20:28:41 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 #include <stdio.h>
-#include <string.h>
 
 int main(int argc, char **argv, const char **env)
 {
@@ -32,24 +31,15 @@ int main(int argc, char **argv, const char **env)
 			read_input(&buffer);
 			if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
 			{
-				if (commands->tokens[0] && !ft_strncmp(*(commands->tokens), "exit", 5)) //Change later on
-					break;
 				while (commands)
 				{
 					errno = 0;
 					commands = execute_commands(commands, &env_array, env_list);
-					if (errno) //Make it its own function; Do all the checks!
-					{
-						ft_printf("%s: %s\n", strerror(errno), commands->tokens[0]);
-						commands = del_command(commands);
-						return(0); //Clean memory function?
-					}
+						if (handle_errors(&commands))
+							break ; 
 				}
 			}
 		}
-		free_commands(commands);
-		ft_lstclear(&env_list, free);
-		free(env_array);
 	}
 	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
@@ -59,7 +49,10 @@ int main(int argc, char **argv, const char **env)
 		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
 			while (commands)
 			{
-				execute_commands(commands, &env_array, env_list);
+				errno = 0;
+				commands = execute_commands(commands, &env_array, env_list);
+				if (handle_errors(&commands))
+					break ; 
 			}
 		free_commands(commands);
 		free(buffer);

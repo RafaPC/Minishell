@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 21:20:00 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/27 20:05:20 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "ft_printf.h"
+#include "minishell.h"
 
 /*
 ** Prints all the environment variables with values
@@ -47,9 +46,11 @@ t_bool	env(t_list *envp, char **args)
 ** Frees the t_list* list of environment variables elements
 */
 
-void	ft_exit(t_list **envp)
+void	ft_exit(t_command *commands, t_list **env_list, char **env_array)
 {
-	ft_lstclear(envp, free);
+	free_commands(commands);
+	ft_lstclear(env_list, free);
+	free(env_array);
 	exit(0);
 }
 
