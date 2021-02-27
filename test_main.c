@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 01:40:29 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 11:14:54 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv, const char **env)
 		env_array = env_list_to_array(env_list);
 		while (true)
 		{
-			ft_putstr_fd("Minishell-> ", 1); //TODO change so it dynamically allocates things?
+			ft_putstr_fd("Minishell-> ", 1);
 			read_input(&buffer);
 			if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
 			{
@@ -41,7 +41,6 @@ int main(int argc, char **argv, const char **env)
 		}
 		free_commands(commands);
 		ft_lstclear(&env_list, free);
-		free(buffer);
 		ft_array_clear((void*)env_array, free);
 	}
 	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA

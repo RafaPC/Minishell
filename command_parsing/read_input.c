@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 21:07:22 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 01:57:47 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 10:52:31 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	read_input(char **line)
 	char	*aux;
 
 	i = 0;
+	*line = NULL;
 	rd_buffer[1] = 0;
-	*line = 0;
 	buffer[BUFFER_SIZE] = 0;
 	while (read(STDIN_FILENO, rd_buffer, 1))
 	{
@@ -30,6 +30,7 @@ void	read_input(char **line)
 		if (i == BUFFER_SIZE)
 		{
 			aux = *line;
+			buffer[BUFFER_SIZE] = 0;
 			*line = ft_strncat_in(*line, (char *)&buffer, BUFFER_SIZE);
 			free (aux);
 			i = 0;
@@ -37,5 +38,6 @@ void	read_input(char **line)
 		buffer[i] = rd_buffer[0];
 		i++;
 	}
+	buffer[i] = 0;
 	*line = ft_strncat_in(*line, buffer, i);
 }
