@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 11:14:54 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 11:29:05 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,10 @@ int main(int argc, char **argv, const char **env)
 			}
 			free_commands(commands);
 			commands = NULL;
-			free(buffer);
 		}
 		free_commands(commands);
 		ft_lstclear(&env_list, free);
-		ft_array_clear((void*)env_array, free);
+		free(env_array);
 	}
 	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO

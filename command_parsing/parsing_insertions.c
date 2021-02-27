@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/25 22:36:45 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 11:26:17 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,10 +122,7 @@ int	insert_variable(char **input, int index, t_list *env_list) //Add t_list *env
 	variable = get_env_var(aux, env_list);
 	index = ft_extract(input, index + j - 1, j);
 	if (variable)
-	{
 		index = ft_insert(input, variable, index, ft_strlen(variable));
-		free(variable);
-	}
 	free(aux);
 	return (index);
 	

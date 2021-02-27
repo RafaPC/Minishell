@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 12:23:34 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 17:44:55 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/27 11:25:49 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*get_env_var(char *var, t_list *env_list)
 		if (!ft_strncmp(content, var_equal, var_length))
 		{
 			free(var_equal);
-			return (ft_strdup(content + var_length));
+			return ((char *)(content + var_length));
 		}
 		env_list = env_list->next;
 	}
