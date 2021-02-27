@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 21:11:15 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/27 12:16:16 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int command_execution(char **command, char ***env_array, t_list *env_list, int r
 	}
 }
 
-void	execute_commands(t_command *commands, char ***env_array, t_list *env_list)
+t_command	*execute_commands(t_command *commands, char ***env_array, t_list *env_list)
 {
 	int			stdin_copy;
 	int			stdout_copy;
@@ -137,10 +137,8 @@ void	execute_commands(t_command *commands, char ***env_array, t_list *env_list)
 	while (commands->relation != simple_command)
 	{
 		if (!get_input_and_output(commands->tokens[0], commands->relation))
-		{
-			//Error al abrir algun fichero
-		}
-		else if (commands->relation == pipe_redirection)
+			return(commands);
+		else if (commands->relation == pipe_redirection) //Mover a una función aparte
 		{
 			pipe(fdpipe);
 			dup2(fdpipe[1], STDOUT_FILENO);
@@ -150,11 +148,12 @@ void	execute_commands(t_command *commands, char ***env_array, t_list *env_list)
 			close(fdpipe[0]);
 			close(fdpipe[1]);
 		}
-		commands = commands->next;
+		commands = del_command(commands);
 	}
 	command_execution(commands->tokens, env_array, env_list, commands->relation);
-	dup2(stdin_copy, STDIN_FILENO);
+	dup2(stdin_copy, STDIN_FILENO); //Mover a una función aparte;
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);
 	close(stdout_copy);
+	return (del_command(commands));
 }

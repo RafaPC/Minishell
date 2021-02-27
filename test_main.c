@@ -6,13 +6,14 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 11:29:05 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 12:24:11 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 #include <stdio.h>
+#include <string.h>
 
 int main(int argc, char **argv, const char **env)
 {
@@ -33,10 +34,18 @@ int main(int argc, char **argv, const char **env)
 			{
 				if (commands->tokens[0] && !ft_strncmp(*(commands->tokens), "exit", 5)) //Change later on
 					break;
-				execute_commands(commands, &env_array, env_list);
+				while (commands)
+				{
+					errno = 0;
+					commands = execute_commands(commands, &env_array, env_list);
+					if (errno) //Make it its own function; Do all the checks!
+					{
+						ft_printf("%s: %s\n", strerror(errno), commands->tokens[0]);
+						commands = del_command(commands);
+						return(0); //Clean memory function?
+					}
+				}
 			}
-			free_commands(commands);
-			commands = NULL;
 		}
 		free_commands(commands);
 		ft_lstclear(&env_list, free);
@@ -46,17 +55,13 @@ int main(int argc, char **argv, const char **env)
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
 		env_list = create_env_list((const char **)get_false_env_array());
 		env_array = env_list_to_array(env_list);
-		buffer = ft_strdup("clear");
-		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
-			execute_commands(commands, &env_array, env_list);
-		free_commands(commands);
-		free(buffer);
 		buffer = ft_strdup("echo hello");
-		split_commands(&buffer, &commands, env_list);
-		env_array = env_list_to_array(env_list);
-		execute_commands(commands, &env_array, env_list);
-		free_commands(commands); // CHange with function!
-		ft_lstclear(&env_list, free);
+		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
+			while (commands)
+			{
+				execute_commands(commands, &env_array, env_list);
+			}
+		free_commands(commands);
 		free(buffer);
 		// PARA VER COMO QUEDA LA LISTA DE COMMANDS
 		// for (t_command *aux = commands; aux; aux = aux->next)

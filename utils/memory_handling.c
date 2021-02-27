@@ -6,21 +6,28 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:33:45 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/26 21:03:53 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 11:58:12 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_commands(t_command *commands)
+t_command *del_command(t_command *command)
+{
+	t_command *aux;
+
+	aux = command;
+	ft_array_clear((void *)command->tokens, free);
+	command = command->next;
+	free(aux);
+	return (command);
+}
+
+t_command	*free_commands(t_command *commands)
 {
 	t_command *aux;
 
 	while (commands)
-	{
-		aux = commands;
-		ft_array_clear((void *)commands->tokens, free);
-		commands = commands->next;
-		free(aux);
-	}
+		commands = del_command(commands);
+	return (NULL);
 }

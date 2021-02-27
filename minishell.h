@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/26 21:27:59 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 11:54:44 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,8 @@ t_list			*create_env_list(const char **envp);
 char			**env_list_to_array(t_list *envp);
 char			*get_env_var(char *var, t_list *envp);
 char			*get_command_path(char **paths, char *command);
-void			free_commands(t_command *commands);
+t_command		*del_command(t_command *command);
+t_command		*free_commands(t_command *commands);
 /*
 **		BUILTINS
 */
@@ -110,5 +111,5 @@ char *var_name, int compare_length);
 ** TEMPORARY
 */
 char			**get_false_env_array(void);
-void			execute_commands(t_command *commands, char ***env_array, t_list *env_list);
+t_command		*execute_commands(t_command *commands, char ***env_array, t_list *env_list);
 #endif
