@@ -6,38 +6,34 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 21:07:22 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/26 21:29:00 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 01:41:35 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void read_input(char **line)
+void	read_input(char **line)
 {
-	char buffer[BUFFER_SIZE + 2];
-	t_bool line_jump;
-	line_jump = 0;
-	int i;
-	
-	i = 2;
-	buffer[BUFFER_SIZE + 1] = 0;
-	while (line_jump)
+	char	buffer[BUFFER_SIZE + 1];
+	char	rd_buffer[2];
+	int		i;
+	int		bytes_read;
+
+	i = 0;
+	rd_buffer[1] = 0;
+	*line = 0;
+	buffer[BUFFER_SIZE] = 0;
+	while ((bytes_read = read(STDIN_FILENO, rd_buffer, 1)))
 	{
-		if (!read(STDIN_FILENO, buffer, 1))
+		if (rd_buffer[0] == '\n')
 			break ;
-		if (buffer[0] == '\n')
+		if (i == BUFFER_SIZE)
 		{
-			line_jump = true;
-			break ;
+			*line = ft_strncat_in(*line, (char *)&buffer, BUFFER_SIZE);
+			i = 0;
 		}
-		if (i == BUFFER_SIZE + 2)
-		{
-			*line = ft_strncat_in(*line, &buffer[2], BUFFER_SIZE);
-			ft_memset(&buffer[2], 0, BUFFER_SIZE);
-		}
-		buffer[i] = buffer[0];
+		buffer[i] = rd_buffer[0];
 		i++;
 	}
-	if(!line_jump)
-		*line = ft_strncat_in(*line, &buffer[2], BUFFER_SIZE);
+	*line = ft_strncat_in(*line, buffer, i);
 }

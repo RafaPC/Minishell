@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/26 21:03:36 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/27 01:40:29 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int main(int argc, char **argv, const char **env)
 		while (true)
 		{
 			ft_putstr_fd("Minishell-> ", 1); //TODO change so it dynamically allocates things?
-			get_next_line(1, &buffer);
+			read_input(&buffer);
 			if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
 			{
 				if (commands->tokens[0] && !ft_strncmp(*(commands->tokens), "exit", 5)) //Change later on
@@ -42,7 +42,7 @@ int main(int argc, char **argv, const char **env)
 		free_commands(commands);
 		ft_lstclear(&env_list, free);
 		free(buffer);
-		ft_array_clear(env_array, free);
+		ft_array_clear((void*)env_array, free);
 	}
 	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
