@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/27 20:17:25 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/28 11:22:54 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int get_input_and_output(char *file, int mode)
 ** Executes the builtin command if found and return either 1 or errnum;
 */
 
-t_bool is_builtin(t_command *command, char ***env_array, t_list *env_list)
+int is_builtin(t_command *command, char ***env_array, t_list *env_list)
 {
 	int	result;
 
@@ -85,7 +85,7 @@ t_bool is_builtin(t_command *command, char ***env_array, t_list *env_list)
 **			si tiene una / pero no en el primer carácter, concatenarlo al directorio actual y checkear si existe el archivo
 */
 
-int command_execution(t_command *command, char ***env_array, t_list *env_list, int relation)
+void command_execution(t_command *command, char ***env_array, t_list *env_list)
 {
 	int		pid;
 	int		wstatus;
@@ -130,7 +130,6 @@ t_command	*execute_commands(t_command *commands, char ***env_array, t_list *env_
 	int			stdin_copy;
 	int			stdout_copy;
 	int			fdpipe[2];
-	int			pid;
 	
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
@@ -142,15 +141,14 @@ t_command	*execute_commands(t_command *commands, char ***env_array, t_list *env_
 		{
 			pipe(fdpipe);
 			dup2(fdpipe[1], STDOUT_FILENO);
-			command_execution(commands, env_array, env_list,
-				commands->relation);
+			command_execution(commands, env_array, env_list);
 			dup2(fdpipe[0], STDIN_FILENO);
 			close(fdpipe[0]);
 			close(fdpipe[1]);
 		}
 		commands = del_command(commands);
 	}
-	command_execution(commands, env_array, env_list, commands->relation);
+	command_execution(commands, env_array, env_list);
 	dup2(stdin_copy, STDIN_FILENO); //Mover a una función aparte;
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 14:39:56 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 16:39:06 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/28 11:17:55 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ t_bool	unset(t_list **env_list, char **args)
 		}
 		args++;
 	}
+	return (true);
 }
 
 /*

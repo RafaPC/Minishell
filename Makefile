@@ -18,7 +18,7 @@ SRCS =	utils/executables_paths.c				\
 
 LIBFTPRINTF_A = libftprintf.a
 # COMPILER FLAGS
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 
 all: ${NAME}
 
@@ -26,7 +26,7 @@ ${NAME}: main.c ${SRCS} ${LIBFTPRINTF_A}
 			gcc ${INCLUDES} main.c ${SRCS} ${LIBFTPRINTF_A} -o ${NAME}
 
 test: test_main.c ${SRCS} ${LIBFTPRINTF_A}
-			gcc ${INCLUDES} test_main.c ${SRCS} ${LIBFTPRINTF_A} -o minishell_test.out
+			gcc ${INCLUDES} ${FLAGS} test_main.c ${SRCS} ${LIBFTPRINTF_A} -o minishell_test.out
 
 ${LIBFTPRINTF_A}:
 		make -C ft_printf

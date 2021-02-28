@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executables_paths.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 23:35:42 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 21:06:38 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/28 10:38:17 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,6 @@ char	**get_path(t_list *env_list)
 	path_splitted = NULL;
 	path_value = get_env_var("PATH", env_list);
 	if (path_value)
-	{
 		path_splitted = ft_split(path_value, ':');
-		free(path_value);
-	}
 	return (path_splitted);
 }

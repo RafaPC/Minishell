@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/27 20:05:20 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/28 11:12:43 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 
 t_bool	env(t_list *envp, char **args)
 {
-	char	*check;
 	char	*content;
 
 	if (*args)

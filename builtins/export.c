@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 20:54:28 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/24 17:42:06 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/02/28 11:20:50 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,12 @@ t_bool	valid_env_characters(char *var_name)
 t_bool	export_variable(t_list **env_list, char *arg)
 {
 	t_list	*aux;
-	char	*string;
 
 	aux = *env_list;
 	while (aux)
 	{
 		if (!ft_strncmp(arg, (char*)aux->content, (ft_strchr(arg, '='))
-			? ft_get_index_of(arg, '=') : ft_strlen(arg)))
+			? ft_get_index_of(arg, '=') : (int)ft_strlen(arg)))
 		{
 			free(aux->content);
 			if ((aux->content = ft_strdup(arg)) == NULL) //ERROR de malloc
@@ -79,14 +78,12 @@ t_bool	export_variable(t_list **env_list, char *arg)
 
 int		export(t_list **env, char **args)
 {
-	t_list	*aux;
 	char	*str_aux;
 
 	if (*args == NULL || **args == '\0')
 		return (export_print(*env));
 	while (*args)
 	{
-		aux = *env;
 		str_aux = ((ft_strchr(*args, '='))
 		? ft_strncpy(*args, ft_get_index_of(*args, '=') - 1)
 		: ft_strdup(*args));

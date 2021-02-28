@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:33:45 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 11:58:12 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/02/28 11:12:32 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ t_command *del_command(t_command *command)
 
 t_command	*free_commands(t_command *commands)
 {
-	t_command *aux;
-
 	while (commands)
 		commands = del_command(commands);
 	return (NULL);
