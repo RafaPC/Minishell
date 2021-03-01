@@ -13,14 +13,14 @@
 #include "minishell.h"
 #include <string.h>
 
-t_bool	handle_errors(t_command **command)
+t_command	*handle_errors(t_command *command)
 {
-	if (errno == 0)
-		return (false);
-	else if (errno == 2)
-		ft_printf("%s: %s\n", strerror(errno), command[0]->tokens[0]);	
+	if (errno == 2)
+		ft_printf("%s: %s\n", strerror(errno), command->tokens[0]);	
 	else
 		ft_printf("%s", strerror(errno));	
-	//Move command structure;
-	return (true);
+	while (command->relation != simple_command)
+		command = del_command(command);
+	command = del_command(command);
+	return (command);
 }

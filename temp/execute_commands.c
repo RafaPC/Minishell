@@ -125,33 +125,47 @@ void command_execution(t_command *command, char ***env_array, t_list *env_list)
 	}
 }
 
+t_command *set_fd(t_command *commands, char***env_array, t_list *env_list)
+{
+	int			fdpipe[2];
+
+	while (commands->relation != simple_command)
+	{
+		if (!get_input_and_output(commands->tokens[0], commands->relation))
+			break ;
+		else if (commands->relation == pipe_redirection) //Mover a una función aparte
+		{
+			if (pipe(fdpipe) == -1)
+				break ;
+			if (dup2(fdpipe[1], STDOUT_FILENO) == -1)
+				break ;
+			command_execution(commands, env_array, env_list);
+			if (errno)
+				break ;
+			if (dup2(fdpipe[0], STDIN_FILENO) == -1)
+				break ;
+			close(fdpipe[0]);
+			close(fdpipe[1]);
+		}
+			commands = del_command(commands);
+	}
+	return (commands);
+}
+
 t_command	*execute_commands(t_command *commands, char ***env_array, t_list *env_list)
 {
 	int			stdin_copy;
 	int			stdout_copy;
-	int			fdpipe[2];
 	
+	errno = 0;
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
-	while (commands->relation != simple_command)
-	{
-		if (!get_input_and_output(commands->tokens[0], commands->relation))
-			return(commands);
-		else if (commands->relation == pipe_redirection) //Mover a una función aparte
-		{
-			pipe(fdpipe);
-			dup2(fdpipe[1], STDOUT_FILENO);
-			command_execution(commands, env_array, env_list);
-			dup2(fdpipe[0], STDIN_FILENO);
-			close(fdpipe[0]);
-			close(fdpipe[1]);
-		}
-		commands = del_command(commands);
-	}
-	command_execution(commands, env_array, env_list);
-	dup2(stdin_copy, STDIN_FILENO); //Mover a una función aparte;
+	commands = set_fd(commands, env_array, env_list);
+	if (!errno)
+		command_execution(commands, env_array, env_list);
+	dup2(stdin_copy, STDIN_FILENO);
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);
 	close(stdout_copy);
-	return (del_command(commands));
+	return (errno ? handle_errors(commands) : del_command(commands));
 }

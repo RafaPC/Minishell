@@ -86,7 +86,7 @@ char			*get_env_var(char *var, t_list *envp);
 char			*get_command_path(char **paths, char *command);
 t_command		*del_command(t_command *command);
 t_command		*free_commands(t_command *commands);
-t_bool			handle_errors(t_command **command);
+t_command		*handle_errors(t_command *command);
 /*
 **		BUILTINS
 */
