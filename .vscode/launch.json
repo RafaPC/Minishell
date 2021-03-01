@@ -8,13 +8,14 @@
 			"name": "debug minishell",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "/home/user42/Desktop/minishell/debug.out",
+			"program": "/home/a/Desktop/minishell/debug.out",
 			"args": ["para_que_entre_en_el_else"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
 			"externalConsole": false,
-			"MIMode": "lldb",
+			"MIMode": "gdb",
+			"miDebuggerPath": "/usr/bin/gdb",
 			"preLaunchTask": "debug minishell"
 		}
 	]

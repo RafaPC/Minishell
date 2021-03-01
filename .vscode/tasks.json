@@ -6,18 +6,18 @@
             "command": "/usr/bin/gcc",
             "args": [
                 "-g",
-                "-I/home/user42/Desktop/minishell/libft/",
-                "-I/home/user42/Desktop/minishell/ft_printf/",
-                "-I/home/user42/Desktop/minishell/",
-                "/home/user42/Desktop/minishell/ft_printf/*.c",
-                "/home/user42/Desktop/minishell/libft/*.c",
-                "/home/user42/Desktop/minishell/test_main.c",
-                "/home/user42/Desktop/minishell/utils/*.c",
-                "/home/user42/Desktop/minishell/builtins/*.c",
-                "/home/user42/Desktop/minishell/command_parsing/*.c",
-                "/home/user42/Desktop/minishell/temp/execute_commands.c",
+                "-I/home/$USER/Desktop/minishell/libft/",
+                "-I/home/$USER/Desktop/minishell/ft_printf/",
+                "-I/home/$USER/Desktop/minishell/",
+                "/home/$USER/Desktop/minishell/ft_printf/*.c",
+                "/home/$USER/Desktop/minishell/libft/*.c",
+                "/home/$USER/Desktop/minishell/test_main.c",
+                "/home/$USER/Desktop/minishell/utils/*.c",
+                "/home/$USER/Desktop/minishell/builtins/*.c",
+                "/home/$USER/Desktop/minishell/command_parsing/*.c",
+                "/home/$USER/Desktop/minishell/temp/execute_commands.c",
                 "-o",
-                "/home/user42/Desktop/minishell/debug.out"
+                "/home/$USER/Desktop/minishell/debug.out"
             ],
             "options": {
                 "cwd": "/usr/bin"
@@ -29,11 +29,11 @@
             "command": "/usr/bin/gcc",
             "args": [
                 "-g",
-                "-I/home/user42/Desktop/minishell/libft/",
-                "/home/user42/Desktop/minishell/libft/*.c",
-                "/home/user42/Desktop/minishell/command_test.c",
+                "-I/home/$USER/Desktop/minishell/libft/",
+                "/home/$USER/Desktop/minishell/libft/*.c",
+                "/home/$USER/Desktop/minishell/command_test.c",
                 "-o",
-                "/home/user42/Desktop/minishell/command_test.out"
+                "/home/$USER/Desktop/minishell/command_test.out"
             ],
             "options": {
                 "cwd": "/usr/bin"
