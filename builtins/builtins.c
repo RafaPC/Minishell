@@ -111,10 +111,7 @@ t_bool	cd(char **args)
 	else if (args[0])
 	{
 		if (chdir(args[0]) == -1)
-		{
-			//TODO: coger el errno y eso
 			return (false);
-		}
 	}
 	return (true);
 }

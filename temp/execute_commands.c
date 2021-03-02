@@ -102,13 +102,16 @@ void command_execution(t_command *command, char ***env_array, t_list *env_list)
 		{
 			execve(command_path, command->tokens, *env_array);
 			free(command_path);
-			ft_lstclear(&env_list, free);
-			ft_array_clear((void *)*env_array, free);
-			free_commands(command);
-			exit(0);
 		}
 		else
+		{
+			errno = 0;
 			ft_printf("%s: command not found\n", command->tokens[0]);
+		}
+		ft_lstclear(&env_list, free);
+		free(*env_array);
+		free_commands(command);
+		exit(0);
 	}
 	else
 	{
