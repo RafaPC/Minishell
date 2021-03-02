@@ -127,7 +127,7 @@ int		split_commands(char **input, t_command **commands, t_list *env_list)
 {
 	t_command_parsing	cmd_pars;
 
-	*commands = 0;
+	*commands = NULL;
 	ft_memset(&cmd_pars, 0, sizeof(cmd_pars));
 	while (1)
 	{

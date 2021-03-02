@@ -22,7 +22,6 @@ void	read_input(char **line)
 	i = 0;
 	*line = NULL;
 	rd_buffer[1] = 0;
-	buffer[BUFFER_SIZE] = 0;
 	while (read(STDIN_FILENO, rd_buffer, 1))
 	{
 		if (rd_buffer[0] == '\n')
@@ -39,5 +38,8 @@ void	read_input(char **line)
 		i++;
 	}
 	buffer[i] = 0;
+    aux = *line;
 	*line = ft_strncat_in(*line, buffer, i);
+    if (aux)
+        free (aux);
 }
