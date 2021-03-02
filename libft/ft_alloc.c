@@ -19,10 +19,10 @@
 
 void	*ft_alloc(size_t count, size_t size)
 {
-	char	*array;
+	void	*array;
 
-	if (!(array = malloc(1 + count * size)))
+	if (!(array = malloc(count * size + size)))
 		return (NULL);
-	array[count * size] = 0;
+	ft_bzero(array + count * size, size);
 	return ((void*)array);
 }
