@@ -102,6 +102,10 @@ void command_execution(t_command *command, char ***env_array, t_list *env_list)
 		{
 			execve(command_path, command->tokens, *env_array);
 			free(command_path);
+			ft_lstclear(&env_list, free);
+			ft_array_clear((void *)*env_array, free);
+			free_commands(command);
+			exit(0);
 		}
 		else
 			ft_printf("%s: command not found\n", command->tokens[0]);
@@ -128,6 +132,7 @@ void command_execution(t_command *command, char ***env_array, t_list *env_list)
 t_command *set_fd(t_command *commands, char***env_array, t_list *env_list)
 {
 	int			fdpipe[2];
+	int			std_out_cpy;
 
 	while (commands->relation != simple_command)
 	{
@@ -135,6 +140,7 @@ t_command *set_fd(t_command *commands, char***env_array, t_list *env_list)
 			break ;
 		else if (commands->relation == pipe_redirection) //Mover a una función aparte
 		{
+			std_out_cpy = dup(STDOUT_FILENO);
 			if (pipe(fdpipe) == -1)
 				break ;
 			if (dup2(fdpipe[1], STDOUT_FILENO) == -1)
@@ -146,8 +152,9 @@ t_command *set_fd(t_command *commands, char***env_array, t_list *env_list)
 				break ;
 			close(fdpipe[0]);
 			close(fdpipe[1]);
+			dup2(std_out_cpy, STDOUT_FILENO);
 		}
-			commands = del_command(commands);
+		commands = del_command(commands);
 	}
 	return (commands);
 }
