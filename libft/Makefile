@@ -60,12 +60,8 @@ SRCS =	ft_atoi.c				\
 		ft_alloc.c				\
 		ft_buffer_fd.c			\
 		ft_array_clear.c		\
-		ft_strncpy.c
-OBJS = ${SRCS:.c=.o};
-CC = gcc -c
-CFLAGS = -Wall -Werror -Wextra
-RM = rm -rf
-BONUS = ft_lstadd_back_bonus.c	\
+		ft_strncpy.c			\
+		ft_lstadd_back_bonus.c	\
 		ft_lstnew_bonus.c		\
 		ft_lstlast_bonus.c		\
 		ft_lstadd_front_bonus.c	\
@@ -75,19 +71,18 @@ BONUS = ft_lstadd_back_bonus.c	\
 		ft_lstclear_bonus.c		\
 		ft_lstmap_bonus.c		\
 		ft_lstmove_backwards.c
-OBJS2 = ${BONUS:.c=.o};
+OBJS = ${SRCS:.c=.o};
+CC = gcc -c
+CFLAGS = -Wall -Werror -Wextra
+RM = rm -rf
 all: ${NAME}
 ${NAME}: ${SRCS}
 		${CC} ${CFLAGS} ${SRCS}
 		ar rc ${NAME} ${OBJS}
 		ranlib ${EXTRA}
-bonus: all
-		${CC} ${CFLAGS} ${BONUS}
-		ar rc ${NAME} ${OBJS2}
-		ranlib ${NAME}
 clean:
 		${RM} ${OBJS}
 fclean:	clean
-		${RM} ${NAME} ${OBJS2}
+		${RM} ${NAME} ${OBJS}
 re: fclean all
 .PHONY:     all re clean fclean bonus
