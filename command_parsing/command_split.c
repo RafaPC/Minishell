@@ -77,7 +77,7 @@ char	**get_redirection_command(t_command_parsing *cmd_pars, char **input, int in
 	}
 	lenght = cmd_pars->i - index;
 	end = index + lenght;
-	if (!(command_args = ft_aclloc(2, sizeof(char *))))
+	if (!(command_args = ft_calloc(2, sizeof(char *))))
 	{
 		cmd_pars->i = ft_extract(input, end - 1, end - start);
 		return (0);
