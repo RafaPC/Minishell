@@ -83,6 +83,6 @@ ${NAME}: ${SRCS}
 clean:
 		${RM} ${OBJS}
 fclean:	clean
-		${RM} ${NAME} ${OBJS}
+		${RM} ${NAME}
 re: fclean all
-.PHONY:     all re clean fclean bonus
+.PHONY:     all re clean fclean

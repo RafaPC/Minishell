@@ -18,7 +18,7 @@
 ** TODO: checkear
 */
 
-t_bool	env(t_list *envp, char **args)
+t_bool	env(t_list *env_list, char **args)
 {
 	char	*content;
 
@@ -27,15 +27,15 @@ t_bool	env(t_list *envp, char **args)
 		ft_printf("env: %s: No such file or directory\n");
 		return (true);
 	}
-	while (envp)
+	while (env_list)
 	{
-		content = (char*)envp->content;
+		content = (char*)env_list->content;
 		if (ft_strchr(content, '='))
 		{
 			ft_putstr_fd(content, STDOUT_FILENO);
 			write(STDOUT_FILENO, "\n", 1);
 		}
-		envp = envp->next;
+		env_list = env_list->next;
 	}
 	return (true);
 }
@@ -104,14 +104,32 @@ t_bool	pwd(void)
 **		Changes the current working directory
 */
 
-t_bool	cd(char **args)
+t_bool	cd(t_list **env_list, char **args)
 {
+	char	*pwd_new;
+	char	*aux;
+
 	if (args[0] && args[1])
 		ft_putstr_fd("minishell: cd: too many arguments\n", STDOUT_FILENO);
 	else if (args[0])
 	{
 		if (chdir(args[0]) == -1)
 			return (false);
+		if (get_env_var("OLDPWD", *env_list))
+		{
+			aux = get_env_var("PWD", *env_list);
+			pwd_new = ft_strjoin("OLDPWD=", aux);
+			export_variable(env_list, pwd_new);
+			free(pwd_new);
+		}
+		if (get_env_var("PWD", *env_list))
+		{
+			aux = getcwd(NULL, 0);
+			pwd_new = ft_strjoin("PWD=", aux);
+			export_variable(env_list, pwd_new);
+			free(aux);
+			free(pwd_new);
+		}
 	}
 	return (true);
 }

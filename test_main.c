@@ -33,7 +33,7 @@ int main(int argc, char **argv, const char **env)
 			if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
 			{
 				while (commands)
-					commands = execute_commands(commands, &env_array, env_list); 
+					commands = execute_commands(commands, &env_array, &env_list); 
 			}
 		}
 	}
@@ -44,7 +44,7 @@ int main(int argc, char **argv, const char **env)
 		buffer = ft_strdup("echo hello");
 		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
 			while (commands)
-				commands = execute_commands(commands, &env_array, env_list);
+				commands = execute_commands(commands, &env_array, &env_list);
 		free_commands(commands);
 		free(buffer);
 		// PARA VER COMO QUEDA LA LISTA DE COMMANDS

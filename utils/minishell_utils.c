@@ -79,13 +79,15 @@ char	*get_env_var(char *var, t_list *env_list)
 	char	*content;
 	char	*var_equal;
 	int		var_length;
+	int		compare_result;
 
 	var_equal = ft_strjoin(var, "=");
 	var_length = ft_strlen(var_equal);
 	while (env_list)
 	{
 		content = (char*)(env_list->content);
-		if (!ft_strncmp(content, var_equal, var_length))
+		compare_result = ft_strncmp(content, var_equal, var_length);
+		if (compare_result == 0 || compare_result == 61)
 		{
 			free(var_equal);
 			return ((char *)(content + var_length));
@@ -100,13 +102,13 @@ char	*get_env_var(char *var, t_list *env_list)
 **	FIXME: ESTO SOLO TIENE FINES DEBUGILES
 */
 
-char **get_false_env_array(void)
+char	**get_false_env_array(void)
 {
 	char	**env_list;
 
-	env_list = malloc(sizeof(char**) * 6); // 5 más el nulo
-	env_list[0] = ft_strdup("PATH=/home/user42/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin");
-	env_list[1] = ft_strdup("USER=user42");
+	env_list = malloc(sizeof(char**) * 6);
+	env_list[0] = ft_strdup("USER=user42");
+	env_list[1] = ft_strdup("PATH=/home/user42/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin");
 	env_list[2] = ft_strdup("PWD=/home/user42/Desktop/minishell");
 	env_list[3] = ft_strdup("LANGUAGE=en");
 	env_list[4] = ft_strdup("HOME=/home/user42");

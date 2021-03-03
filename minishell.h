@@ -81,8 +81,8 @@ int				print_parsing_error(int return_value);
 **		MINISHELL UTILS
 */
 t_list			*create_env_list(const char **envp);
-char			**env_list_to_array(t_list *envp);
-char			*get_env_var(char *var, t_list *envp);
+char			**env_list_to_array(t_list *env_list);
+char			*get_env_var(char *var, t_list *env_list);
 char			*get_command_path(char **paths, char *command);
 t_command		*del_command(t_command *command);
 t_command		*free_commands(t_command *commands);
@@ -90,27 +90,28 @@ t_command		*handle_errors(t_command *command);
 /*
 **		BUILTINS
 */
-t_bool			env(t_list *envp, char **args);
+t_bool			env(t_list *env_list, char **args);
 t_bool			echo(char **args);
 void			ft_exit(t_command *commands, t_list **env_list, char **env_array);
 t_bool			pwd(void);
-t_bool			cd(char **args);
+t_bool			cd(t_list **env_list, char **args);
 /*
 **				EXPORT
 */
-int				export(t_list **env, char **args);
-int				export_print(t_list *envp);
+int				export(t_list **env_list, char **args);
+int				export_print(t_list *env_list);
+t_bool			export_variable(t_list **env_list, char *arg);
 t_bool			valid_env_characters(char *var_name);
 /*
 **				UNSET
 */
-t_bool			unset(t_list **envp, char **args);
-t_bool			unset_recursive(t_list *envp, t_list *previous_aux,
+t_bool			unset(t_list **env_list, char **args);
+t_bool			unset_recursive(t_list *env_list, t_list *previous_aux,
 char *var_name, int compare_length);
 
 /*
 ** TEMPORARY
 */
 char			**get_false_env_array(void);
-t_command		*execute_commands(t_command *commands, char ***env_array, t_list *env_list);
+t_command		*execute_commands(t_command *commands, char ***env_array, t_list **env_list);
 #endif

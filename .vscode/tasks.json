@@ -6,18 +6,18 @@
             "command": "/usr/bin/gcc",
             "args": [
                 "-g",
-                "-I/home/$USER/Desktop/minishell/libft/",
-                "-I/home/$USER/Desktop/minishell/ft_printf/",
-                "-I/home/$USER/Desktop/minishell/",
-                "/home/$USER/Desktop/minishell/ft_printf/*.c",
-                "/home/$USER/Desktop/minishell/libft/*.c",
-                "/home/$USER/Desktop/minishell/test_main.c",
-                "/home/$USER/Desktop/minishell/utils/*.c",
-                "/home/$USER/Desktop/minishell/builtins/*.c",
-                "/home/$USER/Desktop/minishell/command_parsing/*.c",
-                "/home/$USER/Desktop/minishell/temp/execute_commands.c",
+                "-I${workspaceFolder}/libft/",
+                "-I${workspaceFolder}/ft_printf/",
+                "-I${workspaceFolder}",
+                "${workspaceFolder}/ft_printf/*.c",
+                "${workspaceFolder}/libft/*.c",
+                "${workspaceFolder}/test_main.c",
+                "${workspaceFolder}/utils/*.c",
+                "${workspaceFolder}/builtins/*.c",
+                "${workspaceFolder}/command_parsing/*.c",
+                "${workspaceFolder}/temp/execute_commands.c",
                 "-o",
-                "/home/$USER/Desktop/minishell/debug.out"
+                "${workspaceFolder}/debug.out"
             ],
             "options": {
                 "cwd": "/usr/bin"

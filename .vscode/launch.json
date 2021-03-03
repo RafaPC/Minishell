@@ -8,7 +8,7 @@
 			"name": "debug minishell",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "/home/a/Desktop/minishell/debug.out",
+			"program": "${workspaceFolder}/debug.out",
 			"args": ["para_que_entre_en_el_else"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",

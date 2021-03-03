@@ -42,7 +42,7 @@ char	*get_command_path(char **paths, char *command)
 			return (command_path);
 		}
 		free(command_path);
-		i++; 
+		i++;
 	}
 	free(slash_command);
 	ft_array_clear((void**)paths, free);

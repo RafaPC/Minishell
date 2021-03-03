@@ -33,10 +33,11 @@
 ** sets the t_list variable accordingly wether there are more elements or not
 ** If it doesn't match the first element then calls a function that iterates
 ** recursively over the list and deletes a variable if it matches the name
-** TODO: checkear si podría abstraer esto para que el primer caso fuera igual que otro cualquiera
+** TODO: checkear si podría abstraer esto para que el primer caso
+** fuera igual que otro cualquiera
 */
 
-t_bool	unset(t_list **env_list, char **args)
+t_bool	unset(t_list **env, char **args)
 {
 	t_list	*aux;
 	int		compare_length;
@@ -46,20 +47,19 @@ t_bool	unset(t_list **env_list, char **args)
 	{
 		if (!valid_env_characters(*args) || ft_strchr(*args, '='))
 			printf("unset: '%s': not a valid identifier\n", *args);
-		else if (*env_list)
+		else if (*env)
 		{
 			compare_length = ft_strlen(*args) + 1;
 			compare_result = ft_strncmp(
-				(char*)(*env_list)->content, *args, compare_length);
+				(char*)(*env)->content, *args, compare_length);
 			if (compare_result == 0 || compare_result == 61)
 			{
-				aux = *env_list;
-				*env_list = NULL;
+				aux = *env;
+				*env = aux->next;
 				ft_lstdelone(aux, free);
 			}
-			else if ((*env_list)->next)
-				unset_recursive((*env_list)->next, *env_list, *args,
-					compare_length);
+			else if ((*env)->next)
+				unset_recursive((*env)->next, *env, *args, compare_length);
 		}
 		args++;
 	}
@@ -74,21 +74,22 @@ t_bool	unset(t_list **env_list, char **args)
 ** compare_length -> number of chars to compare equal to strlen(var_name) + 1
 */
 
-t_bool	unset_recursive(t_list *envp, t_list *previous_aux,
+t_bool	unset_recursive(t_list *env_list, t_list *previous_aux,
 char *var_name, int compare_length)
 {
 	int		compare_result;
 
 	compare_result = ft_strncmp(
-		(char*)envp->content, var_name, compare_length);
+		(char*)env_list->content, var_name, compare_length);
 	if (compare_result == 0 || compare_result == 61)
 	{
-		previous_aux->next = envp->next;
-		ft_lstdelone(envp, free);
+		previous_aux->next = env_list->next;
+		ft_lstdelone(env_list, free);
 		return (true);
 	}
-	else if (envp->next)
-		return (unset_recursive(envp->next, envp, var_name, compare_length));
+	else if (env_list->next)
+		return (unset_recursive(
+			env_list->next, env_list, var_name, compare_length));
 	else
 		return (false);
 }

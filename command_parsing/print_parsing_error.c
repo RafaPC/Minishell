@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-int print_parsing_error(int return_value)
+int	print_parsing_error(int return_value)
 {
 	char *aux;
-	
+
 	aux = 0;
 	if (return_value)
 	{

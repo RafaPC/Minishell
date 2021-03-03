@@ -28,12 +28,12 @@ void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
 	{
 		if ((*input)[cmd_pars->i] == '\'')
 		{
-		cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
-		return ;
+			cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
+			return ;
 		}
 		cmd_pars->i++;
 	}
-		cmd_pars->error = 5;
+	cmd_pars->error = 5;
 }
 
 /*
@@ -47,12 +47,13 @@ void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
 ** index to the character preceding the last quotation mark.
 ** Therefore, given how 'j' in the super function is located at the beggining
 ** of the argument, the complete quoted content shall be copied as an argument
-** 
+**
 ** Might consider stopping the parsing and printing an error
-** if no closing quotation is found. 
+** if no closing quotation is found.
 */
 
-void	handle_double_quotations(char **input, t_command_parsing *cmd_pars, t_list *env_list)
+void	handle_double_quotations(char **input, t_command_parsing *cmd_pars,
+t_list *env_list)
 {
 	cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
 	while ((*input)[cmd_pars->i])
@@ -68,13 +69,13 @@ void	handle_double_quotations(char **input, t_command_parsing *cmd_pars, t_list 
 			cmd_pars->i = insert_variable(input, cmd_pars->i, env_list);
 		if ((*input)[cmd_pars->i] == '\"')
 		{
-		cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
-		return ;
+			cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
+			return ;
 		}
 		else
 			cmd_pars->i++;
 	}
-		cmd_pars->error = 6;
+	cmd_pars->error = 6;
 }
 
 /*
@@ -86,7 +87,8 @@ void	handle_double_quotations(char **input, t_command_parsing *cmd_pars, t_list 
 ** Consider removal if enough space in the father function.
 */
 
-void	handle_quotations(char **input, t_command_parsing *cmd_pars, t_list *env_list)
+void	handle_quotations(char **input, t_command_parsing *cmd_pars,
+t_list *env_list)
 {
 	if ((*input)[cmd_pars->i] == '\"')
 		handle_double_quotations(input, cmd_pars, env_list);
@@ -108,7 +110,7 @@ void	handle_quotations(char **input, t_command_parsing *cmd_pars, t_list *env_li
 ** preceeding the insertion (or lack thereof);
 */
 
-int	insert_variable(char **input, int index, t_list *env_list) //Add t_list *envp_list
+int		insert_variable(char **input, int index, t_list *env_list)
 {
 	int		j;
 	char	*aux;
@@ -121,9 +123,8 @@ int	insert_variable(char **input, int index, t_list *env_list) //Add t_list *env
 		return (index);
 	variable = get_env_var(aux, env_list);
 	index = ft_extract(input, index + j - 1, j);
-	if (variable)
+	if (variable && *variable)
 		index = ft_insert(input, variable, index, ft_strlen(variable));
 	free(aux);
 	return (index);
-	
 }

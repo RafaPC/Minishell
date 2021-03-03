@@ -133,7 +133,7 @@ int		split_commands(char **input, t_command **commands, t_list *env_list)
 	{
 		if (cmd_pars.error)
 		{
-			free (*input);
+			free(*input);
 			return (cmd_pars.error);
 		}
 		if ((*input)[cmd_pars.i] == '$')

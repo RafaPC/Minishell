@@ -31,15 +31,15 @@ void	read_input(char **line)
 			aux = *line;
 			buffer[BUFFER_SIZE] = 0;
 			*line = ft_strncat_in(*line, (char *)&buffer, BUFFER_SIZE);
-			free (aux);
+			free(aux);
 			i = 0;
 		}
 		buffer[i] = rd_buffer[0];
 		i++;
 	}
 	buffer[i] = 0;
-    aux = *line;
+	aux = *line;
 	*line = ft_strncat_in(*line, buffer, i);
-    if (aux)
-        free (aux);
+	if (aux)
+		free(aux);
 }

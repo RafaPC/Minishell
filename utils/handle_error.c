@@ -16,9 +16,9 @@
 t_command	*handle_errors(t_command *command)
 {
 	if (errno == 2)
-		ft_printf("%s: %s\n", strerror(errno), command->tokens[0]);	
+		ft_printf("minishell: %s: %s\n", command->tokens[0], strerror(errno));
 	else
-		ft_printf("%s", strerror(errno));	
+		ft_printf("minishell: %s\n", strerror(errno));
 	while (command->relation != simple_command)
 		command = del_command(command);
 	command = del_command(command);

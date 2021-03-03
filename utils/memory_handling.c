@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_command *del_command(t_command *command)
+t_command	*del_command(t_command *command)
 {
 	t_command *aux;
 
