@@ -1,7 +1,7 @@
 # PROGRAM NAME
 NAME = minishell.out
 # HEADER FILES DIRECTORIES
-INCLUDES = -Ilibft/ -Ift_printf/ -I.
+INCLUDES = -Ilibft/ -I.
 SRCS =	utils/executables_paths.c				\
 		utils/handle_error.c					\
 		utils/memory_handling.c					\
@@ -16,29 +16,29 @@ SRCS =	utils/executables_paths.c				\
 		command_parsing/read_input.c			\
 		temp/execute_commands.c
 
-LIBFTPRINTF_A = libftprintf.a
+LIBFT_A = libft.a
 # COMPILER FLAGS
 FLAGS = -Wall -Wextra -Werror -g
 
 all: ${NAME}
 
-${NAME}: main.c ${SRCS} ${LIBFTPRINTF_A}
-			gcc ${INCLUDES} main.c ${SRCS} ${LIBFTPRINTF_A} -o ${NAME}
+${NAME}: main.c ${SRCS} ${LIBFT_A}
+			gcc ${INCLUDES} main.c ${SRCS} ${LIBFT_A} -o ${NAME}
 
-test: test_main.c ${SRCS} ${LIBFTPRINTF_A}
-			gcc ${INCLUDES} ${FLAGS} test_main.c ${SRCS} ${LIBFTPRINTF_A} -o minishell_test.out
+test: test_main.c ${SRCS} ${LIBFT_A}
+			gcc ${INCLUDES} ${FLAGS} test_main.c ${SRCS} ${LIBFT_A} -o minishell_test.out
 
-${LIBFTPRINTF_A}:
-		make -C ft_printf
-		cp ft_printf/libftprintf.a .
+${LIBFT_A}:
+		make -C libft
+		cp libft/libft.a .
 clean:
 		rm -f *.o
 		rm -f ${NAME}
 		rm -f minishell_test.out
 		rm -f debug.out
-		make -C ft_printf/ clean
+		make -C libft/ clean
 fclean: clean
-		rm -f libftprintf.a
+		rm -f libft.a
 re:
 		make fclean
 		make test

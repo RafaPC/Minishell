@@ -12,7 +12,6 @@
 
 #include "libft.h"
 #include "minishell.h"
-#include "ft_printf.h"
 
 /*
 ** Might need to change the permits!

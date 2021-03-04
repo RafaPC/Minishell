@@ -13,7 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "ft_printf/ft_printf.h"
+# include "libft.h"
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>

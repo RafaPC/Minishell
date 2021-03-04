@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include "libft.h"
 #include "minishell.h"
-#include "ft_printf.h"
 
 /*
 ** Receives a string and returns false if it contains a char that is not
