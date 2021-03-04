@@ -82,7 +82,7 @@ OBJS = ${SRCS:.c=.o}
 OBJS_PRINTF =	ft_hex.o			\
 				ft_number.o			\
 				ft_printf_utils.o	\
-				ft_printf.o		\
+				ft_printf.o			\
 				ft_strings.o
 CC = gcc -c -I ./
 CFLAGS = -Wall -Werror -Wextra

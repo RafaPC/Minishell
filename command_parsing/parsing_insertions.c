@@ -96,6 +96,25 @@ t_list *env_list)
 		handle_single_quotations(input, cmd_pars);
 }
 
+void	parse_exit_status(char **args, char *prev_exit_status)
+{
+	char *aux;
+	int index;
+
+	while (*args)
+	{
+		aux = *args;
+		while (aux = ft_strnstr(aux, "$?", 2))
+		{
+			index = ft_extract(&args[0], (int)(aux - args[0]) + 2, 2);
+			index = ft_insert(&args[0], prev_exit_status, index, ft_strlen(prev_exit_status));
+			aux = &args[0][index];
+		}
+		args++;
+	}
+	free(prev_exit_status);
+}
+
 /*
 **INPUT = Parse input.
 **
@@ -117,6 +136,8 @@ int		insert_variable(char **input, int index, t_list *env_list)
 	char	*variable;
 
 	j = 1;
+	if (!ft_strncmp("$?", &(*input)[index], 2))
+		return (index + 2);
 	while (ft_isalnum((*input)[index + j]) || (*input)[index + j] == '_')
 		j++;
 	if (!(aux = ft_strncpy(&(*input)[index + 1], j)))

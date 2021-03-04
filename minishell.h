@@ -113,5 +113,5 @@ char *var_name, int compare_length);
 ** TEMPORARY
 */
 char			**get_false_env_array(void);
-t_command		*execute_commands(t_command *commands, char ***env_array, t_list **env_list);
+t_command		*execute_commands(t_command *commands, char ***env_array, t_list **env_list, int *prev_exit_status);
 #endif

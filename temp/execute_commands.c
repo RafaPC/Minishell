@@ -17,15 +17,16 @@
 ** Might need to change the permits!
 */
 
-int			get_input_and_output(char *file, int mode)
+int			get_input_and_output(char *file, int mode, int *prev_exit_status)
 {
 	int fd;
 
+	parse_exit_status(&file, true);
 	if (mode == input_redirection)
 	{
-		if ((fd = open(file, O_RDONLY)) == -1)
+		if ((fd = open(file, O_RDONLY)) == -1 && (prev_exit_status = errno))
 			return (false);
-		if (dup2(fd, STDIN_FILENO) == -1)
+		if (dup2(fd, STDIN_FILENO) == -1 && (prev_exit_status = errno))
 			return (false);
 		close(fd);
 	}
@@ -35,12 +36,13 @@ int			get_input_and_output(char *file, int mode)
 			fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0666);
 		else if (mode == output_redirection_app)
 			fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0666);
-		if (fd == -1)
+		if (fd == -1 && (prev_exit_status = errno))
 			return (false);
-		if (dup2(fd, STDOUT_FILENO) == -1)
+		if (dup2(fd, STDOUT_FILENO) == -1 && (prev_exit_status = errno))
 			return (false);
 		close(fd);
 	}
+	prev_exit_status = errno;
 	return (true);
 }
 
@@ -48,7 +50,7 @@ int			get_input_and_output(char *file, int mode)
 ** Executes the builtin command if found and return either 1 or errnum;
 */
 
-int			is_builtin(t_command *command, char ***env_array, t_list **env_list)
+int			is_builtin(t_command *command, char ***env_array, t_list **env_list, int *prev_exit_status)
 {
 	int	result;
 
@@ -74,6 +76,7 @@ int			is_builtin(t_command *command, char ***env_array, t_list **env_list)
 		free(*env_array);
 		*env_array = env_list_to_array(*env_list);
 	}
+	*prev_exit_status = errno;
 	return (result);
 }
 
@@ -86,14 +89,14 @@ int			is_builtin(t_command *command, char ***env_array, t_list **env_list)
 */
 
 void		command_execution(t_command *command, char ***env_array,
-t_list **env_list)
+t_list **env_list, int *prev_exit_status)
 {
 	int		pid;
 	int		wstatus;
 	char	*command_path;
 
 	pid = 0;
-	if (is_builtin(command, env_array, env_list) != -1)//ERROR handling
+	if (is_builtin(command, env_array, env_list, prev_exit_status) != -1)//ERROR handling
 		pid = 1;
 	else if ((pid = fork()) == -1)
 		ft_printf("Error al forkear");
@@ -113,17 +116,14 @@ t_list **env_list)
 		ft_lstclear(env_list, free);
 		free(*env_array);
 		free_commands(command);
-		exit(0);
+		exit(errno);
 	}
 	else
 	{
 		if (wait(&wstatus) == -1)// Error al esperar porque no haya hijos y cosas así
 			ft_printf("Error al esperar");
 		else if (WIFEXITED(wstatus))
-		{
-			//ft_printf("Returned normally\n");
-			//ft_printf("Code: %i\n", WEXITSTATUS(wstatus));
-		}
+			*prev_exit_status = WEXITSTATUS(wstatus);
 		else if (WIFSIGNALED(wstatus))
 		{
 			ft_printf("Returned by signal\n");
@@ -134,23 +134,24 @@ t_list **env_list)
 	}
 }
 
-t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list)
+t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list, int *prev_exit_status)
 {
 	int			fdpipe[2];
 	int			std_out_cpy;
 
 	while (commands->relation != simple_command)
 	{
-		if (!get_input_and_output(commands->tokens[0], commands->relation))
+		if (!get_input_and_output(commands->tokens[0], commands->relation, prev_exit_status))
 			break ;
 		else if (commands->relation == pipe_redirection)//Mover a una función aparte
 		{
+			parse_exit_status(commands->tokens);
 			std_out_cpy = dup(STDOUT_FILENO);
 			if (pipe(fdpipe) == -1)
 				break ;
 			if (dup2(fdpipe[1], STDOUT_FILENO) == -1)
 				break ;
-			command_execution(commands, env_array, env_list);
+			command_execution(commands, env_array, env_list, prev_exit_status);
 			if (errno)
 				break ;
 			if (dup2(fdpipe[0], STDIN_FILENO) == -1)
@@ -161,11 +162,12 @@ t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list)
 		}
 		commands = del_command(commands);
 	}
+	*prev_exit_status = errno;
 	return (commands);
 }
 
 t_command	*execute_commands(t_command *commands, char ***env_array,
-t_list **env_list)
+t_list **env_list, int *prev_exit_status)
 {
 	int			stdin_copy;
 	int			stdout_copy;
@@ -173,12 +175,12 @@ t_list **env_list)
 	errno = 0;
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
-	commands = set_fd(commands, env_array, env_list);
+	commands = set_fd(commands, env_array, env_list, prev_exit_status);
 	if (!errno)
-		command_execution(commands, env_array, env_list);
+		command_execution(commands, env_array, env_list, prev_exit_status);
 	dup2(stdin_copy, STDIN_FILENO);
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);
 	close(stdout_copy);
-	return (errno ? handle_errors(commands) : del_command(commands));
+	return (del_command(commands)); //I think this needs to be updated to while != simple command, free_command.
 }

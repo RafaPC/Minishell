@@ -137,7 +137,7 @@ int		split_commands(char **input, t_command **commands, t_list *env_list)
 			return (cmd_pars.error);
 		}
 		if ((*input)[cmd_pars.i] == '$')
-			insert_variable(input, cmd_pars.i, env_list);
+			cmd_pars.i = insert_variable(input, cmd_pars.i, env_list);
 		else if ((*input)[cmd_pars.i] == '\"' || (*input)[cmd_pars.i] == '\'')
 			handle_quotations(input, &cmd_pars, env_list);
 		else if (((*input)[cmd_pars.i] == '<'))
