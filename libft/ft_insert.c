@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:49 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/10 20:51:33 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/04 21:12:27 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ unsigned int lenght)
 {
 	char	*aux;
 
-	if (index < 1 || lenght < 1 || !(*addendum))
+	if (lenght < 1 || !(*addendum))
 		return (index);
 	if (!(aux = malloc(ft_strlen(*line) + lenght + 1)))
 		return (0);

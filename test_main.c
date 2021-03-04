@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/28 11:21:15 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/04 20:57:50 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int main(int argc, char **argv, const char **env)
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
 		env_list = create_env_list((const char **)get_false_env_array());
 		env_array = env_list_to_array(env_list);
-		buffer = ft_strdup("echo hello");
+		buffer = ft_strdup("echo $?$?");
 		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
 			while (commands)
 				commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status);

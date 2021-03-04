@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/28 11:22:54 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/04 20:55:50 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ int			get_input_and_output(char *file, int mode, int *prev_exit_status)
 {
 	int fd;
 
-	parse_exit_status(&file, true);
+	parse_exit_status(&file, prev_exit_status);
 	if (mode == input_redirection)
 	{
-		if ((fd = open(file, O_RDONLY)) == -1 && (prev_exit_status = errno))
+		if ((fd = open(file, O_RDONLY)) == -1 && (*prev_exit_status = errno))
 			return (false);
-		if (dup2(fd, STDIN_FILENO) == -1 && (prev_exit_status = errno))
+		if (dup2(fd, STDIN_FILENO) == -1 && (*prev_exit_status = errno))
 			return (false);
 		close(fd);
 	}
@@ -36,13 +36,13 @@ int			get_input_and_output(char *file, int mode, int *prev_exit_status)
 			fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0666);
 		else if (mode == output_redirection_app)
 			fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0666);
-		if (fd == -1 && (prev_exit_status = errno))
+		if (fd == -1 && (*prev_exit_status = errno))
 			return (false);
-		if (dup2(fd, STDOUT_FILENO) == -1 && (prev_exit_status = errno))
+		if (dup2(fd, STDOUT_FILENO) == -1 && (*prev_exit_status = errno))
 			return (false);
 		close(fd);
 	}
-	prev_exit_status = errno;
+	*prev_exit_status = errno;
 	return (true);
 }
 
@@ -145,7 +145,7 @@ t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list, int
 			break ;
 		else if (commands->relation == pipe_redirection)//Mover a una función aparte
 		{
-			parse_exit_status(commands->tokens);
+			parse_exit_status(commands->tokens, prev_exit_status);
 			std_out_cpy = dup(STDOUT_FILENO);
 			if (pipe(fdpipe) == -1)
 				break ;
@@ -162,7 +162,8 @@ t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list, int
 		}
 		commands = del_command(commands);
 	}
-	*prev_exit_status = errno;
+	if (errno)
+		*prev_exit_status = errno;
 	return (commands);
 }
 
@@ -176,6 +177,7 @@ t_list **env_list, int *prev_exit_status)
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
 	commands = set_fd(commands, env_array, env_list, prev_exit_status);
+	parse_exit_status(commands->tokens, prev_exit_status);
 	if (!errno)
 		command_execution(commands, env_array, env_list, prev_exit_status);
 	dup2(stdin_copy, STDIN_FILENO);

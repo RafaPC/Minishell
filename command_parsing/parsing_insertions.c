@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 11:26:17 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/04 21:09:25 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,23 +96,25 @@ t_list *env_list)
 		handle_single_quotations(input, cmd_pars);
 }
 
-void	parse_exit_status(char **args, char *prev_exit_status)
+void	parse_exit_status(char **args, int *prev_exit_status)
 {
 	char *aux;
 	int index;
+	char *exit_status_string;
 
+	exit_status_string = ft_itoa(*prev_exit_status);
 	while (*args)
 	{
 		aux = *args;
-		while (aux = ft_strnstr(aux, "$?", 2))
+		while ((aux == ft_strnstr(aux, "$?", ft_strlen(aux))))
 		{
-			index = ft_extract(&args[0], (int)(aux - args[0]) + 2, 2);
-			index = ft_insert(&args[0], prev_exit_status, index, ft_strlen(prev_exit_status));
+			index = ft_extract(&args[0], (int)(aux - args[0]) + 1, 2);
+			index = ft_insert(&args[0], exit_status_string, index, ft_strlen(exit_status_string));
 			aux = &args[0][index];
 		}
 		args++;
 	}
-	free(prev_exit_status);
+	free(exit_status_string);
 }
 
 /*

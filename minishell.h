@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/27 20:06:38 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/04 20:44:36 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void			handle_redirections_split(t_command_parsing *cmd_pars,
 void			handle_input_redirection(t_command_parsing *cmd_pars,
 				t_command **commands, char **input, t_list *env_list);
 int				print_parsing_error(int return_value);
+void			parse_exit_status(char **args, int *prev_exit_status);
 
 /*
 **		MINISHELL UTILS

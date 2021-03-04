@@ -7,9 +7,8 @@
             "args": [
                 "-g",
                 "-I${workspaceFolder}/libft/",
-                "-I${workspaceFolder}/ft_printf/",
                 "-I${workspaceFolder}",
-                "${workspaceFolder}/ft_printf/*.c",
+                "${workspaceFolder}/libft/ft_printf/*.c",
                 "${workspaceFolder}/libft/*.c",
                 "${workspaceFolder}/test_main.c",
                 "${workspaceFolder}/utils/*.c",
