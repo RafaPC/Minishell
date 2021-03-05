@@ -1,5 +1,5 @@
 # PROGRAM NAME
-NAME = minishell.out
+NAME = minishell
 # HEADER FILES DIRECTORIES
 INCLUDES = -Ilibft/ -I.
 SRCS =	utils/executables_paths.c				\
@@ -23,10 +23,7 @@ FLAGS = -Wall -Wextra -Werror -g
 all: ${NAME}
 
 ${NAME}: main.c ${SRCS} ${LIBFT_A}
-			gcc ${INCLUDES} main.c ${SRCS} ${LIBFT_A} -o ${NAME}
-
-test: test_main.c ${SRCS} ${LIBFT_A}
-			gcc ${INCLUDES} ${FLAGS} test_main.c ${SRCS} ${LIBFT_A} -o minishell_test.out
+			gcc ${INCLUDES} ${FLAGS} main.c ${SRCS} ${LIBFT_A} -o ${NAME}
 
 ${LIBFT_A}:
 		make -C libft
@@ -34,7 +31,6 @@ ${LIBFT_A}:
 clean:
 		rm -f *.o
 		rm -f ${NAME}
-		rm -f minishell_test.out
 		rm -f debug.out
 		make -C libft/ clean
 fclean: clean

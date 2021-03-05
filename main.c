@@ -1,63 +1,69 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   test_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/18 01:52:02 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/16 20:39:42 by rprieto-         ###   ########.fr       */
+/*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
+/*   Updated: 2021/03/04 20:57:50 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "libft.h"
 #include "minishell.h"
-#include <signal.h>
+#include <stdio.h>
 
-void	signal_interrump(int signal)
+// #include <signal.h>
+// void	signal_interrump(int signal)
+// {
+// 	ft_putstr_fd("\nPrompt:", 1);
+// }
+
+int main(int argc, char **argv, const char **env)
 {
-	ft_putstr_fd("\nPrompt:", 1);
-}
+	char		*buffer;
+	t_list		*env_list;
+	t_command	*commands;
+	char		**env_array;
+	int			prev_exit_status;
 
-int		main(int argc, char const **argv, char const **envp)
-{
-	char	*buffer;
-	char	*aux; 
-	t_list	*envp_list;
-
-
-	buffer = (char*)malloc(sizeof(char) * 1025);
-	envp_list = create_env_list(envp);
-	signal(SIGINT, signal_interrump);
-	while (true)
+	// signal(SIGINT, signal_interrump);
+	prev_exit_status = errno;
+	if (argc == 1) // AQUÍ ENTRA SI LO EJECUTAS NORMAL, SE QUEDA EN BUCLE Y PUEDES METER COMANDOS
 	{
-		read_input(buffer);
-		tabs_to_spaces(buffer);
-		aux = buffer;
-		buffer = ft_strtrim(buffer, " ");
-		free(aux);
-		char **command_and_args = ft_split(buffer, ' ');
-		//Aquí un if por cada builtin (echo, export, unset, cd, pwd...)
-		if (!ft_strncmp(command_and_args[0], "export", 6))
-			export(envp_list, command_and_args[1]);
-		else if (!ft_strncmp(command_and_args[0], "unset", 5))
-			unset(&envp_list, command_and_args[1]);
-		else if (!ft_strncmp(command_and_args[0], "env", 3))
-			env(envp_list, 0, 0);
-		else if (!ft_strncmp(command_and_args[0], "exit", 4))
-			ft_exit(&envp_list);
-		else if (!ft_strncmp(command_and_args[0], "echo", 4))
-			echo(&command_and_args[1]);
-		else if (execute_command(get_path(envp_list), command_and_args[0]))
+		env_list = create_env_list(env);
+		env_array = env_list_to_array(env_list);
+		while (true)
 		{
-			printf("Command %s exists\n", buffer);
+			printf("Previous exit status: %i\n", prev_exit_status);
+			ft_putstr_fd("Minishell-> ", 1);
+			read_input(&buffer);
+			if (!print_parsing_error(split_commands(&buffer, &commands, env_list))) //TODO add prev_exit_status to parse errors
+			{
+				while (commands)
+					commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status); 
+			}
 		}
-		else
-			printf("Command %s doesn't exist\n", buffer);
-		//Libera memoria
-		ft_array_clear((void**)command_and_args, free);
-		empty_buffer(buffer);
 	}
-	return (0);
+	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
+	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
+		env_list = create_env_list(env);
+		env_array = env_list_to_array(env_list);
+		buffer = ft_strdup(argv[argc - 1]);
+		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
+			while (commands)
+				commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status);
+		free(buffer);
+		return (0);
+	}
 }
+
+		// PARA VER COMO QUEDA LA LISTA DE COMMANDS
+		// for (t_command *aux = commands; aux; aux = aux->next)
+		// {
+		// 		command_reader = aux->tokens;
+ 		// 		printf("Comando: %s - Relacion: %i\nArgumentos:\n", *command_reader, aux->relation);
+		// 		while (*(++command_reader))
+		// 			printf("%s\n", *command_reader);
+		// }
