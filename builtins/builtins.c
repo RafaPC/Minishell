@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/28 11:12:43 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/06 15:18:07 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,15 @@ t_bool	env(t_list *env_list, char **args)
 
 void	ft_exit(t_command *commands, t_list **env_list, char **env_array)
 {
+	int exit_code;
+	
+	//Check if more than 2? >> exit code 1?
+	exit_code = ft_atoi(commands->tokens[1]);
+	//Check if not a number.
 	free_commands(commands);
 	ft_lstclear(env_list, free);
 	free(env_array);
-	exit(0);
+	exit(exit_code);
 }
 
 /*

@@ -6,11 +6,22 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/04 21:09:25 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/06 14:07:27 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	skip_quotations(char **input, t_command_parsing *cmd_pars)
+{
+	cmd_pars->i++;
+	while (!ft_strchr("\"\'", input[0][cmd_pars->i]))
+		cmd_pars->i++;
+	if (!input[0][cmd_pars->i])
+		cmd_pars->error = newline;
+	else
+		cmd_pars->i++;
+}
 
 /*
 ** INPUT = Parse input.
@@ -53,7 +64,7 @@ void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
 */
 
 void	handle_double_quotations(char **input, t_command_parsing *cmd_pars,
-t_list *env_list)
+t_list *env_list, int prev_exit_status)
 {
 	cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
 	while ((*input)[cmd_pars->i])
@@ -66,7 +77,7 @@ t_list *env_list)
 				cmd_pars->i++;
 		}
 		if ((*input)[cmd_pars->i] == '$')
-			cmd_pars->i = insert_variable(input, cmd_pars->i, env_list);
+			cmd_pars->i = insert_variable(input, cmd_pars->i, env_list, prev_exit_status);
 		if ((*input)[cmd_pars->i] == '\"')
 		{
 			cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
@@ -88,34 +99,14 @@ t_list *env_list)
 */
 
 void	handle_quotations(char **input, t_command_parsing *cmd_pars,
-t_list *env_list)
+t_list *env_list, int prev_exit_status)
 {
 	if ((*input)[cmd_pars->i] == '\"')
-		handle_double_quotations(input, cmd_pars, env_list);
+		handle_double_quotations(input, cmd_pars, env_list, prev_exit_status);
 	else if ((*input)[cmd_pars->i] == '\'')
 		handle_single_quotations(input, cmd_pars);
 }
 
-void	parse_exit_status(char **args, int *prev_exit_status)
-{
-	char *aux;
-	int index;
-	char *exit_status_string;
-
-	exit_status_string = ft_itoa(*prev_exit_status);
-	while (*args)
-	{
-		aux = *args;
-		while ((aux == ft_strnstr(aux, "$?", ft_strlen(aux))))
-		{
-			index = ft_extract(&args[0], (int)(aux - args[0]) + 1, 2);
-			index = ft_insert(&args[0], exit_status_string, index, ft_strlen(exit_status_string));
-			aux = &args[0][index];
-		}
-		args++;
-	}
-	free(exit_status_string);
-}
 
 /*
 **INPUT = Parse input.
@@ -131,23 +122,56 @@ void	parse_exit_status(char **args, int *prev_exit_status)
 ** preceeding the insertion (or lack thereof);
 */
 
-int		insert_variable(char **input, int index, t_list *env_list)
+int		insert_variable(char **input, int index, t_list *env_list, int prev_exit_status)
 {
 	int		j;
 	char	*aux;
 	char	*variable;
 
-	j = 1;
+	j = 0;
+	aux = NULL;
+	if (ft_isspace((*input)[index + 1]) || !(*input)[index + 1])
+		return (index + 1);	
 	if (!ft_strncmp("$?", &(*input)[index], 2))
-		return (index + 2);
-	while (ft_isalnum((*input)[index + j]) || (*input)[index + j] == '_')
-		j++;
-	if (!(aux = ft_strncpy(&(*input)[index + 1], j)))
-		return (index);
-	variable = get_env_var(aux, env_list);
-	index = ft_extract(input, index + j - 1, j);
-	if (variable && *variable)
+	{
+		aux = ft_itoa(prev_exit_status);
+		index = ft_extract(input, index + 1, 2);
+		index = ft_insert(input, aux, index, ft_strlen(aux));
+		free (aux);
+	}
+	else
+	{
+		while (ft_isalnum((*input)[index + j + 1]) || (*input)[index + j + 1] == '_')
+		j++;	
+		if (!(aux = ft_strncpy(&(*input)[index + 1], j)))
+			return (index);
+		variable = get_env_var(aux, env_list);
+		index = ft_extract(input, index + j, j + 1);
 		index = ft_insert(input, variable, index, ft_strlen(variable));
-	free(aux);
+	}
 	return (index);
+}
+
+void	parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_bool single_run)
+{
+	t_command_parsing cmd_pars;
+
+	ft_memset(&cmd_pars, 0, sizeof(t_command_parsing));
+	while (*args)
+	{
+		while (args[0][cmd_pars.i])
+		{
+			if (ft_strrchr("\"\'", args[0][cmd_pars.i]))
+				handle_quotations(&args[0], &cmd_pars, env_list, prev_exit_status);
+			else if (args[0][cmd_pars.i] == '$')
+				cmd_pars.i = insert_variable(&args[0], cmd_pars.i, env_list, prev_exit_status);
+			else
+				cmd_pars.i++;
+			//handle_comillas error;
+		}
+		if (single_run)
+			break ;
+		args++;
+		cmd_pars.i = 0;
+	}
 }

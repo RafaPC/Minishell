@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/04 20:44:36 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/06 12:23:45 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ typedef enum 	e_parser_flags
 		input_redirection,
 		output_redirection,
 		output_redirection_app,
-		pipe_redirection
+		pipe_redirection,
+		newline
 }				t_parser_flags;
 
 typedef struct	s_command
@@ -63,24 +64,26 @@ char			**get_path(t_list *env_list);
 void			tabs_to_spaces(char *string);
 void			read_input(char **buffer);
 void			empty_buffer(char *buffer);
-int				insert_variable(char **input, int index, t_list *env_list);
-int				split_commands(char **input, t_command	**commands, t_list *env_list);
-void			handle_quotations(char **input, t_command_parsing *cmd_pars, t_list *env_list);
+int				insert_variable(char **input, int index, t_list *env_list, int prev_exit_status);
+int				split_commands(char **input, t_command	**commands);
+void			handle_quotations(char **input, t_command_parsing *cmd_pars, t_list *env_list, int prev_exit_status);
+void			skip_quotations(char **input, t_command_parsing *cmd_pars);
 void			add_command(t_command **commands, char **arguments,
 					int relation);
 t_bool			command_split(t_command_parsing *cmd_pars, t_command
 					**commmands, char *input);
 char			**load_command_args(t_command_parsing *cmd_pars, char *input);
 void			handle_redirections_split(t_command_parsing *cmd_pars,
-					t_command **commands, char **input, t_list *env_list);
+					t_command **commands, char **input);
 void			handle_input_redirection(t_command_parsing *cmd_pars,
-				t_command **commands, char **input, t_list *env_list);
+				t_command **commands, char **input);
 int				print_parsing_error(int return_value);
-void			parse_exit_status(char **args, int *prev_exit_status);
+void			parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_bool single_run);
 
 /*
 **		MINISHELL UTILS
 */
+
 t_list			*create_env_list(const char **envp);
 char			**env_list_to_array(t_list *env_list);
 char			*get_env_var(char *var, t_list *env_list);

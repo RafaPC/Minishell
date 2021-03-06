@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_main.c                                        :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/04 20:57:50 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/06 15:08:55 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,9 @@ int main(int argc, char **argv, const char **env)
 		env_array = env_list_to_array(env_list);
 		while (true)
 		{
-			printf("Previous exit status: %i\n", prev_exit_status);
 			ft_putstr_fd("Minishell-> ", 1);
 			read_input(&buffer);
-			if (!print_parsing_error(split_commands(&buffer, &commands, env_list))) //TODO add prev_exit_status to parse errors
+			if (!print_parsing_error(split_commands(&buffer, &commands))) //TODO add prev_exit_status to parse errors
 			{
 				while (commands)
 					commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status); 
@@ -51,7 +50,8 @@ int main(int argc, char **argv, const char **env)
 		env_list = create_env_list(env);
 		env_array = env_list_to_array(env_list);
 		buffer = ft_strdup(argv[argc - 1]);
-		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
+		//buffer = ft_strdup("exit 17");
+		if (!print_parsing_error(split_commands(&buffer, &commands)))
 			while (commands)
 				commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status);
 		free(buffer);

@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/26 21:31:56 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/06 11:34:15 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ t_command **commands, char *input)
 }
 
 char	**get_redirection_command(t_command_parsing *cmd_pars, char **input,
-int index, t_list *env_list)
+int index)
 {
 	int		lenght;
 	char	**command_args;
@@ -67,13 +67,10 @@ int index, t_list *env_list)
 	lenght = 0;
 	start = cmd_pars->i;
 	cmd_pars->i = index;
-	while (!(ft_isspace((*input)[cmd_pars->i]) ||
-	ft_strchr("|<>;", (*input)[cmd_pars->i]) || !(*input)[cmd_pars->i]))
+	while (!(ft_isspace((*input)[cmd_pars->i]) || ft_strchr("|<>;", (*input)[cmd_pars->i])))
 	{
 		if (ft_strchr("\"\'", (*input)[cmd_pars->i]))
-			handle_quotations(input, cmd_pars, env_list);
-		else if ((*input)[cmd_pars->i] == '$')
-			insert_variable(input, cmd_pars->i, env_list);
+			skip_quotations(input, cmd_pars);
 		else
 			cmd_pars->i++;
 	}
@@ -112,7 +109,7 @@ int index, t_list *env_list)
 */
 
 void	handle_redirections_split(t_command_parsing *cmd_pars,
-t_command **commands, char **input, t_list *env_list)
+t_command **commands, char **input)
 {
 	int		counter;
 	int		counter_aux;
@@ -138,13 +135,13 @@ t_command **commands, char **input, t_list *env_list)
 		return ;
 	}
 	command = get_redirection_command(cmd_pars, input,
-	cmd_pars->i + counter + counter_aux, env_list);
+	cmd_pars->i + counter + counter_aux);
 	add_command(commands, command, counter == 1
 	? output_redirection : output_redirection_app);
 }
 
 void	handle_input_redirection(t_command_parsing *cmd_pars,
-t_command **commands, char **input, t_list *env_list)
+t_command **commands, char **input)
 {
 	int		counter_aux;
 	int		error;
@@ -164,7 +161,7 @@ t_command **commands, char **input, t_list *env_list)
 		return ;
 	}
 	command = get_redirection_command(cmd_pars, input,
-	cmd_pars->i + 1 + counter_aux, env_list);
+	cmd_pars->i + 1 + counter_aux);
 	add_command(commands, command, input_redirection);
 }
 

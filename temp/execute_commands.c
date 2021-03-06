@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/04 20:55:50 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/06 12:20:47 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 ** Might need to change the permits!
 */
 
-int			get_input_and_output(char *file, int mode, int *prev_exit_status)
+int			get_input_and_output(char *file, int mode, int *prev_exit_status, t_list *env_list)
 {
 	int fd;
 
-	parse_exit_status(&file, prev_exit_status);
+	parse_insertions(&file, env_list, *prev_exit_status, true);
 	if (mode == input_redirection)
 	{
 		if ((fd = open(file, O_RDONLY)) == -1 && (*prev_exit_status = errno))
@@ -141,11 +141,11 @@ t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list, int
 
 	while (commands->relation != simple_command)
 	{
-		if (!get_input_and_output(commands->tokens[0], commands->relation, prev_exit_status))
+		if (!get_input_and_output(commands->tokens[0], commands->relation, prev_exit_status, *env_list))
 			break ;
 		else if (commands->relation == pipe_redirection)//Mover a una función aparte
 		{
-			parse_exit_status(commands->tokens, prev_exit_status);
+			parse_insertions(commands->tokens, *env_list, *prev_exit_status, false);
 			std_out_cpy = dup(STDOUT_FILENO);
 			if (pipe(fdpipe) == -1)
 				break ;
@@ -177,7 +177,7 @@ t_list **env_list, int *prev_exit_status)
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
 	commands = set_fd(commands, env_array, env_list, prev_exit_status);
-	parse_exit_status(commands->tokens, prev_exit_status);
+	parse_insertions(commands->tokens, *env_list, *prev_exit_status, false);
 	if (!errno)
 		command_execution(commands, env_array, env_list, prev_exit_status);
 	dup2(stdin_copy, STDIN_FILENO);

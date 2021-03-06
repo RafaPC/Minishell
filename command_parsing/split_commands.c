@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 10:57:39 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/06 11:11:07 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	add_command_argument(t_command_parsing *cmd_pars, char *input)
 ** NOTE: Assumes that *input is malloced.
 */
 
-int		split_commands(char **input, t_command **commands, t_list *env_list)
+int		split_commands(char **input, t_command **commands)
 {
 	t_command_parsing	cmd_pars;
 
@@ -136,14 +136,12 @@ int		split_commands(char **input, t_command **commands, t_list *env_list)
 			free(*input);
 			return (cmd_pars.error);
 		}
-		if ((*input)[cmd_pars.i] == '$')
-			cmd_pars.i = insert_variable(input, cmd_pars.i, env_list);
 		else if ((*input)[cmd_pars.i] == '\"' || (*input)[cmd_pars.i] == '\'')
-			handle_quotations(input, &cmd_pars, env_list);
+			skip_quotations(input, &cmd_pars);
 		else if (((*input)[cmd_pars.i] == '<'))
-			handle_input_redirection(&cmd_pars, commands, input, env_list);
+			handle_input_redirection(&cmd_pars, commands, input);
 		else if ((*input)[cmd_pars.i] == '>')
-			handle_redirections_split(&cmd_pars, commands, input, env_list);
+			handle_redirections_split(&cmd_pars, commands, input);
 		else if (ft_isspace((*input)[cmd_pars.i]))
 			add_command_argument(&cmd_pars, *input);
 		else if (ft_strchr(";|", (*input)[cmd_pars.i]))
