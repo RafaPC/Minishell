@@ -37,4 +37,4 @@ fclean: clean
 		rm -f libft.a
 re:
 		make fclean
-		make test
+		make

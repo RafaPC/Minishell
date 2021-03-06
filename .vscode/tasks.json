@@ -10,7 +10,7 @@
                 "-I${workspaceFolder}",
                 "${workspaceFolder}/libft/ft_printf/*.c",
                 "${workspaceFolder}/libft/*.c",
-                "${workspaceFolder}/test_main.c",
+                "${workspaceFolder}/main.c",
                 "${workspaceFolder}/utils/*.c",
                 "${workspaceFolder}/builtins/*.c",
                 "${workspaceFolder}/command_parsing/*.c",

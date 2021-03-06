@@ -48,14 +48,16 @@ t_bool	valid_env_characters(char *var_name)
 int		export(t_list **env_list, char **args)
 {
 	char	*str_aux;
+	int		equal_position;
 
 	if (*args == NULL || **args == '\0')
 		return (export_print(*env_list));
 	while (*args)
 	{
-		str_aux = ((ft_strchr(*args, '='))
-		? ft_strncpy(*args, ft_get_index_of(*args, '=') - 1)
-		: ft_strdup(*args));
+		equal_position = ft_get_index_of(*args, '=');
+		str_aux = (equal_position != -1)
+		? ft_strncpy(*args, equal_position)
+		: ft_strdup(*args);
 		if (**args == '=' || !valid_env_characters(str_aux))
 			ft_printf("minishell: export: `%s': not a valid specifier\n",
 				*args);
@@ -80,12 +82,14 @@ int		export(t_list **env_list, char **args)
 t_bool	export_variable(t_list **env_list, char *arg)
 {
 	t_list	*aux;
+	int		compare_result;
 
 	aux = *env_list;
 	while (aux)
 	{
-		if (!ft_strncmp(arg, (char*)aux->content, (ft_strchr(arg, '='))
-			? ft_get_index_of(arg, '=') : (int)ft_strlen(arg)))
+		compare_result = ft_strncmp(arg, (char*)aux->content, (ft_strchr(arg, '='))
+			? ft_get_index_of(arg, '=') + 1 : (int)ft_strlen(arg) + 1);
+		if (compare_result == 0 || compare_result == 61)
 		{
 			free(aux->content);
 			if ((aux->content = ft_strdup(arg)) == NULL)//ERROR de malloc

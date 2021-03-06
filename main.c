@@ -45,8 +45,19 @@ int main(int argc, char **argv, const char **env)
 			}
 		}
 	}
-	else // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
+	else if (argc == 2) // AQUI ENTRA AL LLAMARLO EL DEBUGER, NO PUEDE COGER INPUT POR CONSOLA
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
+		env_array = get_false_env_array();
+		env_list = create_env_list((const char**)env_array);
+		buffer= ft_strdup("export Z=z ; echo $Z");
+		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
+			while (commands)
+				commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status);
+		free(buffer);
+		return (0);
+	}
+	else //PARA EL TESTER, COGE EL INPUT POR EL ARGUMENTO
+	{
 		env_list = create_env_list(env);
 		env_array = env_list_to_array(env_list);
 		buffer = ft_strdup(argv[argc - 1]);
