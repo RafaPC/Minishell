@@ -2,3 +2,5 @@
 *.o
 *.a
 sandbox.c
+minishell_unit_test/
+minishell

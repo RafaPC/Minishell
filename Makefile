@@ -29,12 +29,11 @@ ${LIBFT_A}:
 		make -C libft
 		cp libft/libft.a .
 clean:
+		make -C libft clean
 		rm -f *.o
+fclean: clean
+		make -C libft fclean
+		rm -f libft.a
 		rm -f ${NAME}
 		rm -f debug.out
-		make -C libft/ clean
-fclean: clean
-		rm -f libft.a
-re:
-		make fclean
-		make
+re: fclean all

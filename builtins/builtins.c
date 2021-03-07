@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/06 15:18:07 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/07 10:37:53 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,30 @@ t_bool	env(t_list *env_list, char **args)
 /*
 ** Called when "exit" is written in the shell
 ** Frees the t_list* list of environment variables elements
+** Returns the value passed as an argument.
+** if more arguments are given, a 2 is returned (for some reason);
 */
 
 void	ft_exit(t_command *commands, t_list **env_list, char **env_array)
 {
 	int exit_code;
-	
-	//Check if more than 2? >> exit code 1?
-	exit_code = ft_atoi(commands->tokens[1]);
-	//Check if not a number.
+
+	exit_code = 0;
+	if (commands->tokens[1])
+	{
+		if (commands->tokens[2])
+		{
+			exit_code = 1;
+			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO); //Might need to be changed to error...
+		}
+		else if (ft_str_checkset(commands->tokens[1], "0123456789"))
+			exit_code = ft_atoi(commands->tokens[1]);
+		else
+		{
+			exit_code = 2;
+			ft_putstr_fd("minishell: exit: notanumber: numeric argument required\n", STDERR_FILENO);
+		}
+	}
 	free_commands(commands);
 	ft_lstclear(env_list, free);
 	free(env_array);
