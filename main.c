@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/06 15:08:55 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/06 20:27:02 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int main(int argc, char **argv, const char **env)
 		env_array = get_false_env_array();
 		env_list = create_env_list((const char**)env_array);
 		buffer= ft_strdup("export Z=z ; echo $Z");
-		if (!print_parsing_error(split_commands(&buffer, &commands, env_list)))
+		if (!print_parsing_error(split_commands(&buffer, &commands)))
 			while (commands)
 				commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status);
 		free(buffer);
