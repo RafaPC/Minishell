@@ -131,10 +131,29 @@ t_bool	cd(t_list **env_list, char **args)
 
 	if (args[0] && args[1])
 		ft_putstr_fd("minishell: cd: too many arguments\n", STDOUT_FILENO);
-	else if (args[0])
+	else
 	{
-		if (chdir(args[0]) == -1)
-			return (false);
+		if (!args[0])//Hacer cd a home
+		{
+			pwd_new = get_env_var("HOME", *env_list);
+			if (pwd_new)
+				chdir(pwd_new);
+			else
+				ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
+		}
+		else
+		{
+			if (chdir(args[0]) == -1)
+			{
+				if (errno == ENOENT)
+				{//FIXME: poner con printf modificado
+					ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+					ft_putstr_fd(args[0], STDERR_FILENO);
+					ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+				}
+				return (false);
+			}
+		}
 		if (get_env_var("OLDPWD", *env_list))
 		{
 			aux = get_env_var("PWD", *env_list);

@@ -79,23 +79,21 @@ char	*get_env_var(char *var, t_list *env_list)
 	char	*content;
 	char	*var_equal;
 	int		var_length;
-	int		compare_result;
+	char	*var_value;
 
+	var_value = NULL;
 	var_equal = ft_strjoin(var, "=");
 	var_length = ft_strlen(var_equal);
-	while (env_list)
+	while (env_list && !var_value)
 	{
 		content = (char*)(env_list->content);
-		compare_result = ft_strncmp(content, var_equal, var_length);
-		if (compare_result == 0 || compare_result == 61)
-		{
-			free(var_equal);
-			return ((char *)(content + var_length));
-		}
+		if (var_length == (ft_get_index_of(content, '=') + 1) &&
+		!ft_strncmp(content, var_equal, var_length))
+			var_value =  (char *)(content + var_length);
 		env_list = env_list->next;
 	}
 	free(var_equal);
-	return (NULL);
+	return (var_value);
 }
 
 /*

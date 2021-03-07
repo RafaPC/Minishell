@@ -71,7 +71,7 @@ SRCS =	ft_atoi.c					\
 		ft_lstclear_bonus.c			\
 		ft_lstmap_bonus.c			\
 		ft_lstmove_backwards.c		\
-		ft_str_checkchar.c
+		ft_str_checkset.c
 
 SRCS_PRINTF = 	ft_printf/ft_hex.c			\
 				ft_printf/ft_number.c		\

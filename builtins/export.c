@@ -21,7 +21,7 @@
 
 t_bool	valid_env_characters(char *var_name)
 {
-	if (ft_isdigit(*var_name++))
+	if (ft_isdigit(*var_name))
 		return (false);
 	while (*var_name)
 	{
@@ -59,8 +59,12 @@ int		export(t_list **env_list, char **args)
 		? ft_strncpy(*args, equal_position)
 		: ft_strdup(*args);
 		if (**args == '=' || !valid_env_characters(str_aux))
-			ft_printf("minishell: export: `%s': not a valid specifier\n",
-				*args);
+		{ //FIXME: cambiar por printf que coja fd
+			ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+			ft_putstr_fd(*args, STDERR_FILENO);
+			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			// ft_printf("minishell: export: `%s': not a valid identifier\n", *args);
+		}
 		else if (!export_variable(env_list, *args))
 		{
 			ft_printf("Error al alocar memoria\n"); // ERROR
@@ -82,14 +86,18 @@ int		export(t_list **env_list, char **args)
 t_bool	export_variable(t_list **env_list, char *arg)
 {
 	t_list	*aux;
-	int		compare_result;
+	int		arg_length;
+	int		env_length;
 
 	aux = *env_list;
 	while (aux)
 	{
-		compare_result = ft_strncmp(arg, (char*)aux->content, (ft_strchr(arg, '='))
-			? ft_get_index_of(arg, '=') + 1 : (int)ft_strlen(arg) + 1);
-		if (compare_result == 0 || compare_result == 61)
+		arg_length = (ft_strchr(arg, '=')
+		? ft_get_index_of(arg, '=') + 1 : (int)ft_strlen(arg));
+		env_length = (ft_strchr(aux->content, '=')
+		? ft_get_index_of(aux->content, '=') + 1 : (int)ft_strlen(aux->content));
+		if (arg_length == env_length && !ft_strncmp(arg, (char*)aux->content,
+		arg_length > env_length ? arg_length : env_length))
 		{
 			free(aux->content);
 			if ((aux->content = ft_strdup(arg)) == NULL)//ERROR de malloc
