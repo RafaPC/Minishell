@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/07 10:37:53 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/07 10:50:57 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_exit(t_command *commands, t_list **env_list, char **env_array)
 		if (commands->tokens[2])
 		{
 			exit_code = 1;
-			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO); //Might need to be changed to error...
+			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
 		}
 		else if (ft_str_checkset(commands->tokens[1], "0123456789"))
 			exit_code = ft_atoi(commands->tokens[1]);

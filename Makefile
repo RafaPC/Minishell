@@ -12,6 +12,7 @@ SRCS =	utils/executables_paths.c				\
 		command_parsing/command_split.c			\
 		command_parsing/parsing_insertions.c	\
 		command_parsing/split_commands.c		\
+		command_parsing/parsing_checks.c		\
 		command_parsing/print_parsing_error.c	\
 		command_parsing/read_input.c			\
 		temp/execute_commands.c

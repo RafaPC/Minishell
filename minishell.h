@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/06 12:23:45 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/07 11:46:45 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ typedef enum 	e_parser_flags
 		output_redirection,
 		output_redirection_app,
 		pipe_redirection,
-		newline
+		newline,
+		semicolon
 }				t_parser_flags;
 
 typedef struct	s_command
@@ -77,8 +78,10 @@ void			handle_redirections_split(t_command_parsing *cmd_pars,
 					t_command **commands, char **input);
 void			handle_input_redirection(t_command_parsing *cmd_pars,
 				t_command **commands, char **input);
-int				print_parsing_error(int return_value);
+int				print_parsing_error(int return_value, int *prev_exit_status);
 void			parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_bool single_run);
+t_bool			not_preceeding_argument(char *input, int index);
+
 
 /*
 **		MINISHELL UTILS

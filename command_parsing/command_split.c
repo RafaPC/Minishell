@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/06 11:34:15 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/07 11:54:56 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,17 @@ t_command **commands, char *input)
 {
 	int		counter_aux;
 	int		error;
-
+		
+	if (not_preceeding_argument(input, cmd_pars->i))
+	{
+		ft_lstclear(&cmd_pars->arguments, free);
+		cmd_pars->error = pipe_redirection;
+		return ;
+	}
 	counter_aux = 0;
 	while (ft_isspace(input[cmd_pars->i + 1 + counter_aux]))
 		counter_aux++;
-	error = (!input[cmd_pars->i + 1 + counter_aux] ||
-	input[cmd_pars->i + 1] == '|') ? 1 : 0;
+	error = (!input[cmd_pars->i + 1 + counter_aux]); //check preceeding argument;
 	if (error)
 	{
 		ft_lstclear(&cmd_pars->arguments, free);
@@ -123,15 +128,14 @@ t_command **commands, char **input)
 		counter++;
 	while (ft_isspace((*input)[cmd_pars->i + counter + counter_aux]))
 		counter_aux++;
-	if (counter > 3)
+	if (counter > 2)
 		error = 1;
 	else if (ft_strrchr(";<>|", (*input)[cmd_pars->i + counter + counter_aux]))
 		error = 1;
 	if (error)
 	{
 		ft_lstclear(&cmd_pars->arguments, free);
-		cmd_pars->error = 1;
-		cmd_pars->error_index = cmd_pars->i + counter;
+		cmd_pars->error = output_redirection;
 		return ;
 	}
 	command = get_redirection_command(cmd_pars, input,
@@ -197,18 +201,12 @@ t_command **commands, char **input)
 void	handle_simple_command_split(t_command_parsing *cmd_pars,
 t_command **commands, char *input)
 {
-	int		aux;
-
-	aux = cmd_pars->i - 1;
 	if (input[cmd_pars->i] == ';')
-	{
-		while (aux > 0 && ft_isspace(input[aux]))
-			aux--;
-		if (input[cmd_pars->i + 1] == ';' || input[aux] == ';' || aux == 0)
+	{	
+		if (not_preceeding_argument(input, cmd_pars->i))
 		{
 			ft_lstclear(&cmd_pars->arguments, free);
-			cmd_pars->error = 1;
-			cmd_pars->error_index = aux;
+			cmd_pars->error = semicolon;
 			return ;
 		}
 	}

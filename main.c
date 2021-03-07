@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/06 20:27:02 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/07 11:53:23 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv, const char **env)
 		{
 			ft_putstr_fd("Minishell-> ", 1);
 			read_input(&buffer);
-			if (!print_parsing_error(split_commands(&buffer, &commands))) //TODO add prev_exit_status to parse errors
+			if (!print_parsing_error(split_commands(&buffer, &commands), &prev_exit_status)) //TODO add prev_exit_status to parse errors
 			{
 				while (commands)
 					commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status); 
@@ -49,8 +49,8 @@ int main(int argc, char **argv, const char **env)
 	{	// ESCRIBIR LO QUE SE QUIERE EJECUTAR AL DEFINIR EL BUFFER DEBAJO
 		env_array = get_false_env_array();
 		env_list = create_env_list((const char**)env_array);
-		buffer= ft_strdup("export Z=z ; echo $Z");
-		if (!print_parsing_error(split_commands(&buffer, &commands)))
+		buffer= ft_strdup(">>> a");
+		if (!print_parsing_error(split_commands(&buffer, &commands), &prev_exit_status))
 			while (commands)
 				commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status);
 		free(buffer);
@@ -62,11 +62,11 @@ int main(int argc, char **argv, const char **env)
 		env_array = env_list_to_array(env_list);
 		buffer = ft_strdup(argv[argc - 1]);
 		//buffer = ft_strdup("exit 17");
-		if (!print_parsing_error(split_commands(&buffer, &commands)))
+		if (!print_parsing_error(split_commands(&buffer, &commands), &prev_exit_status))
 			while (commands)
 				commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status);
 		free(buffer);
-		return (0);
+		return (prev_exit_status);
 	}
 }
 
