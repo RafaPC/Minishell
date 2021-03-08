@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/07 11:54:56 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 08:54:45 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,18 +76,21 @@ int index)
 	{
 		if (ft_strchr("\"\'", (*input)[cmd_pars->i]))
 			skip_quotations(input, cmd_pars);
+		else if ((*input)[cmd_pars->i] == '\\')
+		{
+			cmd_pars->i++;
+			if (ft_strchr("\"\'", (*input)[cmd_pars->i]))
+				cmd_pars->i++;
+		}
 		else
 			cmd_pars->i++;
 	}
 	lenght = cmd_pars->i - index;
 	end = index + lenght;
-	if (!(command_args = ft_calloc(2, sizeof(char *))))
-	{
-		cmd_pars->i = ft_extract(input, end - 1, end - start);
-		return (0);
-	}
-	*command_args = ft_strncpy(&(*input)[index], lenght);
+	if ((command_args = ft_calloc(2, sizeof(char *))))
+		*command_args = ft_strncpy(&(*input)[index], lenght);
 	cmd_pars->i = ft_extract(input, end - 1, end - start);
+	cmd_pars->extracted_content = true;
 	return (command_args);
 }
 
@@ -142,6 +145,7 @@ t_command **commands, char **input)
 	cmd_pars->i + counter + counter_aux);
 	add_command(commands, command, counter == 1
 	? output_redirection : output_redirection_app);
+
 }
 
 void	handle_input_redirection(t_command_parsing *cmd_pars,
@@ -205,9 +209,14 @@ t_command **commands, char *input)
 	{	
 		if (not_preceeding_argument(input, cmd_pars->i))
 		{
-			ft_lstclear(&cmd_pars->arguments, free);
-			cmd_pars->error = semicolon;
-			return ;
+			if (cmd_pars->extracted_content)
+				cmd_pars->extracted_content = false;
+			else
+			{
+				ft_lstclear(&cmd_pars->arguments, free);
+				cmd_pars->error = semicolon;
+				return ;
+			}
 		}
 	}
 	add_command(commands, load_command_args(cmd_pars, input), simple_command);

@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/06 12:20:47 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 10:57:40 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int			is_builtin(t_command *command, char ***env_array, t_list **env_list, int *
 	else if (!ft_strncmp(command->tokens[0], "env", 4))
 		result = (env(*env_list, &command->tokens[1]));
 	else if (!ft_strncmp(command->tokens[0], "exit", 5))
-		ft_exit(command, env_list, *env_array);//ERROR liberar memoria y un monton de cosas
+		ft_exit(command, env_list, *env_array);
 	if (result == 2)
 	{
 		free(*env_array);
@@ -111,12 +111,15 @@ t_list **env_list, int *prev_exit_status)
 		else
 		{
 			errno = 0;
-			ft_printf("%s: command not found\n", command->tokens[0]);
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(command->tokens[0], STDERR_FILENO);
+			ft_putstr_fd(": command not found\n", STDERR_FILENO);
+			*prev_exit_status = 127;			
 		}
 		ft_lstclear(env_list, free);
 		free(*env_array);
 		free_commands(command);
-		exit(errno);
+		exit(*prev_exit_status);
 	}
 	else
 	{
@@ -139,7 +142,7 @@ t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list, int
 	int			fdpipe[2];
 	int			std_out_cpy;
 
-	while (commands->relation != simple_command)
+	while (commands && commands->relation != simple_command)
 	{
 		if (!get_input_and_output(commands->tokens[0], commands->relation, prev_exit_status, *env_list))
 			break ;
@@ -162,8 +165,16 @@ t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list, int
 		}
 		commands = del_command(commands);
 	}
-	if (errno)
-		*prev_exit_status = errno;
+	if (errno == 2) //Move to its own function?
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(commands->tokens[0], STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		while (commands->relation != simple_command)
+			commands = del_command(commands);
+		commands = del_command(commands);
+	}
+	*prev_exit_status = 1; //For some reason... 
 	return (commands);
 }
 
@@ -172,14 +183,15 @@ t_list **env_list, int *prev_exit_status)
 {
 	int			stdin_copy;
 	int			stdout_copy;
-
 	errno = 0;
 	stdin_copy = dup(STDIN_FILENO);
 	stdout_copy = dup(STDOUT_FILENO);
 	commands = set_fd(commands, env_array, env_list, prev_exit_status);
-	parse_insertions(commands->tokens, *env_list, *prev_exit_status, false);
 	if (!errno)
+	{
+		parse_insertions(commands->tokens, *env_list, *prev_exit_status, false);
 		command_execution(commands, env_array, env_list, prev_exit_status);
+	}
 	dup2(stdin_copy, STDIN_FILENO);
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);

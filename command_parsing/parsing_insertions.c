@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/06 14:07:27 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 09:30:09 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,9 @@ int		insert_variable(char **input, int index, t_list *env_list, int prev_exit_st
 	else
 	{
 		while (ft_isalnum((*input)[index + j + 1]) || (*input)[index + j + 1] == '_')
-		j++;	
+		j++;
+		if (!j)
+			return(index + 1);	
 		if (!(aux = ft_strncpy(&(*input)[index + 1], j)))
 			return (index);
 		variable = get_env_var(aux, env_list);
@@ -152,7 +154,20 @@ int		insert_variable(char **input, int index, t_list *env_list, int prev_exit_st
 	return (index);
 }
 
-void	parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_bool single_run)
+int handle_backslash(char **args, int index)
+{
+	index = ft_extract(args, index, 1);
+	if (ft_strrchr("\"\'$", args[0][index]))
+		index++;
+	else if (!ft_strncmp(&args[0][index], "\\\\n", 3))
+	{
+		index = ft_extract(args, index + 2, 3);
+		index = ft_insert(args, "\n", index, 1);
+	}
+	return (index);
+}
+
+void	parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_bool single_run) //TODO when bored: Change cmd_pars to simple int;
 {
 	t_command_parsing cmd_pars;
 
@@ -161,6 +176,8 @@ void	parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_boo
 	{
 		while (args[0][cmd_pars.i])
 		{
+			if (args[0][cmd_pars.i] == '\\')
+				cmd_pars.i = handle_backslash(args, cmd_pars.i);
 			if (ft_strrchr("\"\'", args[0][cmd_pars.i]))
 				handle_quotations(&args[0], &cmd_pars, env_list, prev_exit_status);
 			else if (args[0][cmd_pars.i] == '$')

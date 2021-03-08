@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/07 11:46:45 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 09:39:57 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct	s_split_commands
 	t_list				*arguments;
 	int					error;
 	int					error_index;
+	t_bool				extracted_content;
 }				t_command_parsing;
 
 /*

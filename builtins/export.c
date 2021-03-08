@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 20:54:28 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/28 11:20:50 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 09:44:35 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int		export(t_list **env_list, char **args)
 			ft_putstr_fd("minishell: export: `", STDERR_FILENO);
 			ft_putstr_fd(*args, STDERR_FILENO);
 			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			errno = 1;
 			// ft_printf("minishell: export: `%s': not a valid identifier\n", *args);
 		}
 		else if (!export_variable(env_list, *args))
