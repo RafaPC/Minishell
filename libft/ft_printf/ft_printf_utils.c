@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 15:36:57 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/22 18:48:55 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/08 12:16:56 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,14 @@ char		*get_width(char *format_string, t_modifiers *modifiers)
 **	Then returns the same number it receives
 */
 
-int			print_justification(char c, int times)
+int			print_justification(int fd, char c, int times)
 {
 	int times_copy;
 
 	times_copy = times;
 	while (times > 0)
 	{
-		write(1, &c, 1);
+		write(fd, &c, 1);
 		times--;
 	}
 	return (times_copy);

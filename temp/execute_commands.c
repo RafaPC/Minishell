@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 12:33:14 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 15:39:59 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ t_list **env_list, int *prev_exit_status)
 	if (is_builtin(command, env_array, env_list, prev_exit_status) != -1)//ERROR handling
 		pid = 1;
 	else if ((pid = fork()) == -1)
-		ft_printf("Error al forkear");
+		ft_printf(STDOUT_FILENO, "Error al forkear");
 	else if (pid == 0)// Hijo
 	{
 		if ((command_path = get_command_path(
@@ -124,16 +124,16 @@ t_list **env_list, int *prev_exit_status)
 	else
 	{
 		if (wait(&wstatus) == -1)// Error al esperar porque no haya hijos y cosas así
-			ft_printf("Error al esperar");
+			ft_printf(STDOUT_FILENO, "Error al esperar");
 		else if (WIFEXITED(wstatus))
 			*prev_exit_status = WEXITSTATUS(wstatus);
 		else if (WIFSIGNALED(wstatus))
 		{
-			ft_printf("Returned by signal\n");
-			ft_printf("Signal code: %i\n", WTERMSIG(wstatus));
+			ft_printf(STDOUT_FILENO, "Returned by signal\n");
+			ft_printf(STDOUT_FILENO, "Signal code: %i\n", WTERMSIG(wstatus));
 		}
 		else
-			ft_printf("Not returned normally\n");
+			ft_printf(STDOUT_FILENO, "Not returned normally\n");
 	}
 }
 

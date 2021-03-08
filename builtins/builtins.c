@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/07 10:50:57 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 17:19:07 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,14 @@ t_bool	env(t_list *env_list, char **args)
 
 	if (*args)
 	{
-		ft_printf("env: %s: No such file or directory\n");
+		ft_printf(STDOUT_FILENO, "env: %s: No such file or directory\n", *args);
 		return (true);
 	}
 	while (env_list)
 	{
 		content = (char*)env_list->content;
 		if (ft_strchr(content, '='))
-		{
-			ft_putstr_fd(content, STDOUT_FILENO);
-			write(STDOUT_FILENO, "\n", 1);
-		}
+			ft_printf(STDOUT_FILENO, "%s\n", content);
 		env_list = env_list->next;
 	}
 	return (true);
@@ -130,45 +127,44 @@ t_bool	cd(t_list **env_list, char **args)
 	char	*aux;
 
 	if (args[0] && args[1])
-		ft_putstr_fd("minishell: cd: too many arguments\n", STDOUT_FILENO);
-	else
 	{
-		if (!args[0])//Hacer cd a home
-		{
-			pwd_new = get_env_var("HOME", *env_list);
-			if (pwd_new)
-				chdir(pwd_new);
-			else
-				ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
-		}
+		ft_putstr_fd("minishell: cd: too many arguments\n", STDOUT_FILENO);
+		return (true);
+	}
+	aux = getcwd(NULL, 0);
+	if (!args[0])//Hacer cd a home
+		if ((pwd_new = get_env_var("HOME", *env_list)))//FIXME:checkear errores del chdir, también liberar aux antes de returnear
+			chdir(pwd_new);
 		else
 		{
-			if (chdir(args[0]) == -1)
+			ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
+			return (1);
+		}
+	else
+	{
+		if (chdir(args[0]) == -1)
+		{
+			if (errno == ENOENT)
+				ft_printf(STDERR_FILENO,
+				"minishell: cd: %s: No such file or directory\n", args[0]);
+			else if (errno == EACCES)
 			{
-				if (errno == ENOENT)
-				{//FIXME: poner con printf modificado
-					ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-					ft_putstr_fd(args[0], STDERR_FILENO);
-					ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-				}
-				return (false);
+				ft_printf(STDERR_FILENO,
+				"minishell: cd: %s: Permission denied\n", args[0]);
+				errno = 1;
 			}
-		}
-		if (get_env_var("OLDPWD", *env_list))
-		{
-			aux = get_env_var("PWD", *env_list);
-			pwd_new = ft_strjoin("OLDPWD=", aux);
-			export_variable(env_list, pwd_new);
-			free(pwd_new);
-		}
-		if (get_env_var("PWD", *env_list))
-		{
-			aux = getcwd(NULL, 0);
-			pwd_new = ft_strjoin("PWD=", aux);
-			export_variable(env_list, pwd_new);
-			free(aux);
-			free(pwd_new);
+			return (false);
 		}
 	}
+	pwd_new = ft_strjoin("OLDPWD=", aux);
+	export_variable(env_list, pwd_new);
+	free(pwd_new);
+	free(aux);
+
+	aux = getcwd(NULL, 0);
+	pwd_new = ft_strjoin("PWD=", aux);
+	export_variable(env_list, pwd_new);
+	free(aux);
+	free(pwd_new);
 	return (true);
 }

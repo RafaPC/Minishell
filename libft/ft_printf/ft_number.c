@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/11 16:48:55 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/22 18:48:52 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/08 13:20:03 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 void	handle_number(long n, t_modifiers modifiers, int *char_sum)
 {
 	if (n == 0 && (modifiers.precision == 0 || modifiers.precision == -1))
-		*char_sum += ft_printf("%*s", modifiers.width, "");
+		*char_sum += ft_printf(modifiers.fd, "%*s", modifiers.width, "");
 	else if (modifiers.precision != -2 && modifiers.width)
 		handle_number_prec_width(n, modifiers, char_sum);
 	else
@@ -36,7 +36,7 @@ void	handle_number(long n, t_modifiers modifiers, int *char_sum)
 		if (n < 0 && ((modifiers.zero_padded && modifiers.width) ||
 		(modifiers.precision != -2)) && !modifiers.left_justified)
 		{
-			*char_sum += write(1, "-", 1);
+			*char_sum += write(modifiers.fd, "-", 1);
 			n = -n;
 		}
 		handle_number_no_prec(n, modifiers, char_sum);
@@ -58,14 +58,14 @@ void	handle_number_no_prec(long n, t_modifiers modifiers, int *char_sum)
 	{
 		*char_sum += justification_width;
 		if (!modifiers.left_justified)
-			print_justification((modifiers.zero_padded) ? '0' : ' ',
-			justification_width);
-		print_number(n, char_sum);
+			print_justification(modifiers.fd,
+			(modifiers.zero_padded) ? '0' : ' ', justification_width);
+		print_number(modifiers.fd, n, char_sum);
 		if (modifiers.left_justified)
-			print_justification(' ', justification_width);
+			print_justification(modifiers.fd, ' ', justification_width);
 	}
 	else
-		print_number(n, char_sum);
+		print_number(modifiers.fd, n, char_sum);
 }
 
 /*
@@ -87,14 +87,17 @@ int *char_sum)
 		number_width++;
 	justification_width = modifiers.width - number_width;
 	if (!modifiers.left_justified && justification_width > 0)
-		*char_sum += print_justification(' ', justification_width);
+		*char_sum += print_justification(
+			modifiers.fd, ' ', justification_width);
 	if (n < 0)
-		*char_sum += write(1, "-", 1);
+		*char_sum += write(modifiers.fd, "-", 1);
 	if (modifiers.precision > digits)
-		*char_sum += print_justification('0', modifiers.precision - digits);
-	print_number(ft_abs(n), char_sum);
+		*char_sum += print_justification(
+			modifiers.fd, '0', modifiers.precision - digits);
+	print_number(modifiers.fd, ft_abs(n), char_sum);
 	if (modifiers.left_justified && justification_width > 0)
-		*char_sum += print_justification(' ', justification_width);
+		*char_sum += print_justification(
+			modifiers.fd, ' ', justification_width);
 }
 
 /*
@@ -102,7 +105,7 @@ int *char_sum)
 **	It prints the number and sums char_sum by 1 for each character it prints
 */
 
-void	print_number(long n, int *char_sum)
+void	print_number(int fd, long n, int *char_sum)
 {
 	long int	n_copy;
 	char		c;
@@ -111,14 +114,14 @@ void	print_number(long n, int *char_sum)
 	if (n_copy < 0)
 	{
 		n_copy = -n_copy;
-		*char_sum += write(1, "-", 1);
+		*char_sum += write(fd, "-", 1);
 	}
 	if (n_copy > 9)
 	{
-		print_number(n_copy / 10, char_sum);
+		print_number(fd, n_copy / 10, char_sum);
 		c = n_copy % 10 + 48;
 	}
 	else
 		c = n_copy + 48;
-	*char_sum += write(1, &c, 1);
+	*char_sum += write(fd, &c, 1);
 }

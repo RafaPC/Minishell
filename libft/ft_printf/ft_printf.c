@@ -6,13 +6,13 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/06 17:01:23 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/22 18:48:18 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/08 15:19:23 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int			ft_printf(const char *format_string, ...)
+int			ft_printf(int fd, const char *format_string, ...)
 {
 	va_list		args;
 	int			char_sum;
@@ -24,13 +24,13 @@ int			ft_printf(const char *format_string, ...)
 	{
 		if (*format_string == '%')
 		{
-			modifiers = ft_initialize_struct();
+			modifiers = ft_initialize_struct(fd);
 			format_string = read_modifiers(args,
 			(char *)++format_string, &modifiers);
 			format(args, *format_string, modifiers, &char_sum);
 		}
 		else
-			char_sum += write(1, format_string, 1);
+			char_sum += write(fd, format_string, 1);
 		if (*format_string)
 			format_string++;
 	}
@@ -105,7 +105,7 @@ int *char_sum)
 **	This function initialices modifiers values and returns them in a struct
 */
 
-t_modifiers	ft_initialize_struct(void)
+t_modifiers	ft_initialize_struct(int fd)
 {
 	t_modifiers modifiers;
 
@@ -113,6 +113,7 @@ t_modifiers	ft_initialize_struct(void)
 	modifiers.zero_padded = false;
 	modifiers.precision = -2;
 	modifiers.width = 0;
+	modifiers.fd = fd;
 	return (modifiers);
 }
 

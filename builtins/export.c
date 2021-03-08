@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 20:54:28 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 09:44:35 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 15:29:36 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,14 @@ int		export(t_list **env_list, char **args)
 		? ft_strncpy(*args, equal_position)
 		: ft_strdup(*args);
 		if (**args == '=' || !valid_env_characters(str_aux))
-		{ //FIXME: cambiar por printf que coja fd
-			ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-			ft_putstr_fd(*args, STDERR_FILENO);
-			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+		{
+			ft_printf(STDERR_FILENO,
+			"minishell: export: `%s': not a valid identifier\n", *args);
 			errno = 1;
-			// ft_printf("minishell: export: `%s': not a valid identifier\n", *args);
 		}
 		else if (!export_variable(env_list, *args))
 		{
-			ft_printf("Error al alocar memoria\n"); // ERROR
+			ft_printf(STDOUT_FILENO, "Error al alocar memoria\n"); // ERROR
 			return (0);
 		}
 		free(str_aux);
