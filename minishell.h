@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 09:39:57 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 12:33:30 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ char			*get_command_path(char **paths, char *command);
 t_command		*del_command(t_command *command);
 t_command		*free_commands(t_command *commands);
 t_command		*handle_errors(t_command *command);
+t_command		*print_redirection_errors(t_command *commands, int *prev_exit_status);
 /*
 **		BUILTINS
 */

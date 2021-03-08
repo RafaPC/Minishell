@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 10:57:40 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 12:33:14 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,16 +165,8 @@ t_command	*set_fd(t_command *commands, char ***env_array, t_list **env_list, int
 		}
 		commands = del_command(commands);
 	}
-	if (errno == 2) //Move to its own function?
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(commands->tokens[0], STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		while (commands->relation != simple_command)
-			commands = del_command(commands);
-		commands = del_command(commands);
-	}
-	*prev_exit_status = 1; //For some reason... 
+	if (errno)
+		commands = print_redirection_errors(commands, prev_exit_status); 
 	return (commands);
 }
 

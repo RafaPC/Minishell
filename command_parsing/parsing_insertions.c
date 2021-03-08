@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/08 09:30:09 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/08 12:13:58 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,19 @@ void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
 	cmd_pars->error = 5;
 }
 
+int handle_backslash(char **args, int index)
+{
+	index = ft_extract(args, index, 1);
+	if (ft_strrchr("\"\'$", args[0][index]))
+		index++;
+	else if (!ft_strncmp(&args[0][index], "\\\\n", 3))
+	{
+		index = ft_extract(args, index + 2, 3);
+		index = ft_insert(args, "\n", index, 1);
+	}
+	return (index);
+}
+
 /*
 ** INPUT = Parse input.
 **
@@ -69,16 +82,11 @@ t_list *env_list, int prev_exit_status)
 	cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
 	while ((*input)[cmd_pars->i])
 	{
-		if ((*input)[cmd_pars->i] == '\\')
-		{
-			if (ft_strchr("$`\"", (*input)[cmd_pars->i + 1]))
-				cmd_pars->i = ft_extract(input, cmd_pars->i, 1) + 1;
-			else
-				cmd_pars->i++;
-		}
-		if ((*input)[cmd_pars->i] == '$')
+		if (input[0][cmd_pars->i] == '\\')
+				cmd_pars->i = handle_backslash(input, cmd_pars->i);
+		else if ((*input)[cmd_pars->i] == '$')
 			cmd_pars->i = insert_variable(input, cmd_pars->i, env_list, prev_exit_status);
-		if ((*input)[cmd_pars->i] == '\"')
+		else if ((*input)[cmd_pars->i] == '\"')
 		{
 			cmd_pars->i = ft_extract(input, cmd_pars->i, 1);
 			return ;
@@ -150,19 +158,6 @@ int		insert_variable(char **input, int index, t_list *env_list, int prev_exit_st
 		variable = get_env_var(aux, env_list);
 		index = ft_extract(input, index + j, j + 1);
 		index = ft_insert(input, variable, index, ft_strlen(variable));
-	}
-	return (index);
-}
-
-int handle_backslash(char **args, int index)
-{
-	index = ft_extract(args, index, 1);
-	if (ft_strrchr("\"\'$", args[0][index]))
-		index++;
-	else if (!ft_strncmp(&args[0][index], "\\\\n", 3))
-	{
-		index = ft_extract(args, index + 2, 3);
-		index = ft_insert(args, "\n", index, 1);
 	}
 	return (index);
 }
