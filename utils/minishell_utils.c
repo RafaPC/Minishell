@@ -27,6 +27,8 @@ t_list	*create_env_list(const char **env)
 	t_list	*env_list;
 	t_list	*aux;
 
+	if (!env || !(*env))
+		return (NULL);
 	env_list = ft_lstnew(ft_strdup(*env));
 	aux = env_list;
 	env++;
