@@ -139,6 +139,7 @@ t_bool	cd(t_list **env_list, char **args)
 		else
 		{
 			ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
+			errno = 1;
 			return (1);
 		}
 	else

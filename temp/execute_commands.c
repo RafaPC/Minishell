@@ -102,7 +102,9 @@ t_list **env_list, int *prev_exit_status)
 		ft_printf(STDOUT_FILENO, "Error al forkear");
 	else if (pid == 0)// Hijo
 	{
-		if ((command_path = get_command_path(
+		if (ft_checkchar(command->tokens[0][0], "/."))//TODO:
+			execve(command->tokens[0], command->tokens, *env_array);
+		else if ((command_path = get_command_path(
 			get_path(*env_list), command->tokens[0])) != NULL)
 		{
 			execve(command_path, command->tokens, *env_array);
