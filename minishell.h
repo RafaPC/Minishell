@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 12:33:30 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/09 12:16:09 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ t_command		*del_command(t_command *command);
 t_command		*free_commands(t_command *commands);
 t_command		*handle_errors(t_command *command);
 t_command		*print_redirection_errors(t_command *commands, int *prev_exit_status);
+void			debug_minishell(t_list **env_list, char ***env_array, t_bool verbose);
 /*
 **		BUILTINS
 */

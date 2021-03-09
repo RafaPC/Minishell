@@ -1,0 +1,36 @@
+pwd
+pwd "useless argument"
+unset PWD ; pwd
+echo | cat -e
+echo hola buenos dias | cat -e
+echo -n hola que tal bocadillo digital | cat -e
+env | grep USER
+export Z=z ; echo $Z
+export A=a B=b C=c; echo $A$B$C
+export zz zzz= zzzz=asd ; echo $zz$zzz$zzzz; export | grep zz
+export =a ; echo $a
+export /dont/export/this=hola ; export | grep /dont/export/this
+export A=a=a=a=a=a; echo $A
+export A B C; echo $A$B$C
+export $
+export ?=42
+unset
+export A=a ; unset A ; echo $A
+export A=a B=b C=c ; unset A asd B asd ; echo $A$B$C                                                                               
+pwd
+echo $PWD
+./lscp
+;
+|
+|b
+a|||b
+> > a
+< < a
+< >> a
+>>> a
+<<<< a
+a<<<<
+pwd >;
+;pwd
+pwd ;;
+echo hello

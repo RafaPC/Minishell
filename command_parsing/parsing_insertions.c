@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/08 12:13:58 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/09 10:45:37 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ int		insert_variable(char **input, int index, t_list *env_list, int prev_exit_st
 		aux = ft_itoa(prev_exit_status);
 		index = ft_extract(input, index + 1, 2);
 		index = ft_insert(input, aux, index, ft_strlen(aux));
-		free (aux);
 	}
 	else
 	{
@@ -159,6 +158,7 @@ int		insert_variable(char **input, int index, t_list *env_list, int prev_exit_st
 		index = ft_extract(input, index + j, j + 1);
 		index = ft_insert(input, variable, index, ft_strlen(variable));
 	}
+	free (aux);
 	return (index);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 17:19:07 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/09 10:37:01 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,21 @@ void	ft_exit(t_command *commands, t_list **env_list, char **env_array)
 	int exit_code;
 
 	exit_code = 0;
-	if (commands->tokens[1])
-	{
-		if (commands->tokens[2])
+	if (commands)
+		if (commands->tokens[1])
 		{
-			exit_code = 1;
-			ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-		}
-		else if (ft_str_checkset(commands->tokens[1], "0123456789"))
-			exit_code = ft_atoi(commands->tokens[1]);
-		else
-		{
-			exit_code = 2;
-			ft_putstr_fd("minishell: exit: notanumber: numeric argument required\n", STDERR_FILENO);
-		}
+			if (commands->tokens[2])
+			{
+				exit_code = 1;
+				ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
+			}
+			else if (ft_str_checkset(commands->tokens[1], "0123456789"))
+				exit_code = ft_atoi(commands->tokens[1]);
+			else
+			{
+				exit_code = 2;
+				ft_putstr_fd("minishell: exit: notanumber: numeric argument required\n", STDERR_FILENO);
+			}
 	}
 	free_commands(commands);
 	ft_lstclear(env_list, free);
