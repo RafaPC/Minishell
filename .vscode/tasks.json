@@ -14,7 +14,7 @@
                 "${workspaceFolder}/utils/*.c",
                 "${workspaceFolder}/builtins/*.c",
                 "${workspaceFolder}/command_parsing/*.c",
-                "${workspaceFolder}/temp/execute_commands.c",
+                "${workspaceFolder}/temp/*.c",
                 "-o",
                 "${workspaceFolder}/debug.out"
             ],

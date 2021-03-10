@@ -12,6 +12,8 @@
 
 #include "libft.h"
 #include "minishell.h"
+#include <dirent.h>
+#include <sys/types.h>
 
 /*
 ** Might need to change the permits!
@@ -80,6 +82,27 @@ int			is_builtin(t_command *command, char ***env_array, t_list **env_list, int *
 	return (result);
 }
 
+t_bool		execute_path(t_command *command, int *prev_exit_status)
+{
+	DIR *fd_dir;
+
+	if (!ft_strncmp("..", command->tokens[0], 3))
+	{
+		ft_putstr_fd(
+			"minishell: ..: command not found\n",STDERR_FILENO);
+		*prev_exit_status = 127;
+	}
+	else if((fd_dir = opendir(command->tokens[0])))
+	{
+		closedir(fd_dir);
+		ft_printf(STDERR_FILENO,
+			"minishell: %s: Is a directory\n", command->tokens[0]);
+		*prev_exit_status = 126;
+		return (true);
+	}
+	return (false);
+}
+
 /*
 ** TODO:	COSILLAS A TENER EN CUENTA
 ** checkear si el comando empieza por / eso significa que hay que ejecutarlo
@@ -94,15 +117,29 @@ t_list **env_list, int *prev_exit_status)
 	int		pid;
 	int		wstatus;
 	char	*command_path;
+	int		fd;
 
+	fd = -1;
 	pid = 0;
-	if (is_builtin(command, env_array, env_list, prev_exit_status) != -1)//ERROR handling
-		pid = 1;
-	else if ((pid = fork()) == -1)
+
+	if (is_builtin(command, env_array, env_list, prev_exit_status) != -1 || execute_path(command, prev_exit_status))//ERROR handling
+		return ;
+	if (ft_checkchar(command->tokens[0][0], "/."))
+	{
+		if ((fd = open(command->tokens[0], O_RDONLY)) != -1)
+			close(fd);
+		else
+		{//FIXME: maybe cambiar lo de los erroes de forma que aquí solo haga falta poner el prev_exit_status
+			ft_printf(STDERR_FILENO, "minishell: %s: No such file or directory\n", command->tokens[0]);
+			*prev_exit_status = 127;
+			return ;
+		}
+	}
+	if ((pid = fork()) == -1)
 		ft_printf(STDOUT_FILENO, "Error al forkear");
 	else if (pid == 0)// Hijo
 	{
-		if (ft_checkchar(command->tokens[0][0], "/."))//TODO:
+		if (fd != -1)
 			execve(command->tokens[0], command->tokens, *env_array);
 		else if ((command_path = get_command_path(
 			get_path(*env_list), command->tokens[0])) != NULL)
@@ -113,9 +150,8 @@ t_list **env_list, int *prev_exit_status)
 		else
 		{
 			errno = 0;
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(command->tokens[0], STDERR_FILENO);
-			ft_putstr_fd(": command not found\n", STDERR_FILENO);
+			ft_printf(STDERR_FILENO,
+			"minishell: %s: command not found\n", command->tokens[0]);
 			*prev_exit_status = 127;			
 		}
 		ft_lstclear(env_list, free);

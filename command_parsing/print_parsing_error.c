@@ -29,9 +29,8 @@ int	print_parsing_error(int return_value, int *prev_exit_status)
 			aux = ";";
 		else if (return_value == newline)
 			aux = "newline";
-		ft_putstr_fd("syntax error near unexpected token \'", STDERR_FILENO);
-		ft_putstr_fd(aux, STDERR_FILENO);
-		ft_putstr_fd("\'\n", STDERR_FILENO);
+		ft_printf(STDERR_FILENO,
+		"minishell: [argumento]: syntax error near unexpected token `%s'\nminishell: [argumento]: `%s'\n", aux, aux);
 		*prev_exit_status = 1;
 	}
 	return (return_value);
