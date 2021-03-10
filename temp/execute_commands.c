@@ -100,6 +100,7 @@ t_bool		execute_path(t_command *command, int *prev_exit_status)
 		*prev_exit_status = 126;
 		return (true);
 	}
+	errno = 0;
 	return (false);
 }
 
