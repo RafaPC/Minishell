@@ -91,7 +91,7 @@ char	*get_env_var(char *var, t_list *env_list)
 		content = (char*)(env_list->content);
 		if (var_length == (ft_get_index_of(content, '=') + 1) &&
 		!ft_strncmp(content, var_equal, var_length))
-			var_value =  (char *)(content + var_length);
+			var_value =  ft_strdup((char *)(content + var_length));
 		env_list = env_list->next;
 	}
 	if (!var_value && !ft_strncmp("PWD", var, 4))//FIXME: maybe lo mismo para OLDPWD

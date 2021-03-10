@@ -153,7 +153,7 @@ int		insert_variable(char **input, int index, t_list *env_list, int prev_exit_st
 	j = 0;
 	aux = NULL;
 	if (ft_isspace((*input)[index + 1]) || !(*input)[index + 1])
-		return (index + 1);	
+		return (index + 1);
 	if (!ft_strncmp("$?", &(*input)[index], 2))
 	{
 		aux = ft_itoa(prev_exit_status);
@@ -165,12 +165,14 @@ int		insert_variable(char **input, int index, t_list *env_list, int prev_exit_st
 		while (ft_isalnum((*input)[index + j + 1]) || (*input)[index + j + 1] == '_')
 		j++;
 		if (!j)
-			return(index + 1);	
+			return(index + 1);
 		if (!(aux = ft_strncpy(&(*input)[index + 1], j)))
 			return (index);
 		variable = get_env_var(aux, env_list);
 		index = ft_extract(input, index + j, j + 1);
 		index = ft_insert(input, variable, index, ft_strlen(variable));
+		if (variable)
+			free(variable);
 	}
 	free (aux);
 	return (index);

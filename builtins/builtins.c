@@ -135,10 +135,14 @@ t_bool	cd(t_list **env_list, char **args)
 	aux = getcwd(NULL, 0);
 	if (!args[0])//Hacer cd a home
 		if ((pwd_new = get_env_var("HOME", *env_list)))//FIXME:checkear errores del chdir, también liberar aux antes de returnear
+		{
 			chdir(pwd_new);
+			free(pwd_new);
+		}
 		else
 		{
 			ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
+			free(aux);
 			errno = 1;
 			return (1);
 		}

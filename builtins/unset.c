@@ -14,6 +14,29 @@
 #include "libft.h"
 #include "minishell.h"
 
+
+t_bool	unset_variable(t_list **env, char *arg)
+{
+	t_list	*aux;
+	int		compare_length;
+	int		compare_result;
+
+	compare_length = ft_strlen(arg) + 1;
+	compare_result = ft_strncmp(
+		(char*)(*env)->content, arg, compare_length);
+	if (compare_result == 0 || compare_result == 61)
+	{
+		aux = *env;
+		*env = aux->next;
+		ft_lstdelone(aux, free);
+		return (true);
+	}
+	else if ((env[0])->next)
+		return (unset_recursive((env[0])->next, *env, arg, compare_length));
+	else
+		return (false);
+}
+
 /*
 ** Compares each variable from the list with the name given as argument
 ** It compares n + 1 characters, n being the name argument length
@@ -37,33 +60,26 @@
 ** fuera igual que otro cualquiera
 */
 
-t_bool	unset(t_list **env, char **args)
+int	unset(t_list **env, char **args)
 {
-	t_list	*aux;
-	int		compare_length;
-	int		compare_result;
+	t_bool	aux;
+	t_bool	env_changed;
 
+	env_changed = false;
 	while (*args)
 	{
 		if (!valid_env_characters(*args) || ft_strchr(*args, '='))
-			printf("unset: '%s': not a valid identifier\n", *args);
+			ft_printf(STDERR_FILENO,
+			"unset: '%s': not a valid identifier\n", *args);//FIXME: checkear esto
 		else if (*env)
 		{
-			compare_length = ft_strlen(*args) + 1;
-			compare_result = ft_strncmp(
-				(char*)(*env)->content, *args, compare_length);
-			if (compare_result == 0 || compare_result == 61)
-			{
-				aux = *env;
-				*env = aux->next;
-				ft_lstdelone(aux, free);
-			}
-			else if ((*env)->next)
-				unset_recursive((*env)->next, *env, *args, compare_length);
+			aux = unset_variable(env, *args);
+			if (!env_changed)
+				env_changed = aux;
 		}
 		args++;
 	}
-	return (true);
+	return (env_changed ? 2 : 1);
 }
 
 /*

@@ -115,7 +115,7 @@ t_bool			valid_env_characters(char *var_name);
 /*
 **				UNSET
 */
-t_bool			unset(t_list **env_list, char **args);
+int				unset(t_list **env_list, char **args);
 t_bool			unset_recursive(t_list *env_list, t_list *previous_aux,
 char *var_name, int compare_length);
 
