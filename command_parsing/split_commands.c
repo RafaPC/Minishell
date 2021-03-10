@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/06 11:11:07 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/10 13:18:58 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,14 +136,6 @@ int		split_commands(char **input, t_command **commands)
 			free(*input);
 			return (cmd_pars.error);
 		}
-		else if ((*input)[cmd_pars.i] == '\"' || (*input)[cmd_pars.i] == '\'')
-			skip_quotations(input, &cmd_pars);
-		else if (((*input)[cmd_pars.i] == '<'))
-			handle_input_redirection(&cmd_pars, commands, input);
-		else if ((*input)[cmd_pars.i] == '>')
-			handle_redirections_split(&cmd_pars, commands, input);
-		else if (ft_isspace((*input)[cmd_pars.i]))
-			add_command_argument(&cmd_pars, *input);
 		else if (ft_strchr(";|", (*input)[cmd_pars.i]))
 		{
 			if (command_split(&cmd_pars, commands, *input))
@@ -152,6 +144,14 @@ int		split_commands(char **input, t_command **commands)
 				return (0);
 			}
 		}
+		else if (ft_strrchr("\\\"\'", input[0][cmd_pars.i]))
+			skip_quotations(input, &cmd_pars);
+		else if (((*input)[cmd_pars.i] == '<'))
+			handle_input_redirection(&cmd_pars, commands, input);
+		else if ((*input)[cmd_pars.i] == '>')
+			handle_redirections_split(&cmd_pars, commands, input);
+		else if (ft_isspace((*input)[cmd_pars.i]))
+			add_command_argument(&cmd_pars, *input);
 		else
 			cmd_pars.i++;
 	}

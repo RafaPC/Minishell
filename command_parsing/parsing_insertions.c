@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/09 10:45:37 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/10 13:41:28 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,32 @@
 
 void	skip_quotations(char **input, t_command_parsing *cmd_pars)
 {
-	cmd_pars->i++;
-	while (!ft_strchr("\"\'", input[0][cmd_pars->i]))
+	char *closer;
+	char *alternate;
+
+	if (input[0][cmd_pars->i] == '\\')
+	{
 		cmd_pars->i++;
-	if (!input[0][cmd_pars->i])
-		cmd_pars->error = newline;
+		if (ft_strrchr("\"\'", input[0][cmd_pars->i]))
+			cmd_pars->i++;
+	}
 	else
+	{
+		closer = input[0][cmd_pars->i] == '\"' ? "\"" : "\'";
+		alternate = input[0][cmd_pars->i] == '\'' ? "\\\'" : "\\\"";
 		cmd_pars->i++;
+		while (!ft_strchr(closer, input[0][cmd_pars->i]))
+		{
+			if (ft_strchr(alternate, input[0][cmd_pars->i]))
+				skip_quotations(input, cmd_pars);
+			else
+				cmd_pars->i++;
+		}	
+		if (!input[0][cmd_pars->i])
+ 			cmd_pars->error = newline;
+		else
+			cmd_pars->i++;
+	}
 }
 
 /*
@@ -50,13 +69,8 @@ void	handle_single_quotations(char **input, t_command_parsing *cmd_pars)
 int handle_backslash(char **args, int index)
 {
 	index = ft_extract(args, index, 1);
-	if (ft_strrchr("\"\'$", args[0][index]))
+	if (ft_strrchr("\"\'$\\", args[0][index]))
 		index++;
-	else if (!ft_strncmp(&args[0][index], "\\\\n", 3))
-	{
-		index = ft_extract(args, index + 2, 3);
-		index = ft_insert(args, "\n", index, 1);
-	}
 	return (index);
 }
 
@@ -173,7 +187,7 @@ void	parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_boo
 		{
 			if (args[0][cmd_pars.i] == '\\')
 				cmd_pars.i = handle_backslash(args, cmd_pars.i);
-			if (ft_strrchr("\"\'", args[0][cmd_pars.i]))
+			else if (ft_strrchr("\"\'", args[0][cmd_pars.i]))
 				handle_quotations(&args[0], &cmd_pars, env_list, prev_exit_status);
 			else if (args[0][cmd_pars.i] == '$')
 				cmd_pars.i = insert_variable(&args[0], cmd_pars.i, env_list, prev_exit_status);

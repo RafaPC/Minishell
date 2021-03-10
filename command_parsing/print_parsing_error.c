@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:19:23 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/07 11:58:53 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/10 12:56:07 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	print_parsing_error(int return_value, int *prev_exit_status)
 		else if (return_value == newline)
 			aux = "newline";
 		ft_printf(STDERR_FILENO,
-		"minishell: [argumento]: syntax error near unexpected token `%s'\nminishell: [argumento]: `%s'\n", aux, aux);
+		"minishell: syntax error near unexpected token `%s'\n", aux);
 		*prev_exit_status = 1;
 	}
 	return (return_value);

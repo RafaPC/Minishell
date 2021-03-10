@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 15:39:59 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/10 11:34:11 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,12 @@ t_list **env_list, int *prev_exit_status)
 			close(fd);
 		else
 		{//FIXME: maybe cambiar lo de los erroes de forma que aquí solo haga falta poner el prev_exit_status
+			if (errno == 13)
+			{
+				ft_printf(STDERR_FILENO, "minishell: %s: Permission denied\n", command->tokens[0]);
+				*prev_exit_status = 126;
+				return ;
+			}
 			ft_printf(STDERR_FILENO, "minishell: %s: No such file or directory\n", command->tokens[0]);
 			*prev_exit_status = 127;
 			return ;
