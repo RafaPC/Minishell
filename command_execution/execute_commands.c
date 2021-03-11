@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/11 16:24:13 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/11 19:39:14 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,33 +72,6 @@ t_bool		is_directory(char *token, int *prev_exit_status)
 }
 
 /*
-**
-*/
-
-void		command_execution(t_command *command, t_list **env_list,
-int *prev_exit_status)
-{
-	int			pid;
-	t_bool		is_valid_file;
-
-	is_valid_file = false;
-	pid = 0;
-	if (!command->tokens[0] ||
-	is_builtin(command, env_list, prev_exit_status) != -1 ||
-	is_directory(command->tokens[0], prev_exit_status))//ERROR handling
-		return ;
-	if (ft_checkchar(command->tokens[0][0], "/.") &&
-	!(is_valid_file = is_valid_path(command->tokens[0], prev_exit_status)))
-			return ;
-	if ((pid = fork()) == -1)
-		ft_printf(STDOUT_FILENO, "Fork error\n");
-	else if (pid == 0)
-		child_process(command, is_valid_file, env_list, prev_exit_status);
-	else
-		wait_child_status(prev_exit_status);
-}
-
-/*
 ** This function is calls if the first token starts with / or .
 ** It checks if the token can be opened as a file //TODO:
 */
@@ -125,6 +98,33 @@ t_bool		is_valid_path(char *path, int *prev_exit_status)
 		*prev_exit_status = 127;
 		return (false);
 	}
+}
+
+/*
+**
+*/
+
+void		command_execution(t_command *command, t_list **env_list,
+int *prev_exit_status)
+{
+	int			pid;
+	t_bool		is_valid_file;
+
+	is_valid_file = false;
+	pid = 0;
+	if (!command->tokens[0] ||
+	is_builtin(command, env_list, prev_exit_status) != -1 ||
+	is_directory(command->tokens[0], prev_exit_status))//ERROR handling
+		return ;
+	if (ft_checkchar(command->tokens[0][0], "/.") &&
+	!(is_valid_file = is_valid_path(command->tokens[0], prev_exit_status)))
+			return ;
+	if ((pid = fork()) == -1)
+		ft_printf(STDOUT_FILENO, "Fork error\n");
+	else if (pid == 0)
+		child_process(command, is_valid_file, env_list, prev_exit_status);
+	else
+		wait_child_status(prev_exit_status);
 }
 
 /*

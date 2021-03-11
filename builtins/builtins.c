@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/09 10:37:01 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/11 20:04:30 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ t_bool	cd(t_list **env_list, char **args)
 				"minishell: cd: %s: Permission denied\n", args[0]);
 				errno = 1;
 			}
+			free(aux);
 			return (false);
 		}
 	}

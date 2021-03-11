@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/10 13:18:58 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/11 19:58:50 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ int		split_commands(char **input, t_command **commands)
 	{
 		if (cmd_pars.error)
 		{
+			commands[0] = free_commands(commands[0]);
 			free(*input);
 			return (cmd_pars.error);
 		}
