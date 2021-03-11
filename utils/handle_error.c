@@ -26,7 +26,8 @@ t_command	*handle_errors(t_command *command)
 	return (command);
 }
 
-t_command	*print_redirection_errors(t_command *commands, int *prev_exit_status) //What about dup?
+t_command	*print_redirection_errors(
+	t_command *commands, int *prev_exit_status)
 {
 	if (errno == 2)
 		ft_printf(STDERR_FILENO,
@@ -36,6 +37,6 @@ t_command	*print_redirection_errors(t_command *commands, int *prev_exit_status) 
 		"minishell: %s: Is a directory\n", commands->tokens[0]);
 	while (commands->relation != simple_command)
 		commands = del_command(commands);
-	*prev_exit_status = 1; //For some reason...
+	*prev_exit_status = 1;
 	return (commands);
 }

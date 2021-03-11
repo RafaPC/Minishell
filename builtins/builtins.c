@@ -44,7 +44,7 @@ t_bool	env(t_list *env_list, char **args)
 ** if more arguments are given, a 2 is returned (for some reason);
 */
 
-void	ft_exit(t_command *commands, t_list **env_list, char **env_array)
+void	ft_exit(t_command *commands, t_list **env_list)
 {
 	int exit_code;
 
@@ -64,10 +64,9 @@ void	ft_exit(t_command *commands, t_list **env_list, char **env_array)
 				exit_code = 2;
 				ft_putstr_fd("minishell: exit: notanumber: numeric argument required\n", STDERR_FILENO);
 			}
-	}
+		}
 	free_commands(commands);
 	ft_lstclear(env_list, free);
-	free(env_array);
 	exit(exit_code);
 }
 

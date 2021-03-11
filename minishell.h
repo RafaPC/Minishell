@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/09 12:16:09 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/11 16:25:56 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,15 @@
 ** Declares
 */
 
-typedef enum 	e_parser_flags
+typedef enum	e_parser_flags
 {
-		simple_command,
-		input_redirection,
-		output_redirection,
-		output_redirection_app,
-		pipe_redirection,
-		newline,
-		semicolon
+	simple_command,
+	input_redirection,
+	output_redirection,
+	output_redirection_app,
+	pipe_redirection,
+	newline,
+	semicolon
 }				t_parser_flags;
 
 typedef struct	s_command
@@ -82,12 +82,9 @@ void			handle_input_redirection(t_command_parsing *cmd_pars,
 int				print_parsing_error(int return_value, int *prev_exit_status);
 void			parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_bool single_run);
 t_bool			not_preceeding_argument(char *input, int index);
-
-
 /*
 **		MINISHELL UTILS
 */
-
 t_list			*create_env_list(const char **envp);
 char			**env_list_to_array(t_list *env_list);
 char			*get_env_var(char *var, t_list *env_list);
@@ -96,13 +93,13 @@ t_command		*del_command(t_command *command);
 t_command		*free_commands(t_command *commands);
 t_command		*handle_errors(t_command *command);
 t_command		*print_redirection_errors(t_command *commands, int *prev_exit_status);
-void			debug_minishell(t_list **env_list, char ***env_array, t_bool verbose);
+void			debug_minishell(t_list **env_list, t_bool verbose);
 /*
 **		BUILTINS
 */
 t_bool			env(t_list *env_list, char **args);
 t_bool			echo(char **args);
-void			ft_exit(t_command *commands, t_list **env_list, char **env_array);
+void			ft_exit(t_command *commands, t_list **env_list);
 t_bool			pwd(void);
 t_bool			cd(t_list **env_list, char **args);
 /*
@@ -118,10 +115,27 @@ t_bool			valid_env_characters(char *var_name);
 int				unset(t_list **env_list, char **args);
 t_bool			unset_recursive(t_list *env_list, t_list *previous_aux,
 char *var_name, int compare_length);
-
+/*
+**		COMMAND EXECUTION
+*/
+void			child_process(t_command *command, t_bool is_file_path, t_list **env_list,
+int *prev_exit_status);
+t_bool			is_directory(char *token, int *prev_exit_status);
+int				is_builtin(t_command *command, t_list **env_list, int *prev_exit_status);
+void			wait_child_status(int *prev_exit_status);
+t_bool			can_execute_file(char *path, int *prev_exit_status);
+void			command_execution(t_command *command, t_list **env_list,
+int *prev_exit_status);
+t_command		*execute_commands(t_command *commands, t_list **env_list, int *prev_exit_status);
+/*
+**		COMMAND INPUT/OUTPUT
+*/
+int			get_input_and_output(
+	char *file, int mode, int *prev_exit_status, t_list *env_list);
+t_command	*set_fd(
+	t_command *commands, t_list **env_list, int *prev_exit_status);
 /*
 ** TEMPORARY
 */
 char			**get_false_env_array(void);
-t_command		*execute_commands(t_command *commands, char ***env_array, t_list **env_list, int *prev_exit_status);
 #endif

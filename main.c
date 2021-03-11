@@ -25,13 +25,11 @@ int main(int argc, char **argv, const char **env)
 	char		*buffer;
 	t_list		*env_list;
 	t_command	*commands;
-	char		**env_array;
 	int			prev_exit_status;
 
 	// signal(SIGINT, signal_interrump);
 	prev_exit_status = errno;
 	env_list = create_env_list(env);
-	env_array = env_list_to_array(env_list);
 	if (argc == 1) // AQUÍ ENTRA SI LO EJECUTAS NORMAL, SE QUEDA EN BUCLE Y PUEDES METER COMANDOS
 	{
 		while (true)
@@ -41,18 +39,18 @@ int main(int argc, char **argv, const char **env)
 			if (!print_parsing_error(split_commands(&buffer, &commands), &prev_exit_status))
 			{
 				while (commands)
-					commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status); 
+					commands = execute_commands(commands, &env_list, &prev_exit_status); 
 			}
 		}
 	}
 	else if (argc == 2)
-		debug_minishell(&env_list, &env_array, !ft_strncmp(argv[1], "-v", 3));		
+		debug_minishell(&env_list, !ft_strncmp(argv[1], "-v", 3));		
 	else //PARA EL TESTER, COGE EL INPUT POR EL ARGUMENTO
 	{
 		buffer = ft_strdup(argv[argc - 1]);
 		if (!print_parsing_error(split_commands(&buffer, &commands), &prev_exit_status))
 			while (commands)
-				commands = execute_commands(commands, &env_array, &env_list, &prev_exit_status);
+				commands = execute_commands(commands, &env_list, &prev_exit_status);
 		return (prev_exit_status);
 	}
 }

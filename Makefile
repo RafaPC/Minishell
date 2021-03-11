@@ -16,7 +16,8 @@ SRCS =	utils/executables_paths.c				\
 		command_parsing/print_parsing_error.c	\
 		command_parsing/read_input.c			\
 		temp/debug_minishell.c					\
-		temp/execute_commands.c
+		command_execution/execute_commands.c	\
+		command_execution/command_io.c
 
 LIBFT_A = libft.a
 # COMPILER FLAGS
