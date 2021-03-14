@@ -5,6 +5,7 @@ INCLUDES = -Ilibft/ -I.
 SRCS =	builtins/builtins.c						\
 		builtins/export.c						\
 		builtins/unset.c						\
+		command_execution/command_checks.c		\
 		command_execution/command_io.c			\
 		command_execution/execute_commands.c	\
 		command_parsing/command_split.c			\
