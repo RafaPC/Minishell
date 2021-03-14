@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/11 16:25:56 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/14 12:43:03 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void			read_input(char **buffer);
 void			empty_buffer(char *buffer);
 int				insert_variable(char **input, int index, t_list *env_list, int prev_exit_status);
 int				split_commands(char **input, t_command	**commands);
-void			handle_quotations(char **input, t_command_parsing *cmd_pars, t_list *env_list, int prev_exit_status);
+void			handle_quotations(char **input, int *index, t_list *env_list, int prev_exit_status);
 void			skip_quotations(char **input, t_command_parsing *cmd_pars);
 void			add_command(t_command **commands, char **arguments,
 					int relation);
@@ -82,6 +82,9 @@ void			handle_input_redirection(t_command_parsing *cmd_pars,
 int				print_parsing_error(int return_value, int *prev_exit_status);
 void			parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_bool single_run);
 t_bool			not_preceeding_argument(char *input, int index);
+int				handle_backslash(char **args, int index, t_bool remove);
+char			**get_redirection_command(t_command_parsing *cmd_pars, char **input,
+				int index);
 /*
 **		MINISHELL UTILS
 */

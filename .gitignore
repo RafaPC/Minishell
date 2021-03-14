@@ -4,3 +4,4 @@
 sandbox.c
 minishell_unit_test/
 minishell
+command_list

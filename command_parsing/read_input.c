@@ -6,11 +6,22 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 21:07:22 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/02/27 10:52:31 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/13 11:23:20 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int		add_to_line(char **line, char buffer[BUFFER_SIZE + 1])
+{
+	char *aux;
+
+	aux = *line;
+	buffer[BUFFER_SIZE] = 0;
+	*line = ft_strncat_in(*line, (char *)&buffer, BUFFER_SIZE);
+	free(aux);
+	return (0);
+}
 
 void	read_input(char **line)
 {
@@ -27,13 +38,7 @@ void	read_input(char **line)
 		if (rd_buffer[0] == '\n')
 			break ;
 		if (i == BUFFER_SIZE)
-		{
-			aux = *line;
-			buffer[BUFFER_SIZE] = 0;
-			*line = ft_strncat_in(*line, (char *)&buffer, BUFFER_SIZE);
-			free(aux);
-			i = 0;
-		}
+			i = add_to_line(line, buffer);
 		buffer[i] = rd_buffer[0];
 		i++;
 	}

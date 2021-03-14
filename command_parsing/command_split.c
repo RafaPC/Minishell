@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 12:03:51 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/08 08:54:45 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/14 12:28:19 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_command **commands, char *input)
 {
 	int		counter_aux;
 	int		error;
-		
+
 	if (not_preceeding_argument(input, cmd_pars->i))
 	{
 		ft_lstclear(&cmd_pars->arguments, free);
@@ -48,7 +48,7 @@ t_command **commands, char *input)
 	counter_aux = 0;
 	while (ft_isspace(input[cmd_pars->i + 1 + counter_aux]))
 		counter_aux++;
-	error = (!input[cmd_pars->i + 1 + counter_aux]); //check preceeding argument;
+	error = (!input[cmd_pars->i + 1 + counter_aux]);
 	if (error)
 	{
 		ft_lstclear(&cmd_pars->arguments, free);
@@ -59,39 +59,6 @@ t_command **commands, char *input)
 	add_command(commands, load_command_args(cmd_pars, input), pipe_redirection);
 	cmd_pars->i += counter_aux + 1;
 	cmd_pars->j = cmd_pars->i;
-}
-
-char	**get_redirection_command(t_command_parsing *cmd_pars, char **input,
-int index)
-{
-	int		lenght;
-	char	**command_args;
-	int		start;
-	int		end;
-
-	lenght = 0;
-	start = cmd_pars->i;
-	cmd_pars->i = index;
-	while (!(ft_isspace((*input)[cmd_pars->i]) || ft_strchr("|<>;", (*input)[cmd_pars->i])))
-	{
-		if (ft_strchr("\"\'", (*input)[cmd_pars->i]))
-			skip_quotations(input, cmd_pars);
-		else if ((*input)[cmd_pars->i] == '\\')
-		{
-			cmd_pars->i++;
-			if (ft_strchr("\"\'", (*input)[cmd_pars->i]))
-				cmd_pars->i++;
-		}
-		else
-			cmd_pars->i++;
-	}
-	lenght = cmd_pars->i - index;
-	end = index + lenght;
-	if ((command_args = ft_calloc(2, sizeof(char *))))
-		*command_args = ft_strncpy(&(*input)[index], lenght);
-	cmd_pars->i = ft_extract(input, end - 1, end - start);
-	cmd_pars->extracted_content = true;
-	return (command_args);
 }
 
 /*
@@ -107,13 +74,17 @@ int index)
 **
 ** Self explanatory name.
 ** Keep in mind this handles both '>' and '>>' redirections.
-** To do so, a counter is used to set the appropiate relation, by counting the amount of adyacent '>'.
-** Therefore, '>' = 1, and '>>' = 2 (duh). If the counter > 3, an error is issued.
-** Additionally, the redirections must be followed by some sort of alphanumeric content.
+** To do so, a counter is used to set the appropiate relation,
+** by counting the amount of adyacent '>'.
+**
+** Therefore, '>' = 1, and '>>' = 2 (duh).
+** If the counter > 3, an error is issued.
+** Additionally, the redirections must be followed
+** by some sort of alphanumeric content.
 ** Therefore, if only spaces are found preceding the '>', an error is issued.
 **
-**  Should an error be found, the linked argument list is freed.
-**  The commands already malloced should be freed by the super function.
+** Should an error be found, the linked argument list is freed.
+** The commands already malloced should be freed by the super function.
 */
 
 void	handle_redirections_split(t_command_parsing *cmd_pars,
@@ -121,21 +92,16 @@ t_command **commands, char **input)
 {
 	int		counter;
 	int		counter_aux;
-	int		error;
 	char	**command;
 
 	counter = 1;
 	counter_aux = 0;
-	error = 0;
 	while ((*input)[cmd_pars->i + counter] == '>')
 		counter++;
 	while (ft_isspace((*input)[cmd_pars->i + counter + counter_aux]))
 		counter_aux++;
-	if (counter > 2)
-		error = 1;
-	else if (ft_strrchr(";<>|", (*input)[cmd_pars->i + counter + counter_aux]))
-		error = 1;
-	if (error)
+	if (counter > 2 ||
+	ft_strrchr(";<>|", (*input)[cmd_pars->i + counter + counter_aux]))
 	{
 		ft_lstclear(&cmd_pars->arguments, free);
 		cmd_pars->error = output_redirection;
@@ -145,7 +111,6 @@ t_command **commands, char **input)
 	cmd_pars->i + counter + counter_aux);
 	add_command(commands, command, counter == 1
 	? output_redirection : output_redirection_app);
-
 }
 
 void	handle_input_redirection(t_command_parsing *cmd_pars,
@@ -184,19 +149,26 @@ t_command **commands, char **input)
 **
 ** INPUT = Parse input.
 **
-** Adds a command structure with the stored arguments to the command linked list.
-** Sets the i to skip the ';' if needded, also setting j to the i value, so it may copy the following argument.
-** Note that, since in the main while spaces are skipped if i and j are the same, should a ; be preceeded by just spaces,
+** Adds a command structure with the stored
+** arguments to the command linked list.
+** Sets the i to skip the ';' if needded, also setting j to the i value,
+** so it may copy the following argument.
+** Note that, since in the main while spaces are skipped if i and j
+** are the same, should a ; be preceeded by just spaces,
 ** said spaces would be ignored when continuing the parse.
 **
 ** Aditionally, if a ';' is find, two parsing checks are done.
 **
-** 	Firstly, it checks that the ';' is followed by alphanumeric information, by moving backwards until something other than a space is found.
-** 	Therefore, should aux get to 0, or should it point to a ';', this check would be considered as failed.
+** Firstly, it checks that the ';' is followed by alphanumeric information,
+** by moving backwards until something other than a space is found.
+** Therefore, should aux get to 0, or should it point to a ';',
+** this check would be considered as failed.
 **
 ** 	Secondly, it checks that the ';' is not immediately followed by another one.
 **
-** 	Note that if something like this were to happen ("; ;"), a parsing error would still be handled, as this will fail the first check when done on the second ';'
+** Note that if something like this were to happen ("; ;"),
+** a parsing error would still be handled, as this will fail
+** the first check when done on the second ';'
 **
 **  Should an error be found, the linked argument list is freed.
 **  The commands already malloced should be freed by the super function.
@@ -206,7 +178,7 @@ void	handle_simple_command_split(t_command_parsing *cmd_pars,
 t_command **commands, char *input)
 {
 	if (input[cmd_pars->i] == ';')
-	{	
+	{
 		if (not_preceeding_argument(input, cmd_pars->i))
 		{
 			if (cmd_pars->extracted_content)
@@ -238,10 +210,16 @@ t_command **commands, char *input)
 **
 ** Hub function for the command splitting function.
 ** If any of the special characters are found, it calls the appropiate function.
-** Note that in the case of simple command splittage, it checks for both a ';' and the end of the string.
-** Aditionally, said command is only executed if i != j. This prevents empty commands when said indexes are set to the null character.
+**
+** Note that in the case of simple command splittage,
+** it checks for both a ';' and the end of the string.
+**
+** Aditionally, said command is only executed if i != j.
+** This prevents empty commands when said indexes are set to the null character.
 ** I.e: Spaces following a ';'
-** Returns true if input[cmd_pars->i] points at NULL and thus no more parsing is required.
+**
+** Returns true if input[cmd_pars->i] points at NULL
+** and thus no more parsing is required.
 ** Note that this will also end the parent function.
 */
 
