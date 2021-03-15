@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/15 01:00:24 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/15 16:59:01 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char			**get_path(t_list *env_list);
 **		READ INPUT
 */
 void			tabs_to_spaces(char *string);
-void			read_input(char **buffer);
+t_bool			read_input(char **buffer);
 void			empty_buffer(char *buffer);
 int				insert_variable(char **input, int index, t_list *env_list, int prev_exit_status);
 int				split_commands(char **input, t_command	**commands);
