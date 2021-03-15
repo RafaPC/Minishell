@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/15 16:59:01 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/15 22:46:39 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,17 +125,17 @@ void			child_process(t_command *command, t_bool is_file_path, t_list **env_list,
 int *prev_exit_status);
 t_bool			is_directory(char *token, int *prev_exit_status);
 int				is_builtin(t_command *command, t_list **env_list, int *prev_exit_status);
-void			wait_child_status(int *prev_exit_status);
 t_bool			is_valid_path(char *path, int *prev_exit_status);
 void			command_execution(t_command *command, t_list **env_list,
 int *prev_exit_status);
 t_command		*execute_commands(t_command *commands, t_list **env_list, int *prev_exit_status);
+void			restore_fds(int stdin_copy, int stdout_copy);
 /*
 **		COMMAND INPUT/OUTPUT
 */
-int			get_input_and_output(
+t_bool			get_input_and_output(
 	char *file, int mode, int *prev_exit_status, t_list *env_list);
-t_command	*set_fd(
+t_bool		handle_pipe_and_execute(
 	t_command *commands, t_list **env_list, int *prev_exit_status);
 /*
 ** TEMPORARY

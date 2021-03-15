@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 16:15:36 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/11 16:31:23 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/15 23:02:48 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 ** TODO: Might need to change the permits!
 */
 
-int			get_input_and_output(
+t_bool	get_input_and_output(
 	char *file, int mode, int *prev_exit_status, t_list *env_list)
 {
 	int fd;
@@ -50,37 +50,25 @@ int			get_input_and_output(
 ** TODO:
 */
 
-t_command	*set_fd(t_command *commands, t_list **env_list, int *prev_exit_status)
+t_bool	handle_pipe_and_execute(t_command *commands, t_list **env_list,
+int *prev_exit_status)
 {
-	int			fdpipe[2];
-	int			std_out_cpy;
+	int std_out_cpy;
+	int	fdpipe[2];
 
-	while (commands && commands->relation != simple_command)
-	{
-		if (!get_input_and_output(commands->tokens[0], commands->relation,
-		prev_exit_status, *env_list))
-			break ;
-		else if (commands->relation == pipe_redirection)//TODO:Mover a una función aparte
-		{
-			parse_insertions(
-				commands->tokens, *env_list, *prev_exit_status, false);
-			std_out_cpy = dup(STDOUT_FILENO);
-			if (pipe(fdpipe) == -1)
-				break ;
-			if (dup2(fdpipe[1], STDOUT_FILENO) == -1)
-				break ;
-			command_execution(commands, env_list, prev_exit_status);
-			if (errno)
-				break ;
-			if (dup2(fdpipe[0], STDIN_FILENO) == -1)
-				break ;
-			close(fdpipe[0]);
-			close(fdpipe[1]);
-			dup2(std_out_cpy, STDOUT_FILENO);
-		}
-		commands = del_command(commands);
-	}
+	parse_insertions(commands->tokens, *env_list, *prev_exit_status, false);
+	std_out_cpy = dup(STDOUT_FILENO);
+	if (pipe(fdpipe) == -1)
+		return (false);
+	if (dup2(fdpipe[1], STDOUT_FILENO) == -1)
+		return (false);
+	command_execution(commands, env_list, prev_exit_status);
 	if (errno)
-		commands = print_redirection_errors(commands, prev_exit_status);
-	return (commands);
+		return (false);
+	if (dup2(fdpipe[0], STDIN_FILENO) == -1)
+		return (false);
+	close(fdpipe[0]);
+	close(fdpipe[1]);
+	dup2(std_out_cpy, STDOUT_FILENO);
+	return (true);
 }

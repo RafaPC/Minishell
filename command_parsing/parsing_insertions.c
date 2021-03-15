@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_insertions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/14 12:39:11 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/15 20:50:53 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int prev_exit_status)
 }
 
 void	parse_insertions(char **args, t_list *env_list,
-int prev_exit_status, t_bool single_run) //TODO when bored: Change cmd_pars to simple int;
+int prev_exit_status, t_bool single_run) //TODO: when bored: Change cmd_pars to simple int;
 {
 	int index;
 

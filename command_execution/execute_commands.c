@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/14 13:00:39 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/15 22:54:32 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,68 @@
 #include "minishell.h"
 
 /*
-**
+** TODO:
+*/
+
+t_command	*execute_commands(t_command *commands,
+t_list **env_list, int *prev_exit_status)
+{
+	int	stdin_copy;
+	int	stdout_copy;
+
+	errno = 0;
+	stdin_copy = dup(STDIN_FILENO);
+	stdout_copy = dup(STDOUT_FILENO);
+	while (commands && commands->relation != simple_command)
+	{
+		if (!get_input_and_output(commands->tokens[0], commands->relation,
+		prev_exit_status, *env_list))
+			break ;
+		else if (commands->relation == pipe_redirection)
+			if (!handle_pipe_and_execute(commands, env_list, prev_exit_status))
+				break ;
+		commands = del_command(commands);
+	}
+	if (errno)
+		commands = print_redirection_errors(commands, prev_exit_status);
+	else
+	{
+		parse_insertions(commands->tokens, *env_list, *prev_exit_status, false);
+		command_execution(commands, env_list, prev_exit_status);
+	}
+	restore_fds(stdin_copy, stdout_copy);
+	return (del_command(commands));//I think this needs to be updated to while != simple command, free_command.
+}
+
+/*
+** TODO:
 */
 
 void		command_execution(t_command *command, t_list **env_list,
 int *prev_exit_status)
 {
 	int			pid;
+	int			child_tatus;
 	t_bool		is_valid_file;
 
 	is_valid_file = false;
 	pid = 0;
 	if (!command->tokens[0] ||
 	is_builtin(command, env_list, prev_exit_status) != -1 ||
-	is_directory(command->tokens[0], prev_exit_status))//ERROR handling
+	is_directory(command->tokens[0], prev_exit_status))
 		return ;
 	if (ft_checkchar(command->tokens[0][0], "/.") &&
 	!(is_valid_file = is_valid_path(command->tokens[0], prev_exit_status)))
-			return ;
-	if ((pid = fork()) == -1)
-		ft_printf(STDOUT_FILENO, "Fork error\n");
-	else if (pid == 0)
+		return ;
+	if ((pid = fork()) == 0)
 		child_process(command, is_valid_file, env_list, prev_exit_status);
-	else
-		wait_child_status(prev_exit_status);
+	else if (pid > 0 && wait(&child_tatus) != -1)
+	{
+		if (WIFEXITED(child_tatus))
+			*prev_exit_status = WEXITSTATUS(child_tatus);
+		else if (WIFSIGNALED(child_tatus))
+			*prev_exit_status = WTERMSIG(child_tatus);
+	}
 }
 
 /*
@@ -77,46 +115,13 @@ t_list **env_list, int *prev_exit_status)
 }
 
 /*
-** Waits for the child process and gets its exit status
+** Restore stdin and stdout fds
 */
 
-void		wait_child_status(int *prev_exit_status)
+void		restore_fds(int stdin_copy, int stdout_copy)
 {
-	int	wstatus;
-
-	if (wait(&wstatus) == -1)//Error al esperar porque no haya hijos y cosas así
-		ft_printf(STDOUT_FILENO, "Error al esperar");
-	else if (WIFEXITED(wstatus))
-		*prev_exit_status = WEXITSTATUS(wstatus);
-	else if (WIFSIGNALED(wstatus))
-		*prev_exit_status = WTERMSIG(wstatus);
-	else
-		ft_printf(STDOUT_FILENO, "Not returned normally\n");
-}
-
-/*
-** TODO:
-*/
-
-t_command	*execute_commands(t_command *commands,
-t_list **env_list, int *prev_exit_status)
-{
-	int	stdin_copy;
-	int	stdout_copy;
-
-	errno = 0;
-	stdin_copy = dup(STDIN_FILENO);
-	stdout_copy = dup(STDOUT_FILENO);
-	commands = set_fd(commands, env_list, prev_exit_status);
-	if (!errno)
-	{
-		parse_insertions(commands->tokens, *env_list, *prev_exit_status, false);
-		command_execution(commands, env_list, prev_exit_status);
-	}
 	dup2(stdin_copy, STDIN_FILENO);
 	dup2(stdout_copy, STDOUT_FILENO);
 	close(stdin_copy);
 	close(stdout_copy);
-	return (del_command(commands));
-	//I think this needs to be updated to while != simple command, free_command.
 }
