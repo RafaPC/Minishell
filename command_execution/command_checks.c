@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 12:57:24 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/14 13:03:18 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/15 01:20:49 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,15 @@ t_bool		is_valid_path(char *path, int *prev_exit_status)
 		close(fd);
 		return (true);
 	}
+	else if (errno == 13)
+	{
+		ft_printf(STDERR_FILENO,
+		"minishell: %s: Permission denied\n", path);
+		*prev_exit_status = 126;
+		return (false);
+	}
 	else
-	{//FIXME:maybe cambiar lo de los errores para solo poner el prev_exit_status
-		if (errno == 13)
-		{
-			ft_printf(STDERR_FILENO,
-			"minishell: %s: Permission denied\n", path);
-			*prev_exit_status = 126;
-		}
+	{
 		ft_printf(STDERR_FILENO,
 		"minishell: %s: No such file or directory\n", path);
 		*prev_exit_status = 127;

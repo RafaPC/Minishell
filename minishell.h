@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/14 12:43:03 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/15 01:00:24 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int *prev_exit_status);
 t_bool			is_directory(char *token, int *prev_exit_status);
 int				is_builtin(t_command *command, t_list **env_list, int *prev_exit_status);
 void			wait_child_status(int *prev_exit_status);
-t_bool			can_execute_file(char *path, int *prev_exit_status);
+t_bool			is_valid_path(char *path, int *prev_exit_status);
 void			command_execution(t_command *command, t_list **env_list,
 int *prev_exit_status);
 t_command		*execute_commands(t_command *commands, t_list **env_list, int *prev_exit_status);
