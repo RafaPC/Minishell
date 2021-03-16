@@ -12,42 +12,31 @@
 
 #include "minishell.h"
 
-int		add_to_line(char **line, char buffer[BUFFER_SIZE + 1])
-{
-	char *aux;
-
-	aux = *line;
-	buffer[BUFFER_SIZE] = 0;
-	*line = ft_strncat_in(*line, (char *)&buffer, BUFFER_SIZE);
-	free(aux);
-	return (0);
-}
-
 t_bool	read_input(char **line)
 {
 	char	buffer[BUFFER_SIZE + 1];
-	char	rd_buffer[2];
+	char	rd_buffer[1];
 	int		i;
 	char	*aux;
-	int		bytes_readed;
+	int		bytes_read;
 
 	i = 0;
 	*line = NULL;
-	rd_buffer[1] = 0;
-	while ((bytes_readed = read(STDIN_FILENO, rd_buffer, 1)))
+	while (true)
 	{
-		if (rd_buffer[0] == '\n')
-			break ;
-		if (i == BUFFER_SIZE)
-			i = add_to_line(line, buffer);
+		bytes_read = read(STDIN_FILENO, rd_buffer, 1);
+		if (i == BUFFER_SIZE || !bytes_read || rd_buffer[0] == '\n')
+		{
+			aux = *line;
+			buffer[i] = 0;
+			*line = ft_strncat_in(*line, (char *)&buffer, i + 1);
+			if (aux)
+				free(aux);
+			i = 0;
+		}
+		if (!bytes_read || rd_buffer[0] == '\n')
+			return (bytes_read ? true : false);
 		buffer[i++] = rd_buffer[0];
 	}
-	if (bytes_readed == 0)
-		return (false);
-	buffer[i] = 0;
-	aux = *line;
-	*line = ft_strncat_in(*line, buffer, i);
-	if (aux)
-		free(aux);
 	return (true);
 }

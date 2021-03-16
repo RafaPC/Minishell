@@ -39,6 +39,7 @@ int		main(int argc, char **argv, const char **env)
 			if (!read_input(&buffer))
 			{
 				write(STDOUT_FILENO, "exit\n", 5);
+				free(buffer);
 				ft_exit(NULL, &env_list);
 			}
 			if (!print_parsing_error(split_commands(&buffer, &commands), &prev_exit_status))
