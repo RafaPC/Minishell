@@ -28,7 +28,6 @@ t_bool	get_input_and_output(
 			return (false);
 		if (dup2(fd, STDIN_FILENO) == -1 && (*prev_exit_status = errno))
 			return (false);
-		close(fd);
 	}
 	else if (mode == output_redirection || mode == output_redirection_app)
 	{
@@ -40,8 +39,8 @@ t_bool	get_input_and_output(
 			return (false);
 		if (dup2(fd, STDOUT_FILENO) == -1 && (*prev_exit_status = errno))
 			return (false);
-		close(fd);
 	}
+	close(fd);
 	*prev_exit_status = errno;
 	return (true);
 }
