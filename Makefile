@@ -3,6 +3,7 @@ NAME = minishell
 # HEADER FILES DIRECTORIES
 INCLUDES = -Ilibft/ -I.
 SRCS =	builtins/builtins.c						\
+		builtins/cd.c							\
 		builtins/export.c						\
 		builtins/unset.c						\
 		command_execution/command_checks.c		\
@@ -28,7 +29,7 @@ FLAGS = -Wall -Wextra -Werror -g
 all: ${NAME}
 
 ${NAME}: main.c ${SRCS} ${LIBFT_A}
-			gcc ${INCLUDES} ${FLAGS} main.c ${SRCS} ${LIBFT_A} -o ${NAME}
+			gcc ${INCLUDES} ${FLAGS} main.c ${SRCS} -ltermcap ${LIBFT_A} -o ${NAME}
 
 ${LIBFT_A}:
 		make -C libft

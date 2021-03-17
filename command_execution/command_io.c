@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 16:15:36 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/15 23:02:48 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/17 17:00:12 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_bool	get_input_and_output(
 			return (false);
 		if (dup2(fd, STDIN_FILENO) == -1 && (*prev_exit_status = errno))
 			return (false);
+		close(fd);
 	}
 	else if (mode == output_redirection || mode == output_redirection_app)
 	{
@@ -39,8 +40,8 @@ t_bool	get_input_and_output(
 			return (false);
 		if (dup2(fd, STDOUT_FILENO) == -1 && (*prev_exit_status = errno))
 			return (false);
+		close(fd);
 	}
-	close(fd);
 	*prev_exit_status = errno;
 	return (true);
 }

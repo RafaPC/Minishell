@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executables_paths.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/20 23:35:42 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/28 10:38:17 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/17 20:55:53 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*get_command_path(char **paths, char *command)
 	char	*slash_command;
 	char	*command_path;
 
+	if (!paths)
+		return (NULL);
 	i = 0;
 	slash_command = ft_strjoin("/", command);
 	while (paths[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 12:23:34 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/27 11:25:49 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/17 22:12:45 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ char	*get_env_var(char *var, t_list *env_list)
 	int		var_length;
 	char	*var_value;
 
+	if (!env_list)
+		return (NULL);
 	var_value = NULL;
 	var_equal = ft_strjoin(var, "=");
 	var_length = ft_strlen(var_equal);

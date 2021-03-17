@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 20:54:28 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 15:29:36 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/17 20:25:04 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int		export(t_list **env_list, char **args)
 		}
 		else if (!export_variable(env_list, *args))
 		{
-			ft_printf(STDOUT_FILENO, "Error al alocar memoria\n"); // ERROR
+			errno = ENOMEM;
 			return (0);
 		}
 		free(str_aux);
@@ -92,10 +92,10 @@ t_bool	export_variable(t_list **env_list, char *arg)
 	while (aux)
 	{
 		arg_length = (ft_strchr(arg, '=')
-		? ft_get_index_of(arg, '=') + 1 : (int)ft_strlen(arg));
+		? ft_get_index_of(arg, '=') : (int)ft_strlen(arg));
 		env_length = (ft_strchr(aux->content, '=')
-		? ft_get_index_of(aux->content, '=') + 1 : (int)ft_strlen(aux->content));
-		if (arg_length == env_length && !ft_strncmp(arg, (char*)aux->content,
+		? ft_get_index_of(aux->content, '=') : (int)ft_strlen(aux->content));
+		if ((arg_length == env_length) && !ft_strncmp(arg,(char*)aux->content,
 		arg_length > env_length ? arg_length : env_length))
 		{
 			free(aux->content);
