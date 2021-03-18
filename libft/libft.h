@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:42:43 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/08 15:17:31 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/18 10:22:13 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,13 @@ typedef struct		s_list
 	void			*content;
 	struct s_list	*next;
 }					t_list;
+
+typedef struct		s_list_dbl
+{
+	void				*content;
+	struct s_list_dbl 		*next;
+	struct s_list_dbl	*prev;
+}						t_list_dbl;
 
 typedef enum	e_bool
 {false, true}	t_bool;
@@ -100,6 +107,14 @@ void				ft_lstdelone(t_list *lst, void (*del)(void*));
 void				ft_lstclear(t_list **lst, void (*del)(void*));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 void				ft_lstmove_backwards(t_list *lst);
+void				ft_lstdbl_delone(t_list_dbl *lst, void (*del)(void *));
+void				ft_lstdbl_clear(t_list_dbl **lst, void (*del)(void *));
+void				ft_lstdbl_add_front(t_list_dbl **lst, t_list_dbl *new);
+t_list_dbl			*ft_lstdbl_last(t_list_dbl *lst);
+void				ft_lstdbl_add_back(t_list_dbl **lst, t_list_dbl *new);
+void				ft_lstdbl_move_backwards(t_list_dbl *lst);
+t_list_dbl			*ft_lstdbl_new(void *content);
+int					ft_lstdbl_size(t_list_dbl *lst);
 t_bool				ft_checkchar(char c, char *set);
 int					ft_get_index_of(char *string, char c);
 int					ft_nbrlen(int n);

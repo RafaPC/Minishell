@@ -6,7 +6,7 @@
 #    By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/21 18:09:12 by rprieto-          #+#    #+#              #
-#    Updated: 2021/03/07 10:23:47 by aiglesia         ###   ########.fr        #
+#    Updated: 2021/03/18 10:17:45 by aiglesia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,7 +71,8 @@ SRCS =	ft_atoi.c					\
 		ft_lstclear_bonus.c			\
 		ft_lstmap_bonus.c			\
 		ft_lstmove_backwards.c		\
-		ft_str_checkset.c
+		ft_str_checkset.c			\
+		ft_lstdbl.c
 
 SRCS_PRINTF = 	ft_printf/ft_hex.c			\
 				ft_printf/ft_number.c		\

@@ -20,8 +20,9 @@ typedef struct          s_shell
 	struct termios      term;
 	struct termios      term_cp;
     char                *line;
-	t_list              *history;
-    int                 history_index;
+	t_list_dbl          *history;
+    t_list_dbl          *current_history;
+    char                *h_saved_line;
     int                 index;
     int                 length;
 }                       t_shell;
@@ -57,28 +58,62 @@ static int      set_terminal_mode(struct termios *term, struct termios *term_sav
    return (0);
  }
 
-void    retrieve_older_command(t_shell *shell) //Not 100% sold on the algoithm, since it involves innecesary iterations thorugh the list
-{
-    int i;
-    t_list *aux;
-
-    i = 0;
-    aux = shell->history;
-    while (aux != NULL && i < shell->history_index)
-    {
-        aux = aux->next;
-        i++;
-    }
-    if (aux == NULL)
-        return ; //Maybe go all blinky blinky?
-    free(shell->line);
-    shell->line = ft_strdup(aux->content);
+ void   rewrite_line(t_shell *shell, char *line, t_bool erase_mode, t_bool duplicate_string)
+ {
+    if (erase_mode)
+        free(shell->line);
+    if (duplicate_string)
+        shell->line = ft_strdup(shell->current_history->content);
+    else
+        shell->line = line;
     shell->index = ft_strlen(shell->line);
     shell->length = shell->index;
-    shell->history_index++;
-    ft_putstr_fd("\r\33[0J", STDIN_FILENO); //Debería borrarlo todo! :o
+    ft_putstr_fd("\r\33[0J", STDIN_FILENO);
     write_prompt();
     ft_putstr_fd(shell->line, STDIN_FILENO);
+ }
+
+ void   delete_h_saved_line(t_shell *shell)
+ {
+    if (shell->h_saved_line)
+    {
+        free(shell->h_saved_line);
+        shell->h_saved_line = 0;
+    }
+ }
+
+void    retrieve_older_command(t_shell *shell)
+{
+    if (!shell->current_history)
+        return ; //Maybe go all blinky blinky?
+    if (!shell->current_history->prev && !shell->h_saved_line)
+    {
+        shell->h_saved_line = shell->line;
+        rewrite_line(shell, shell->current_history->content, false, true);
+        return ;
+    }
+    if (shell->current_history->next)
+        shell->current_history = shell->current_history->next;
+    rewrite_line(shell, shell->current_history->content, true, true);
+}
+
+void    retrieve_newer_command(t_shell *shell)
+{
+    if (!shell->current_history)
+        return ; //Maybe go all blinky blinky?
+
+    if (!shell->current_history->prev)
+    {
+        if (shell->h_saved_line)
+        {
+            rewrite_line(shell, shell->h_saved_line, false, false);
+            shell->h_saved_line = 0;
+        }
+        return ;
+    }
+    if (shell->current_history->prev)
+        shell->current_history = shell->current_history->prev;
+    rewrite_line(shell, shell->current_history->content, true, true);
 }
 
 void check_keys(t_shell *shell)
@@ -98,8 +133,6 @@ void check_keys(t_shell *shell)
             break ;
         i++;
     }
-    //if (i == 2)
-        //copy temporal buffer to the actual buffer;
     if (buffer[0] == key_left && shell->index)
     {
         ft_putstr_fd("\33[1D", STDIN_FILENO);
@@ -112,6 +145,8 @@ void check_keys(t_shell *shell)
     }
     else if (buffer[0] == key_up)
         retrieve_older_command(shell);
+    else if (buffer[0] == key_down)
+        retrieve_newer_command(shell);
 }
 
 void set_cursor_back(char *written_sring)
@@ -144,6 +179,7 @@ char    *delete_char(t_shell *shell)
             ft_putstr_fd(&shell->line[shell->index], STDIN_FILENO);
             set_cursor_back(&shell->line[shell->index]);
         }
+        delete_h_saved_line(shell);
     }
     return (shell->line);
 }
@@ -152,10 +188,11 @@ char    *handle_input(t_shell *shell) //Make shell global?
 {
     char    buffer[1];
     
+    delete_h_saved_line(shell);
     shell->length = 0; //mem_set if we change it to a struct inside a struct?
-    shell->line = NULL;
+    shell->line = ft_strdup("");
     shell->index = 0;
-    shell->history_index = 0;
+    shell->current_history = shell->history;
     set_terminal_mode(&shell->term, &shell->term_cp, 0);
     write_prompt();
     while (read(STDIN_FILENO, buffer, 1))
@@ -175,11 +212,12 @@ char    *handle_input(t_shell *shell) //Make shell global?
             ft_putstr_fd(&shell->line[shell->index - 1], STDIN_FILENO);
             set_cursor_back(&shell->line[shell->index]);
             shell->length++;
+            delete_h_saved_line(shell);
         }
     }
-    if (shell->line && (!shell->history ||
+    if (shell->line && *(shell->line) && (!shell->history ||
     ft_strncmp(shell->line, shell->history->content, shell->length)))
-        ft_lstadd_front(&shell->history, ft_lstnew(ft_strdup(shell->line)));
+        ft_lstdbl_add_front(&shell->history, ft_lstdbl_new(ft_strdup(shell->line)));
     set_terminal_mode(&shell->term, &shell->term, 1);
     return (shell->line);
 }
@@ -188,7 +226,7 @@ int main(void)
 {
     t_shell shell;
     char    *input;
-    t_list  *aux;
+    t_list_dbl  *aux;
 
     ft_memset(&shell, 0, sizeof(t_shell));
     while (true)
