@@ -15,8 +15,11 @@ SRCS =	builtins/builtins.c						\
 		command_parsing/parsing_quotations.c	\
 		command_parsing/parsing_utils.c			\
 		command_parsing/print_parsing_error.c	\
-		command_parsing/read_input.c			\
 		command_parsing/split_commands.c		\
+		handle_input/handle_input.c				\
+		handle_input/handle_keys.c				\
+		handle_input/input_history.c			\
+		handle_input/read_input.c				\
 		temp/debug_minishell.c					\
 		utils/environment.c						\
 		utils/executables_paths.c				\
@@ -31,7 +34,7 @@ FLAGS = -Wall -Wextra -Werror -g
 all: ${NAME}
 
 ${NAME}: main.c ${SRCS} ${LIBFT_A}
-			gcc ${INCLUDES} ${FLAGS} main.c ${SRCS} -ltermcap ${LIBFT_A} -o ${NAME}
+			gcc ${INCLUDES} ${FLAGS} main.c ${SRCS} ${LIBFT_A} -o ${NAME}
 
 ${LIBFT_A}:
 		make -C libft

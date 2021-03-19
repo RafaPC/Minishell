@@ -108,4 +108,5 @@ t_bool    read_input(t_shell *shell)
     ft_strncmp(shell->line, shell->history->content, shell->length)))
         ft_lstdbl_add_front(&shell->history, ft_lstdbl_new(ft_strdup(shell->line)));
     delete_h_saved_line(shell);
+    return (true);
 }

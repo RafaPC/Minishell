@@ -15,28 +15,22 @@
 #include <stdio.h>
 #include <signal.h>
 
-void	signal_interrump(int signal)
-{
-	signal = signal;
-	ft_putstr_fd("\nMinishell-> ", STDOUT_FILENO);
-}
-
 int		main(int argc, char **argv, const char **env)
 {
 	char		*buffer;
 	t_list		*env_list;
 	t_command	*commands;
 	int			prev_exit_status;
+	t_list_dbl 	*command_history;
 
-	signal(SIGINT, signal_interrump);
 	prev_exit_status = errno;
 	env_list = create_env_list(env, argv[0]);
+	command_history = NULL;
 	if (argc == 1) // AQUÍ ENTRA SI LO EJECUTAS NORMAL, SE QUEDA EN BUCLE Y PUEDES METER COMANDOS
 	{
 		while (true)
 		{
-			ft_putstr_fd("Minishell-> ", 1);
-			if (!read_input(&buffer))
+			if (!handle_input(&buffer, &command_history))
 			{
 				write(STDOUT_FILENO, "exit\n", 5);
 				free(buffer);

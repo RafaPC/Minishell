@@ -65,7 +65,6 @@ typedef enum	e_key_values
 
 typedef struct          s_shell
 {
-	struct termios      term;
 	struct termios      term_cp;
     char                *line;
 	t_list_dbl          *history;
@@ -86,8 +85,8 @@ char			**get_path(t_list *env_list);
 **		READ INPUT
 */
 //t_bool read_input(char **line);
-char    *handle_input(t_shell *shell);
-void	read_input(t_shell *shell);
+t_bool  handle_input(char **buffer, t_list_dbl **command_history);
+t_bool	read_input(t_shell *shell);
 void	handle_keys(t_shell *shell);
 void	handle_input_history(t_shell *shell, char direction);
  void   delete_h_saved_line(t_shell *shell);
@@ -148,7 +147,7 @@ t_bool			valid_env_characters(char *var_name);
 /*
 **				UNSET
 */
-int				unset(t_list **env_list, char **args);
+t_bool			unset(t_list **env, char **args);
 t_bool			unset_recursive(t_list *env_list, t_list *previous_aux,
 char *var_name, int compare_length);
 /*
