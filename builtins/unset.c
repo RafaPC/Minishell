@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 14:39:56 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/02/28 11:17:55 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/19 13:36:02 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,26 +60,18 @@ t_bool	unset_variable(t_list **env, char *arg)
 ** fuera igual que otro cualquiera
 */
 
-int	unset(t_list **env, char **args)
+t_bool	unset(t_list **env, char **args)
 {
-	t_bool	aux;
-	t_bool	env_changed;
-
-	env_changed = false;
 	while (*args)
 	{
 		if (!valid_env_characters(*args) || ft_strchr(*args, '='))
 			ft_printf(STDERR_FILENO,
 			"unset: '%s': not a valid identifier\n", *args);//FIXME: checkear esto
 		else if (*env)
-		{
-			aux = unset_variable(env, *args);
-			if (!env_changed)
-				env_changed = aux;
-		}
+			unset_variable(env, *args);
 		args++;
 	}
-	return (env_changed ? 2 : 1);
+	return (true);
 }
 
 /*

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/19 11:56:02 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/19 12:02:57 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,8 +141,8 @@ t_bool			cd(t_list **env_list, char **args);
 /*
 **				EXPORT
 */
-int				export(t_list **env_list, char **args);
-int				export_print(t_list *env_list);
+t_bool				export(t_list **env_list, char **args);
+t_bool				export_print(t_list *env_list);
 t_bool			export_variable(t_list **env_list, char *arg);
 t_bool			valid_env_characters(char *var_name);
 /*

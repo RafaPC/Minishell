@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 20:54:28 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/17 20:25:04 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/19 11:30:40 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_bool	valid_env_characters(char *var_name)
 ** to the list with arg as its content
 */
 
-int		export(t_list **env_list, char **args)
+t_bool	export(t_list **env_list, char **args)
 {
 	char	*str_aux;
 	int		equal_position;
@@ -67,12 +67,12 @@ int		export(t_list **env_list, char **args)
 		else if (!export_variable(env_list, *args))
 		{
 			errno = ENOMEM;
-			return (0);
+			return (false);
 		}
 		free(str_aux);
 		args++;
 	}
-	return (2);
+	return (true);
 }
 
 /*
@@ -115,7 +115,7 @@ t_bool	export_variable(t_list **env_list, char *arg)
 ** Writes all the environment variables in the standart output
 */
 
-int		export_print(t_list *env_list)
+t_bool	export_print(t_list *env_list)
 {
 	char	*content;
 
@@ -136,5 +136,5 @@ int		export_print(t_list *env_list)
 		write(STDOUT_FILENO, "\n", 1);
 		env_list = env_list->next;
 	}
-	return (1);
+	return (true);
 }
