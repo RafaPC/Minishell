@@ -72,5 +72,5 @@ void	debug_minishell(t_shell *shell, t_bool verbose)
 		free_gnl_buffer(gnl_buff, false);
 		close(fd);
 	}
-	exit_command(NULL, &shell->env_list, 0, 0);
+	exit_command(shell, 0, 0); //double check
 }

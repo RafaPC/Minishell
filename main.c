@@ -30,7 +30,7 @@ int		main(int argc, char **argv, const char **env)
 			{
 				write(STDOUT_FILENO, "exit\n", 5);
 				free(shell.buffer);
-				exit_command(NULL, &shell.env_list, 0, 0);
+				exit_command(&shell, 0, 0);//Double check
 			}
 			if (!print_parsing_error(split_commands(&shell), &shell.prev_exit_status))
 			{

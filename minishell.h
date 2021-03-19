@@ -143,7 +143,7 @@ void			debug_minishell(t_shell *shell, t_bool verbose);
 */
 t_bool			env(t_list *env_list, char **args);
 t_bool			echo(char **args);
-void			exit_command(t_command *commands, t_list **env_list, int exit_code, int i);
+void			exit_command(t_shell *shell, int exit_code, int i);
 t_bool			pwd(void);
 t_bool			cd(t_list **env_list, char **args);
 /*

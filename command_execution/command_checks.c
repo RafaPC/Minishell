@@ -38,7 +38,7 @@ int			is_builtin(t_shell *shell)//FIXME: checkear lo que puede devolver cada bui
 	else if (!ft_strncmp(shell->commands->tokens[0], "env", 4))
 		result = (env(shell->env_list, &shell->commands->tokens[1]));
 	else if (!ft_strncmp(shell->commands->tokens[0], "exit", 5))
-		exit_command(shell->commands, &shell->env_list, 0, 0);
+		exit_command(shell, 0, 0);
 	shell->prev_exit_status = errno;
 	return (result);
 }

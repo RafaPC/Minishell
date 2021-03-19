@@ -52,10 +52,11 @@ int		exit_atoi(const char *str, t_bool *overflow, int i, u_int64_t number)
 ** Free all the memory and exits with a given status number
 */
 
-void	free_and_exit(t_command *commands, t_list **env_list, int exit_code)
+void	free_and_exit(t_shell *shell, int exit_code)
 {
-	free_commands(commands);
-	ft_lstclear(env_list, free);
+	ft_lstdbl_clear(&shell->command_history, free);
+	free_commands(shell->commands);
+	ft_lstclear(&shell->env_list, free);
 	exit(exit_code);
 }
 
@@ -95,28 +96,27 @@ t_bool overflow)
 ** and the t_command *commands struct before exiting
 */
 
-void	exit_command(t_command *commands, t_list **env_list, int exit_code, int i)
+void	exit_command(t_shell *shell, int exit_code, int i)
 {
 	t_bool	overflow;
 	int		signs;
 
 	signs = 0;
 	overflow = false;
-	if (!commands || !commands->tokens[1])
-		free_and_exit(commands, env_list, exit_code);
-	while (commands->tokens[1][i] && (commands->tokens[1][i] == ' ' ||
-	commands->tokens[1][i] == '\t' || commands->tokens[1][i] == '\f' ||
-	commands->tokens[1][i] == '-' || commands->tokens[1][i] == '+' ||
-	ft_isdigit(commands->tokens[1][i])))
+	if (!shell->commands || !shell->commands->tokens[1])
+		free_and_exit(shell, exit_code);
+	while (shell->commands->tokens[1][i] &&
+	(ft_strchr(" \t\f-+", shell->commands->tokens[1][i])||
+	ft_isdigit(shell->commands->tokens[1][i])))
 	{
-		if (ft_isdigit(commands->tokens[1][i]))
-			exit_code = exit_atoi(&commands->tokens[1][i], &overflow, 0, 0);
-		if (commands->tokens[1][i] == '+' || commands->tokens[1][i] == '-')
+		if (ft_isdigit(shell->commands->tokens[1][i]))
+			exit_code = exit_atoi(&shell->commands->tokens[1][i], &overflow, 0, 0);
+		if (shell->commands->tokens[1][i] == '+' || shell->commands->tokens[1][i] == '-')
 			signs++;
 		if (signs > 1)
 			break ;
 		i++;
 	}
-	check_exit(commands->tokens, &exit_code, i, overflow);
-	free_and_exit(commands, env_list, exit_code);
+	check_exit(shell->commands->tokens, &exit_code, i, overflow);
+	free_and_exit(shell, exit_code);
 }
