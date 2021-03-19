@@ -32,10 +32,17 @@ static int      set_terminal_mode(struct termios *term_save, const int canonical
    return (0);
  }
 
+void    handle_signal()
+{
+    ft_putstr_fd("^C\n", STDIN_FILENO); //Change to ignore, detect Ctr input?
+    write_prompt();
+}
+
 t_bool  handle_input(char **buffer, t_list_dbl **command_history) //Make shell global?
 {
     t_input_info shell;
 
+    signal(SIGINT, handle_signal);
     ft_memset(&shell, 0, sizeof(t_input_info));
     shell.line = ft_strdup("");
     shell.history = *command_history;

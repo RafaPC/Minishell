@@ -89,7 +89,7 @@ void    add_char(t_input_info *shell, char c)
 t_bool    read_input(t_input_info *shell)
 {
     char    buffer[1];
-    
+
     while (read(STDIN_FILENO, buffer, 1))
     {
         if (buffer[0] == end_of_transmission && !(shell->line[0])) // Add Ctrl + c signal?
