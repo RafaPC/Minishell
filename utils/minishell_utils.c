@@ -6,41 +6,11 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 12:23:34 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/17 22:12:45 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/18 19:33:24 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-** Parameter:
-** envp -> array of environment variables strings
-**
-** Creates a list of t_list* elements with the
-** environment variables strings as content
-**
-** Returns a t_list pointer to the first element of the list
-*/
-
-#include "libft.h"
-
-t_list	*create_env_list(const char **env)
-{
-	t_list	*env_list;
-	t_list	*aux;
-
-	if (!env || !(*env))
-		return (NULL);
-	env_list = ft_lstnew(ft_strdup(*env));
-	aux = env_list;
-	env++;
-	while (*env)
-	{
-		aux->next = ft_lstnew(ft_strdup(*env));
-		aux = aux->next;
-		env++;
-	}
-	return (env_list);
-}
-
+#include "minishell.h"
 /*
 ** Transforms the t_list* list of environment variables elements to
 ** a double pointer of chars so that it can be used as the third argument in
@@ -83,8 +53,6 @@ char	*get_env_var(char *var, t_list *env_list)
 	int		var_length;
 	char	*var_value;
 
-	if (!env_list)
-		return (NULL);
 	var_value = NULL;
 	var_equal = ft_strjoin(var, "=");
 	var_length = ft_strlen(var_equal);

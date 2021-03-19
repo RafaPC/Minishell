@@ -4,6 +4,7 @@ NAME = minishell
 INCLUDES = -Ilibft/ -I.
 SRCS =	builtins/builtins.c						\
 		builtins/cd.c							\
+		builtins/exit.c							\
 		builtins/export.c						\
 		builtins/unset.c						\
 		command_execution/command_checks.c		\
@@ -17,6 +18,7 @@ SRCS =	builtins/builtins.c						\
 		command_parsing/read_input.c			\
 		command_parsing/split_commands.c		\
 		temp/debug_minishell.c					\
+		utils/environment.c						\
 		utils/executables_paths.c				\
 		utils/handle_error.c					\
 		utils/memory_handling.c					\

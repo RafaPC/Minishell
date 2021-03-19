@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug_minishell.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 11:28:26 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/09 12:17:11 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/19 10:48:57 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,5 @@ void	debug_minishell(t_list **env_list, t_bool verbose)
 		free_gnl_buffer(gnl_buff, false);
 		close(fd);
 	}
-	ft_exit(NULL, env_list);
+	exit_command(NULL, env_list, 0, 0);
 }

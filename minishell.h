@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/15 22:46:39 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/19 10:48:57 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char			**get_redirection_command(t_command_parsing *cmd_pars, char **input,
 /*
 **		MINISHELL UTILS
 */
-t_list			*create_env_list(const char **envp);
+t_list			*create_env_list(const char **env, char *command_path);
 char			**env_list_to_array(t_list *env_list);
 char			*get_env_var(char *var, t_list *env_list);
 char			*get_command_path(char **paths, char *command);
@@ -102,7 +102,7 @@ void			debug_minishell(t_list **env_list, t_bool verbose);
 */
 t_bool			env(t_list *env_list, char **args);
 t_bool			echo(char **args);
-void			ft_exit(t_command *commands, t_list **env_list);
+void			exit_command(t_command *commands, t_list **env_list, int exit_code, int i);
 t_bool			pwd(void);
 t_bool			cd(t_list **env_list, char **args);
 /*

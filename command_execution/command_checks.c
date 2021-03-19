@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 12:57:24 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/15 01:20:49 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/19 10:48:57 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_command *command, t_list **env_list, int *prev_exit_status)//FIXME: checkear l
 	else if (!ft_strncmp(command->tokens[0], "env", 4))
 		result = (env(*env_list, &command->tokens[1]));
 	else if (!ft_strncmp(command->tokens[0], "exit", 5))
-		ft_exit(command, env_list);
+		exit_command(command, env_list, 0, 0);
 	*prev_exit_status = errno;
 	return (result);
 }

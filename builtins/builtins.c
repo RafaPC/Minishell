@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/17 16:11:36 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/18 15:21:03 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,39 +38,6 @@ t_bool	env(t_list *env_list, char **args)
 }
 
 /*
-** Called when "exit" is written in the shell
-** Frees the t_list* list of environment variables elements
-** Returns the value passed as an argument.
-** if more arguments are given, a 2 is returned (for some reason);
-*/
-
-void	ft_exit(t_command *commands, t_list **env_list)
-{
-	int exit_code;
-
-	exit_code = 0;
-	if (commands)
-		if (commands->tokens[1])
-		{
-			if (commands->tokens[2])
-			{
-				exit_code = 1;
-				ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-			}
-			else if (ft_str_checkset(commands->tokens[1], "0123456789"))
-				exit_code = ft_atoi(commands->tokens[1]);
-			else
-			{
-				exit_code = 2;
-				ft_putstr_fd("minishell: exit: notanumber: numeric argument required\n", STDERR_FILENO);
-			}
-		}
-	free_commands(commands);
-	ft_lstclear(env_list, free);
-	exit(exit_code);
-}
-
-/*
 **	Prints all the arguments to standart output
 */
 
@@ -81,15 +48,18 @@ t_bool	echo(char **args)
 
 	i = 1;
 	newline_flag = false;
-	if (*args && !ft_strncmp(*args, "-n", 2))
+	while (*args && !ft_strncmp(*args, "-n", 2))
 	{
 		while ((*args)[i] && (*args)[i] == 'n')
 			i++;
 		if (!(*args)[i])
 		{
+			i = 1;
 			newline_flag = true;
 			args++;
 		}
+		else
+			break ;
 	}
 	while (*args)
 	{
