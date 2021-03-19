@@ -100,7 +100,7 @@ t_bool    read_input(t_input_info *shell)
             handle_keys(shell);
         else if (buffer[0] == delete)
             delete_char(shell);
-        else
+        else if (buffer[0] != '\t')
             add_char(shell, buffer[0]);
     }
     write(STDIN_FILENO, "\n", 1);
