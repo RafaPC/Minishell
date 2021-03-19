@@ -32,7 +32,7 @@ void	print_command_table(t_command *command)
 }
 
 void	iterate_through_commands(t_gnl_buffer *gnl_buff,
-t_list **env_list, t_bool verbose)
+t_shell *shell, t_bool verbose)
 {
 	char		*buffer;
 	t_command	*commands;
@@ -44,14 +44,13 @@ t_list **env_list, t_bool verbose)
 		buffer = gnl_buff->line;
 		ft_printf(STDOUT_FILENO, "Input: \"%s\"\n\n", buffer);
 		if (!print_parsing_error(
-			split_commands(&buffer, &commands), &prev_exit_status))
+			split_commands(shell), &prev_exit_status))
 		{
 			while (commands)
 			{
 				if (verbose)
 					print_command_table(commands);
-				commands = execute_commands(
-					commands, env_list, &prev_exit_status);
+				commands = execute_commands(shell);
 			}
 		}
 		gnl_buff = gnl_buff->next;
@@ -59,7 +58,7 @@ t_list **env_list, t_bool verbose)
 	}
 }
 
-void	debug_minishell(t_list **env_list, t_bool verbose)
+void	debug_minishell(t_shell *shell, t_bool verbose)
 {
 	int				fd;
 	t_gnl_buffer	*gnl_buff;
@@ -69,9 +68,9 @@ void	debug_minishell(t_list **env_list, t_bool verbose)
 	if (fd != -1)
 	{
 		gnl_buffer(fd, 0, &gnl_buff);
-		iterate_through_commands(gnl_buff, env_list, verbose);
+		iterate_through_commands(gnl_buff, shell, verbose);
 		free_gnl_buffer(gnl_buff, false);
 		close(fd);
 	}
-	exit_command(NULL, env_list, 0, 0);
+	exit_command(NULL, &shell->env_list, 0, 0);
 }

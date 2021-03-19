@@ -16,17 +16,19 @@
 ** TODO: Might need to change the permits!
 */
 
-t_bool	get_input_and_output(
-	char *file, int mode, int *prev_exit_status, t_list *env_list)
+t_bool	get_input_and_output(t_shell *shell, int mode)
 {
 	int fd;
+	char *file;
 
-	parse_insertions(&file, env_list, *prev_exit_status, true);
+	file = shell->commands->tokens[0];
+	parse_insertions(shell, true);
 	if (mode == input_redirection)
 	{
-		if ((fd = open(file, O_RDONLY)) == -1 && (*prev_exit_status = errno))
+		if ((fd = open(file, O_RDONLY)) == -1 &&
+		(shell->prev_exit_status = errno))
 			return (false);
-		if (dup2(fd, STDIN_FILENO) == -1 && (*prev_exit_status = errno))
+		if (dup2(fd, STDIN_FILENO) == -1 && (shell->prev_exit_status = errno))
 			return (false);
 		close(fd);
 	}
@@ -36,13 +38,13 @@ t_bool	get_input_and_output(
 			fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0666);
 		else if (mode == output_redirection_app)
 			fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0666);
-		if (fd == -1 && (*prev_exit_status = errno))
+		if (fd == -1 && (shell->prev_exit_status = errno))
 			return (false);
-		if (dup2(fd, STDOUT_FILENO) == -1 && (*prev_exit_status = errno))
+		if (dup2(fd, STDOUT_FILENO) == -1 && (shell->prev_exit_status = errno))
 			return (false);
 		close(fd);
 	}
-	*prev_exit_status = errno;
+	shell->prev_exit_status = errno;
 	return (true);
 }
 
@@ -50,19 +52,18 @@ t_bool	get_input_and_output(
 ** TODO:
 */
 
-t_bool	handle_pipe_and_execute(t_command *commands, t_list **env_list,
-int *prev_exit_status)
+t_bool	handle_pipe_and_execute(t_shell *shell)
 {
 	int std_out_cpy;
 	int	fdpipe[2];
 
-	parse_insertions(commands->tokens, *env_list, *prev_exit_status, false);
+	parse_insertions(shell, false);
 	std_out_cpy = dup(STDOUT_FILENO);
 	if (pipe(fdpipe) == -1)
 		return (false);
 	if (dup2(fdpipe[1], STDOUT_FILENO) == -1)
 		return (false);
-	command_execution(commands, env_list, prev_exit_status);
+	command_execution(shell);
 	if (errno)
 		return (false);
 	if (dup2(fdpipe[0], STDIN_FILENO) == -1)

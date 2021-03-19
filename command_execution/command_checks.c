@@ -20,27 +20,26 @@
 ** the env_array is freed and created again so that it is updated
 */
 
-int			is_builtin(
-t_command *command, t_list **env_list, int *prev_exit_status)//FIXME: checkear lo que puede devolver cada builtin y eso
+int			is_builtin(t_shell *shell)//FIXME: checkear lo que puede devolver cada builtin y eso
 {
 	int	result;
 
 	result = -1;
-	if (!ft_strncmp(command->tokens[0], "echo", 5))
-		result = (echo(&command->tokens[1]));
-	else if (!ft_strncmp(command->tokens[0], "cd", 3))
-		result = (cd(env_list, &command->tokens[1]));
-	else if (!ft_strncmp(command->tokens[0], "pwd", 4))
+	if (!ft_strncmp(shell->commands->tokens[0], "echo", 5))
+		result = (echo(&shell->commands->tokens[1]));
+	else if (!ft_strncmp(shell->commands->tokens[0], "cd", 3))
+		result = (cd(&shell->env_list, &shell->commands->tokens[1]));
+	else if (!ft_strncmp(shell->commands->tokens[0], "pwd", 4))
 		result = (pwd());
-	else if (!ft_strncmp(command->tokens[0], "export", 7))
-		result = export(env_list, &command->tokens[1]);
-	else if (!ft_strncmp(command->tokens[0], "unset", 6))
-		result = unset(env_list, &command->tokens[1]);
-	else if (!ft_strncmp(command->tokens[0], "env", 4))
-		result = (env(*env_list, &command->tokens[1]));
-	else if (!ft_strncmp(command->tokens[0], "exit", 5))
-		exit_command(command, env_list, 0, 0);
-	*prev_exit_status = errno;
+	else if (!ft_strncmp(shell->commands->tokens[0], "export", 7))
+		result = export(&shell->env_list, &shell->commands->tokens[1]);
+	else if (!ft_strncmp(shell->commands->tokens[0], "unset", 6))
+		result = unset(&shell->env_list, &shell->commands->tokens[1]);
+	else if (!ft_strncmp(shell->commands->tokens[0], "env", 4))
+		result = (env(shell->env_list, &shell->commands->tokens[1]));
+	else if (!ft_strncmp(shell->commands->tokens[0], "exit", 5))
+		exit_command(shell->commands, &shell->env_list, 0, 0);
+	shell->prev_exit_status = errno;
 	return (result);
 }
 

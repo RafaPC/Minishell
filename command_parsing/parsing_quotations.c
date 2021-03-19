@@ -12,25 +12,25 @@
 
 #include "minishell.h"
 
-void	skip_quotations(char **input, t_command_parsing *cmd_pars)
+void	skip_quotations(char *input, t_command_parsing *cmd_pars)
 {
 	char *closer;
 	char *alternate;
 
-	closer = input[0][cmd_pars->i] == '\"' ? "\"" : "\'";
-	alternate = input[0][cmd_pars->i] == '\'' ? "\"" : "\'";
+	closer = input[cmd_pars->i] == '\"' ? "\"" : "\'";
+	alternate = input[cmd_pars->i] == '\'' ? "\"" : "\'";
 	cmd_pars->i++;
-	while (!ft_strchr(closer, input[0][cmd_pars->i]))
+	while (!ft_strchr(closer, input[cmd_pars->i]))
 	{
-		if (!ft_strncmp(&input[0][cmd_pars->i], "\\\"", 2) ||
-		!ft_strncmp(&input[0][cmd_pars->i], "\\\'", 2))
+		if (!ft_strncmp(&input[cmd_pars->i], "\\\"", 2) ||
+		!ft_strncmp(&input[cmd_pars->i], "\\\'", 2))
 			cmd_pars->i += 2;
-		if (ft_strchr(alternate, input[0][cmd_pars->i]))
+		if (ft_strchr(alternate, input[cmd_pars->i]))
 			skip_quotations(input, cmd_pars);
 		else
 			cmd_pars->i++;
 	}
-	if (!input[0][cmd_pars->i])
+	if (!input[cmd_pars->i])
 		cmd_pars->error = newline;
 	else
 		cmd_pars->i++;

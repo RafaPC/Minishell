@@ -13,7 +13,7 @@
 
 #include "minishell.h"
 
- void   delete_h_saved_line(t_shell *shell)
+ void   delete_h_saved_line(t_input_info *shell)
  {
     if (shell->h_saved_line)
     {
@@ -22,7 +22,7 @@
     }
  }
 
-void move_cursor(t_shell *shell, int direction, t_bool change_index, unsigned nb)
+void move_cursor(t_input_info *shell, int direction, t_bool change_index, unsigned nb)
 {
     if (nb == 0)
         return ;
@@ -44,7 +44,7 @@ void move_cursor(t_shell *shell, int direction, t_bool change_index, unsigned nb
     }
 }
 
-void    delete_char(t_shell *shell)
+void    delete_char(t_input_info *shell)
 {
     int index;
 
@@ -65,7 +65,7 @@ void    delete_char(t_shell *shell)
     delete_h_saved_line(shell);
 }
 
-void    add_char(t_shell *shell, char c)
+void    add_char(t_input_info *shell, char c)
 {
     char    buffer[2];
     int     index;
@@ -86,7 +86,7 @@ void    add_char(t_shell *shell, char c)
 }
 
 
-t_bool    read_input(t_shell *shell)
+t_bool    read_input(t_input_info *shell)
 {
     char    buffer[1];
     

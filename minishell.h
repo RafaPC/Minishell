@@ -63,7 +63,7 @@ typedef enum	e_key_values
     right
 }				t_key_values;
 
-typedef struct          s_shell
+typedef struct          s_input_info
 {
 	struct termios      term_cp;
     char                *line;
@@ -72,7 +72,16 @@ typedef struct          s_shell
     char                *h_saved_line;
     unsigned            index;
     unsigned            length;
-}						t_shell;    
+}						t_input_info;    
+
+typedef struct	s_shell
+{
+	char		*buffer;
+	t_list		*env_list;
+	t_command	*commands;
+	int			prev_exit_status;
+	t_list_dbl 	*command_history;
+}				t_shell;
 
 /*
 **		EXECUTABLES PATHS
@@ -86,22 +95,22 @@ char			**get_path(t_list *env_list);
 */
 //t_bool read_input(char **line);
 t_bool  handle_input(char **buffer, t_list_dbl **command_history);
-t_bool	read_input(t_shell *shell);
-void	handle_keys(t_shell *shell);
-void	handle_input_history(t_shell *shell, char direction);
- void   delete_h_saved_line(t_shell *shell);
+t_bool	read_input(t_input_info *shell);
+void	handle_keys(t_input_info *shell);
+void	handle_input_history(t_input_info *shell, char direction);
+ void   delete_h_saved_line(t_input_info *shell);
  int	write_prompt();
- void	move_cursor(t_shell *shell, int direction, t_bool change_index, unsigned nb);
- void   delete_char(t_shell *shell);
+ void	move_cursor(t_input_info *shell, int direction, t_bool change_index, unsigned nb);
+ void   delete_char(t_input_info *shell);
 /*
 ** 		COMMAND PARSING
 */
 void			tabs_to_spaces(char *string);
 void			empty_buffer(char *buffer);
 int				insert_variable(char **input, int index, t_list *env_list, int prev_exit_status);
-int				split_commands(char **input, t_command	**commands);
+int				split_commands(t_shell *shell);
 void			handle_quotations(char **input, int *index, t_list *env_list, int prev_exit_status);
-void			skip_quotations(char **input, t_command_parsing *cmd_pars);
+void			skip_quotations(char *input, t_command_parsing *cmd_pars);
 void			add_command(t_command **commands, char **arguments,
 					int relation);
 t_bool			command_split(t_command_parsing *cmd_pars, t_command
@@ -112,7 +121,7 @@ void			handle_redirections_split(t_command_parsing *cmd_pars,
 void			handle_input_redirection(t_command_parsing *cmd_pars,
 				t_command **commands, char **input);
 int				print_parsing_error(int return_value, int *prev_exit_status);
-void			parse_insertions(char **args, t_list *env_list, int prev_exit_status, t_bool single_run);
+void			parse_insertions(t_shell *shell, t_bool single_run);
 t_bool			not_preceeding_argument(char *input, int index);
 int				handle_backslash(char **args, int index, t_bool remove);
 char			**get_redirection_command(t_command_parsing *cmd_pars, char **input,
@@ -128,7 +137,7 @@ t_command		*del_command(t_command *command);
 t_command		*free_commands(t_command *commands);
 t_command		*handle_errors(t_command *command);
 t_command		*print_redirection_errors(t_command *commands, int *prev_exit_status);
-void			debug_minishell(t_list **env_list, t_bool verbose);
+void			debug_minishell(t_shell *shell, t_bool verbose);
 /*
 **		BUILTINS
 */
@@ -140,8 +149,8 @@ t_bool			cd(t_list **env_list, char **args);
 /*
 **				EXPORT
 */
-t_bool				export(t_list **env_list, char **args);
-t_bool				export_print(t_list *env_list);
+t_bool			export(t_list **env_list, char **args);
+t_bool			export_print(t_list *env_list);
 t_bool			export_variable(t_list **env_list, char *arg);
 t_bool			valid_env_characters(char *var_name);
 /*
@@ -153,22 +162,18 @@ char *var_name, int compare_length);
 /*
 **		COMMAND EXECUTION
 */
-void			child_process(t_command *command, t_bool is_file_path, t_list **env_list,
-int *prev_exit_status);
+void			child_process(t_shell *shell, t_bool is_file_path);
 t_bool			is_directory(char *token, int *prev_exit_status);
-int				is_builtin(t_command *command, t_list **env_list, int *prev_exit_status);
+int				is_builtin(t_shell *t_shell);
 t_bool			is_valid_path(char *path, int *prev_exit_status);
-void			command_execution(t_command *command, t_list **env_list,
-int *prev_exit_status);
-t_command		*execute_commands(t_command *commands, t_list **env_list, int *prev_exit_status);
+void			command_execution(t_shell *shell);
+t_command		*execute_commands(t_shell *shell);
 void			restore_fds(int stdin_copy, int stdout_copy);
 /*
 **		COMMAND INPUT/OUTPUT
 */
-t_bool			get_input_and_output(
-	char *file, int mode, int *prev_exit_status, t_list *env_list);
-t_bool		handle_pipe_and_execute(
-	t_command *commands, t_list **env_list, int *prev_exit_status);
+t_bool			get_input_and_output(t_shell *shell, int mode);
+t_bool			handle_pipe_and_execute(t_shell *shell);
 /*
 ** TEMPORARY
 */

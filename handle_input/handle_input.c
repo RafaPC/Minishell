@@ -34,9 +34,9 @@ static int      set_terminal_mode(struct termios *term_save, const int canonical
 
 t_bool  handle_input(char **buffer, t_list_dbl **command_history) //Make shell global?
 {
-    t_shell shell;
+    t_input_info shell;
 
-    ft_memset(&shell, 0, sizeof(t_shell));
+    ft_memset(&shell, 0, sizeof(t_input_info));
     shell.line = ft_strdup("");
     shell.history = *command_history;
     shell.current_history = shell.history;

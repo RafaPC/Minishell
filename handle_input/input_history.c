@@ -12,7 +12,7 @@
 
 #include "minishell.h" 
 
- void   rewrite_line(t_shell *shell, char *line, t_bool erase_mode, t_bool duplicate_string)
+ void   rewrite_line(t_input_info *shell, char *line, t_bool erase_mode, t_bool duplicate_string)
  {
     if (erase_mode)
         free(shell->line);
@@ -27,7 +27,7 @@
     ft_putstr_fd(shell->line, STDIN_FILENO);
  }
 
-void    retrieve_older_command(t_shell *shell)
+void    retrieve_older_command(t_input_info *shell)
 {
     if (shell->current_history)
     {
@@ -45,7 +45,7 @@ void    retrieve_older_command(t_shell *shell)
     }
 }
 
-void    retrieve_newer_command(t_shell *shell)
+void    retrieve_newer_command(t_input_info *shell)
 {
     if (shell->current_history)
     {
@@ -65,7 +65,7 @@ void    retrieve_newer_command(t_shell *shell)
     }
 }
 
-void handle_input_history(t_shell *shell, char direction)
+void handle_input_history(t_input_info *shell, char direction)
 {
     if (direction == 'A')
         retrieve_older_command(shell);

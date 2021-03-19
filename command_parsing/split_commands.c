@@ -125,18 +125,18 @@ void	add_command_argument(t_command_parsing *cmd_pars, char *input)
 */
 
 void	handle_parse_manipulations(t_command_parsing *cmd_pars,
-t_command **commands, char **input)
+t_shell *shell)
 {
-	if (input[0][cmd_pars->i] == '\\')
-		cmd_pars->i = handle_backslash(input, cmd_pars->i, false);
-	else if (ft_strrchr("\"\'", input[0][cmd_pars->i]))
-		skip_quotations(input, cmd_pars);
-	else if (((*input)[cmd_pars->i] == '<'))
-		handle_input_redirection(cmd_pars, commands, input);
-	else if ((*input)[cmd_pars->i] == '>')
-		handle_redirections_split(cmd_pars, commands, input);
-	else if (ft_isspace((*input)[cmd_pars->i]))
-		add_command_argument(cmd_pars, *input);
+	if (shell->buffer[cmd_pars->i] == '\\')
+		cmd_pars->i = handle_backslash(&shell->buffer, cmd_pars->i, false);
+	else if (ft_strrchr("\"\'", shell->buffer[cmd_pars->i]))
+		skip_quotations(shell->buffer, cmd_pars);
+	else if ((shell->buffer[cmd_pars->i] == '<'))
+		handle_input_redirection(cmd_pars, &shell->commands, &shell->buffer);
+	else if (shell->buffer[cmd_pars->i] == '>')
+		handle_redirections_split(cmd_pars, &shell->commands, &shell->buffer);
+	else if (ft_isspace(shell->buffer[cmd_pars->i]))
+		add_command_argument(cmd_pars, shell->buffer);
 	else
 		cmd_pars->i++;
 }
@@ -155,30 +155,30 @@ t_command **commands, char **input)
 ** NOTE: Assumes that *input is malloced.
 */
 
-int		split_commands(char **input, t_command **commands)
+int		split_commands(t_shell *shell)
 {
 	t_command_parsing	cmd_pars;
 
-	*commands = NULL;
+	shell->commands = NULL;
 	ft_memset(&cmd_pars, 0, sizeof(cmd_pars));
 	while (1)
 	{
 		if (cmd_pars.error)
 		{
-			commands[0] = free_commands(commands[0]);
-			free(*input);
+			shell->commands = free_commands(shell->commands);
+			free(shell->buffer);
 			return (cmd_pars.error);
 		}
-		else if (ft_strchr(";|", (*input)[cmd_pars.i]))
+		else if (ft_strchr(";|", (shell->buffer)[cmd_pars.i]))
 		{
-			if (command_split(&cmd_pars, commands, *input))
+			if (command_split(&cmd_pars, &shell->commands, shell->buffer))
 			{
-				free(*input);
+				free(shell->buffer);
 				return (0);
 			}
 		}
 		else
-			handle_parse_manipulations(&cmd_pars, commands, input);
+			handle_parse_manipulations(&cmd_pars, shell);
 	}
 	return (0);
 }

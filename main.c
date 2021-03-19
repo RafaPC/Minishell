@@ -17,43 +17,39 @@
 
 int		main(int argc, char **argv, const char **env)
 {
-	char		*buffer;
-	t_list		*env_list;
-	t_command	*commands;
-	int			prev_exit_status;
-	t_list_dbl 	*command_history;
+	t_shell		shell;
 
-	prev_exit_status = errno;
-	env_list = create_env_list(env, argv[0]);
-	command_history = NULL;
-	if (argc == 1) // AQUÍ ENTRA SI LO EJECUTAS NORMAL, SE QUEDA EN BUCLE Y PUEDES METER COMANDOS
+	shell.prev_exit_status = errno;
+	shell.env_list = create_env_list(env, argv[0]);
+	shell.command_history = NULL;
+	if (argc == 1)
 	{
 		while (true)
 		{
-			if (!handle_input(&buffer, &command_history))
+			if (!handle_input(&shell.buffer, &shell.command_history))
 			{
 				write(STDOUT_FILENO, "exit\n", 5);
-				free(buffer);
-				exit_command(NULL, &env_list, 0, 0);
+				free(shell.buffer);
+				exit_command(NULL, &shell.env_list, 0, 0);
 			}
-			if (!print_parsing_error(split_commands(&buffer, &commands), &prev_exit_status))
+			if (!print_parsing_error(split_commands(&shell), &shell.prev_exit_status))
 			{
-				while (commands)
-					commands = execute_commands(commands, &env_list, &prev_exit_status);
+				while (shell.commands)
+					shell.commands = execute_commands(&shell);
 			}
 		}
 	}
 	else if (argc == 2)
 	{
-		env_list = create_env_list((const char**)get_false_env_array(), argv[0]);
-		debug_minishell(&env_list, !ft_strncmp(argv[1], "-v", 3));
+		shell.env_list = create_env_list((const char**)get_false_env_array(), argv[0]);
+		debug_minishell(&shell, !ft_strncmp(argv[1], "-v", 3));
 	}
 	else //PARA EL TESTER, COGE EL INPUT POR EL ARGUMENTO
 	{
-		buffer = ft_strdup(argv[argc - 1]);
-		if (!print_parsing_error(split_commands(&buffer, &commands), &prev_exit_status))
-			while (commands)
-				commands = execute_commands(commands, &env_list, &prev_exit_status);
-		return (prev_exit_status);
+		shell.buffer = ft_strdup(argv[argc - 1]);
+		if (!print_parsing_error(split_commands(&shell), &shell.prev_exit_status))
+			while (shell.commands)
+				shell.commands = execute_commands(&shell);
+		return (shell.prev_exit_status);
 	}
 }

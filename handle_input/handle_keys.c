@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void handle_keys(t_shell *shell)
+void handle_keys(t_input_info *shell)
 {
     char    buffer[1];
     char    aux[5];

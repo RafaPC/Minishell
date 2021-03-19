@@ -68,11 +68,12 @@ int prev_exit_status)
 	return (index);
 }
 
-void	parse_insertions(char **args, t_list *env_list,
-int prev_exit_status, t_bool single_run) //TODO: when bored: Change cmd_pars to simple int;
+void	parse_insertions(t_shell *shell, t_bool single_run) //TODO: when bored: Change cmd_pars to simple int;
 {
 	int index;
+	char **args;
 
+	args = shell->commands->tokens;
 	index = 0;
 	while (*args)
 	{
@@ -82,10 +83,10 @@ int prev_exit_status, t_bool single_run) //TODO: when bored: Change cmd_pars to 
 				index = handle_backslash(args, index, true);
 			else if (ft_strrchr("\"\'", args[0][index]))
 				handle_quotations(&args[0], &index,
-				env_list, prev_exit_status);
+				shell->env_list, shell->prev_exit_status);
 			else if (args[0][index] == '$')
 				index = insert_variable(&args[0], index,
-				env_list, prev_exit_status);
+				shell->env_list, shell->prev_exit_status);
 			else
 				index++;
 		}

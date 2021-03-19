@@ -39,7 +39,7 @@ int index)
 	ft_strchr("|<>;", (*input)[cmd_pars->i])))
 	{
 		if (ft_strchr("\"\'", (*input)[cmd_pars->i]))
-			skip_quotations(input, cmd_pars);
+			skip_quotations(*input, cmd_pars);
 		else if ((*input)[cmd_pars->i] == '\\')
 			handle_backslash(input, cmd_pars->i, false);
 		else
