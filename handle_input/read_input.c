@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 20:24:45 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/18 23:58:21 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/19 13:06:20 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,33 +67,34 @@ void    delete_char(t_shell *shell)
 
 void    add_char(t_shell *shell, char c)
 {
-    char buffer[1];
+    char    buffer[2];
+    int     index;
 
     buffer[0] = c;
-    if (shell->index == shell->length)
+    buffer[1] = '\0';
+    ft_insert(&shell->line, buffer, shell->index, 1);
+    (shell->index)++;
+    (shell->length)++;
+    ft_putstr_fd(&shell->line[shell->index - 1], STDIN_FILENO);
+    if (shell->index != shell->length)
     {
-        shell->index = ft_insert(&shell->line, buffer, shell->index, 1);
-        ft_putstr_fd(&shell->line[shell->index - 1], STDIN_FILENO);
-        shell->length++;
-        delete_h_saved_line(shell);
+        index = shell->index;
+        shell->index = shell->length;
+        move_cursor(shell, left, true, shell->length - index);
     }
-    else
-    {
-        shell->index = ft_insert(&shell->line, buffer, shell->index, 1);
-        ft_putstr_fd(&shell->line[shell->index - 1], STDIN_FILENO);
-        move_cursor(shell, left, false, ft_strlen(&shell->line[shell->index]));
-        shell->length++;
-        delete_h_saved_line(shell);
-    }
+    delete_h_saved_line(shell);
 }
 
-void    read_input(t_shell *shell)
+
+t_bool    read_input(t_shell *shell)
 {
     char    buffer[1];
     
     while (read(STDIN_FILENO, buffer, 1))
     {
-        if (buffer[0] == end_of_transmission || buffer[0] == '\n')
+        if (buffer[0] == end_of_transmission && !(shell->line[0])) // Add Ctrl + c signal?
+            return (false);
+        if (buffer[0] == '\n')
             break ;
         else if (buffer[0] == escape)
             handle_keys(shell);
@@ -103,7 +104,7 @@ void    read_input(t_shell *shell)
             add_char(shell, buffer[0]);
     }
     write(STDIN_FILENO, "\n", 1);
-    if (shell->line && *(shell->line) && (!shell->history ||
+    if (*(shell->line) && (!shell->history ||
     ft_strncmp(shell->line, shell->history->content, shell->length)))
         ft_lstdbl_add_front(&shell->history, ft_lstdbl_new(ft_strdup(shell->line)));
     delete_h_saved_line(shell);

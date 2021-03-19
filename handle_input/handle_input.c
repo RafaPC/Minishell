@@ -27,13 +27,13 @@ static int      set_terminal_mode(struct termios *term, struct termios *term_sav
         tcsetattr(STDIN_FILENO, TCSANOW, term);
     }
    if (canonical == 1)
-        tcsetattr(STDIN_FILENO, TCSANOW, term_save);
+        tcsetattr(STDIN_FILENO, TCSANOW, term_save); //handle un por si acaso
    return (0);
  }
 
 char    *handle_input(t_shell *shell) //Make shell global?
 {
-    shell->length = 0; //mem_set if we change it to a struct inside a struct?
+    shell->length = 0;
     shell->line = ft_strdup("");
     shell->index = 0;
     shell->current_history = shell->history;
@@ -41,6 +41,7 @@ char    *handle_input(t_shell *shell) //Make shell global?
     write_prompt();
     read_input(shell);
     set_terminal_mode(&shell->term, &shell->term, 1);
+    //handle memory stuff;
     return (shell->line);
 }
 
