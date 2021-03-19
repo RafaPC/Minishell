@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/19 10:48:57 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/19 11:56:02 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <errno.h>
+# include <termios.h>
 
 /*
 ** Declares
@@ -53,6 +54,27 @@ typedef struct	s_split_commands
 	t_bool				extracted_content;
 }				t_command_parsing;
 
+typedef enum	e_key_values
+{
+    end_of_transmission = 4,
+    escape = 27,
+    delete = 127,
+    left,
+    right
+}				t_key_values;
+
+typedef struct          s_shell
+{
+	struct termios      term;
+	struct termios      term_cp;
+    char                *line;
+	t_list_dbl          *history;
+    t_list_dbl          *current_history;
+    char                *h_saved_line;
+    unsigned            index;
+    unsigned            length;
+}						t_shell;    
+
 /*
 **		EXECUTABLES PATHS
 */
@@ -63,8 +85,19 @@ char			**get_path(t_list *env_list);
 /*
 **		READ INPUT
 */
+//t_bool read_input(char **line);
+char    *handle_input(t_shell *shell);
+void	read_input(t_shell *shell);
+void	handle_keys(t_shell *shell);
+void	handle_input_history(t_shell *shell, char direction);
+ void   delete_h_saved_line(t_shell *shell);
+ int	write_prompt();
+ void	move_cursor(t_shell *shell, int direction, t_bool change_index, unsigned nb);
+ void   delete_char(t_shell *shell);
+/*
+** 		COMMAND PARSING
+*/
 void			tabs_to_spaces(char *string);
-t_bool			read_input(char **buffer);
 void			empty_buffer(char *buffer);
 int				insert_variable(char **input, int index, t_list *env_list, int prev_exit_status);
 int				split_commands(char **input, t_command	**commands);
