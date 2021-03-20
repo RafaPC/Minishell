@@ -6,14 +6,12 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/19 10:49:25 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 20:01:39 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
-#include <stdio.h>
-#include <signal.h>
+
 
 int		main(int argc, char **argv, const char **env)
 {
@@ -30,7 +28,7 @@ int		main(int argc, char **argv, const char **env)
 			{
 				write(STDOUT_FILENO, "exit\n", 5);
 				free(shell.buffer);
-				exit_command(&shell, 0, 0);//Double check
+				exit_command(&shell);//Double check
 			}
 			if (!print_parsing_error(split_commands(&shell), &shell.prev_exit_status))
 			{

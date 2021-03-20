@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 15:20:50 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/19 10:48:43 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:28:26 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int		exit_atoi(const char *str, t_bool *overflow, int i, u_int64_t number)
 
 void	free_and_exit(t_shell *shell, int exit_code)
 {
-	ft_lstdbl_clear(&shell->command_history, free);
+	ft_lstdbl_clear(&(shell->command_history), free);
 	free_commands(shell->commands);
 	ft_lstclear(&shell->env_list, free);
 	exit(exit_code);
@@ -64,10 +64,10 @@ void	free_and_exit(t_shell *shell, int exit_code)
 ** Sets the exit code and prints a messagge depending on some conditions
 */
 
-void	check_exit(char **tokens, int *exit_code, int token_index,
+void	check_exit(char **tokens, int *exit_code, char last_character,
 t_bool overflow)
 {
-	if (tokens[1][token_index])
+	if (last_character)
 	{
 		*exit_code = 2;
 		ft_printf(STDERR_FILENO,
@@ -96,27 +96,29 @@ t_bool overflow)
 ** and the t_command *commands struct before exiting
 */
 
-void	exit_command(t_shell *shell, int exit_code, int i)
+void	exit_command(t_shell *shell)
 {
 	t_bool	overflow;
 	int		signs;
+	char	*c;
+	int		exit_code;
 
+	exit_code = 0;
 	signs = 0;
 	overflow = false;
 	if (!shell->commands || !shell->commands->tokens[1])
 		free_and_exit(shell, exit_code);
-	while (shell->commands->tokens[1][i] &&
-	(ft_strchr(" \t\f-+", shell->commands->tokens[1][i])||
-	ft_isdigit(shell->commands->tokens[1][i])))
+	c = shell->commands->tokens[1];
+	while (*c && (ft_strchr(" \t\f+-", *c) || ft_isdigit(*c)))
 	{
-		if (ft_isdigit(shell->commands->tokens[1][i]))
-			exit_code = exit_atoi(&shell->commands->tokens[1][i], &overflow, 0, 0);
-		if (shell->commands->tokens[1][i] == '+' || shell->commands->tokens[1][i] == '-')
+		if (ft_isdigit(*c))
+			exit_code = exit_atoi(c, &overflow, 0, 0);
+		if (*c == '+' || *c == '-')
 			signs++;
 		if (signs > 1)
 			break ;
-		i++;
+		c++;
 	}
-	check_exit(shell->commands->tokens, &exit_code, i, overflow);
+	check_exit(shell->commands->tokens, &exit_code, *c, overflow);
 	free_and_exit(shell, exit_code);
 }

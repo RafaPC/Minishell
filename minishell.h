@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/19 12:02:57 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:59:22 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct          s_input_info
     unsigned            length;
 }						t_input_info;    
 
-typedef struct	s_shell
+typedef struct			s_shell
 {
 	char		*buffer;
 	t_list		*env_list;
@@ -134,45 +134,47 @@ char			**env_list_to_array(t_list *env_list);
 char			*get_env_var(char *var, t_list *env_list);
 char			*get_command_path(char **paths, char *command);
 t_command		*del_command(t_command *command);
-t_command		*free_commands(t_command *commands);
+void			free_commands(t_command *commands);
 t_command		*handle_errors(t_command *command);
 t_command		*print_redirection_errors(t_command *commands, int *prev_exit_status);
 void			debug_minishell(t_shell *shell, t_bool verbose);
 /*
 **		BUILTINS
 */
-t_bool			env(t_list *env_list, char **args);
-t_bool			echo(char **args);
-void			exit_command(t_shell *shell, int exit_code, int i);
-t_bool			pwd(void);
-t_bool			cd(t_list **env_list, char **args);
+void			env(t_list *env_list, char *args);
+void			echo(char **args, int i);
+void			exit_command(t_shell *shell);
+void			pwd(void);
+void			cd(t_list **env_list, char **args);
 /*
 **				EXPORT
 */
-t_bool			export(t_list **env_list, char **args);
-t_bool			export_print(t_list *env_list);
+void			export(t_list **env_list, char **args);
+void			export_print(t_list *env_list);
 t_bool			export_variable(t_list **env_list, char *arg);
 t_bool			valid_env_characters(char *var_name);
 /*
 **				UNSET
 */
-t_bool			unset(t_list **env, char **args);
-t_bool			unset_recursive(t_list *env_list, t_list *previous_aux,
+void			unset(t_list **env, char **args);
+void			unset_variable(t_list **env, char *arg);
+void			unset_recursive(t_list *env_list, t_list *previous_aux,
 char *var_name, int compare_length);
 /*
 **		COMMAND EXECUTION
 */
 void			child_process(t_shell *shell, t_bool is_file_path);
 t_bool			is_directory(char *token, int *prev_exit_status);
-int				is_builtin(t_shell *t_shell);
+t_bool			is_builtin(t_shell *t_shell, char *token);
 t_bool			is_valid_path(char *path, int *prev_exit_status);
 void			command_execution(t_shell *shell);
 t_command		*execute_commands(t_shell *shell);
+void			get_child_exit_status(int child_status, int *prev_exit_status);
 void			restore_fds(int stdin_copy, int stdout_copy);
 /*
 **		COMMAND INPUT/OUTPUT
 */
-t_bool			get_input_and_output(t_shell *shell, int mode);
+t_bool			set_input_and_output(t_shell *shell, int mode);
 t_bool			handle_pipe_and_execute(t_shell *shell);
 /*
 ** TEMPORARY

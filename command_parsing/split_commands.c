@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_commands.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/26 10:47:52 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/14 12:11:08 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/20 18:10:28 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,11 +161,12 @@ int		split_commands(t_shell *shell)
 
 	shell->commands = NULL;
 	ft_memset(&cmd_pars, 0, sizeof(cmd_pars));
-	while (1)
+	while (true)
 	{
 		if (cmd_pars.error)
 		{
-			shell->commands = free_commands(shell->commands);
+			free_commands(shell->commands);
+			shell->commands = NULL;
 			free(shell->buffer);
 			return (cmd_pars.error);
 		}

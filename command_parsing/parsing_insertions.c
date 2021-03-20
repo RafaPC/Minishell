@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 11:41:44 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/15 20:50:53 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:42:46 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ int prev_exit_status)
 	return (index);
 }
 
-void	parse_insertions(t_shell *shell, t_bool single_run) //TODO: when bored: Change cmd_pars to simple int;
+void	parse_insertions(t_shell *shell, t_bool single_run)
 {
-	int index;
-	char **args;
+	int		index;
+	char	**args;
 
 	args = shell->commands->tokens;
 	index = 0;

@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 00:39:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 00:55:35 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:30:19 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_lstdbl_clear(t_list_dbl **lst, void (*del)(void *))
 {
 	t_list_dbl		*aux;
 
-	if (lst == 0)
+	if (lst == NULL || *lst == NULL)
 		return ;
 	while ((*lst)->prev)
 		*lst = (*lst)->prev;

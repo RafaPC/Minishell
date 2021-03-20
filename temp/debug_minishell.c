@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 11:28:26 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/19 10:48:57 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:41:32 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,19 @@ void	print_command_table(t_command *command)
 void	iterate_through_commands(t_gnl_buffer *gnl_buff,
 t_shell *shell, t_bool verbose)
 {
-	char		*buffer;
-	t_command	*commands;
-	int			prev_exit_status;
-
-	commands = NULL;
+	shell->commands = NULL;
 	while (gnl_buff)
 	{
-		buffer = gnl_buff->line;
-		ft_printf(STDOUT_FILENO, "Input: \"%s\"\n\n", buffer);
+		shell->buffer = gnl_buff->line;
+		ft_printf(STDOUT_FILENO, "Input: \"%s\"\n\n", shell->buffer);
 		if (!print_parsing_error(
-			split_commands(shell), &prev_exit_status))
+			split_commands(shell), &shell->prev_exit_status))
 		{
-			while (commands)
+			while (shell->commands)
 			{
 				if (verbose)
-					print_command_table(commands);
-				commands = execute_commands(shell);
+					print_command_table(shell->commands);
+				shell->commands = execute_commands(shell);
 			}
 		}
 		gnl_buff = gnl_buff->next;
@@ -72,5 +68,5 @@ void	debug_minishell(t_shell *shell, t_bool verbose)
 		free_gnl_buffer(gnl_buff, false);
 		close(fd);
 	}
-	exit_command(shell, 0, 0); //double check
+	exit_command(shell); //double check
 }

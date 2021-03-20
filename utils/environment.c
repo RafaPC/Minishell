@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 19:05:22 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/19 02:16:09 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:54:15 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_list	*check_and_fix_env(t_list *env, char *command_path)
 	if ((aux = get_env_var("SHLVL", env)))
 		free(aux);
 	else
-		ft_lstadd_back(&env, ft_lstnew(ft_strdup("SHLVL=1")));
+		export_variable(&env, "SHLVL=1");
 	return (env);
 }
 
@@ -83,9 +83,9 @@ t_list	*create_env_list(const char **env, char *command_path)
 	aux = env_list;
 	while (*env)
 	{
-		if (!ft_strncmp(*env, "SHLVL", 5))
+		if (!ft_strncmp(*env, "SHLVL=", 6))
 		{
-			str_aux = ft_itoa(ft_atoi(&(*env)[5]) + 1);
+			str_aux = ft_itoa(ft_atoi(&(*env)[6]) + 1);
 			aux->next = ft_lstnew(ft_strjoin("SHLVL=", str_aux));
 			free(str_aux);
 		}

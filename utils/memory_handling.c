@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   memory_handling.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:33:45 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/08 10:49:40 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:47:53 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+** TODO:
+*/
 
 t_command	*del_command(t_command *command)
 {
@@ -25,9 +29,12 @@ t_command	*del_command(t_command *command)
 	return (command);
 }
 
-t_command	*free_commands(t_command *commands)
+/*
+** TODO:
+*/
+
+void		free_commands(t_command *commands)
 {
 	while (commands)
 		commands = del_command(commands);
-	return (NULL);
 }

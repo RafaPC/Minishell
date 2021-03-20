@@ -6,64 +6,110 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 16:11:27 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/17 17:46:17 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:25:59 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-**		Changes the current working directory
+** Sets PWD and OLDPWD enevironment variables
 */
 
-t_bool	cd(t_list **env_list, char **args)
+void	cd_set_pwds(t_list **env_list, char *old_pwd)
 {
-	char	*pwd_new;
-	char	*aux;
+	char *aux;
+	char *new_pwd;
+
+	aux = old_pwd;
+	old_pwd = ft_strjoin("OLDPWD=", old_pwd);
+	export_variable(env_list, old_pwd);
+	free(old_pwd);
+	free(aux);
+	if ((aux = getcwd(NULL, 0)))
+	{
+		new_pwd = ft_strjoin("PWD=", aux);
+		export_variable(env_list, new_pwd);
+		free(aux);
+		free(new_pwd);
+	}
+}
+
+/*
+** Tries to execute chdir() to a directory
+** In case of error it prints the appropiate messages
+*/
+
+t_bool	cd_dir(char *directory)
+{
+	if (chdir(directory) == -1)
+	{
+		if (errno == ENOENT)
+			ft_printf(STDERR_FILENO,
+			"minishell: cd: %s: No such file or directory\n", directory);
+		else if (errno == EACCES)
+		{
+			ft_printf(STDERR_FILENO,
+			"minishell: cd: %s: Permission denied\n", directory);
+			errno = 1;
+		}
+		return (false);
+	}
+	return (true);
+}
+
+/*
+** Tries to execute chdir() to the home directory
+** If HOME doesn't exists it prints a message and sets errno to EPERM
+*/
+
+t_bool	cd_home(t_list *env_list)
+{
+	char	*home;
+	t_bool	result;
+
+	if ((home = get_env_var("HOME", env_list)))
+	{
+		result = cd_dir(home);
+		free(home);
+		return (result);
+	}
+	else
+	{
+		ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
+		errno = EPERM;
+		return (false);
+	}
+}
+
+/*
+** Tries to change the current directory to a new one and
+** change PWD and OLDPWD accordingly
+*/
+
+void	cd(t_list **env_list, char **args)
+{
+	char	*old_pwd;
 
 	if (args[0] && args[1])
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", STDOUT_FILENO);
-		return (true);
+		return ;
 	}
-	aux = getcwd(NULL, 0);
-	if (!args[0])//Hacer cd a home
-		if ((pwd_new = get_env_var("HOME", *env_list)))//FIXME:checkear errores del chdir
-		{
-			chdir(pwd_new);
-			free(pwd_new);
-		}
-		else
-		{
-			ft_putstr_fd("minishell: cd: HOME not set\n", STDERR_FILENO);
-			free(aux);
-			errno = 1;
-			return (true);
-		}
-	else if (chdir(args[0]) == -1)
+	else if (!(old_pwd = getcwd(NULL, 0)))
+		return ;
+	else if (!args[0])
 	{
-		if (errno == ENOENT)
-			ft_printf(STDERR_FILENO,
-			"minishell: cd: %s: No such file or directory\n", args[0]);
-		else if (errno == EACCES)
+		if (!cd_home(*env_list))
 		{
-			ft_printf(STDERR_FILENO,
-			"minishell: cd: %s: Permission denied\n", args[0]);
-			errno = 1;
+			free(old_pwd);
+			return ;
 		}
-		free(aux);
-		return (false);
 	}
-
-	pwd_new = ft_strjoin("OLDPWD=", aux);
-	export_variable(env_list, pwd_new);
-	free(pwd_new);
-	free(aux);
-
-	aux = getcwd(NULL, 0);
-	pwd_new = ft_strjoin("PWD=", aux);
-	export_variable(env_list, pwd_new);
-	free(aux);
-	free(pwd_new);
-	return (true);
+	else if (!cd_dir(args[0]))
+	{
+		free(old_pwd);
+		return ;
+	}
+	cd_set_pwds(env_list, old_pwd);
 }

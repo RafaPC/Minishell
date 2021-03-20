@@ -6,15 +6,15 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/15 22:54:32 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 19:21:01 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
 
 /*
-** TODO:
+** This function iterates through  the command list until it encounters a simple
+** command TODO:
 */
 
 t_command	*execute_commands(t_shell *shell)
@@ -27,15 +27,16 @@ t_command	*execute_commands(t_shell *shell)
 	stdout_copy = dup(STDOUT_FILENO);
 	while (shell->commands && shell->commands->relation != simple_command)
 	{
-		if (!get_input_and_output(shell, shell->commands->relation))
+		if (!set_input_and_output(shell, shell->commands->relation))
 			break ;
 		else if (shell->commands->relation == pipe_redirection &&
 		!handle_pipe_and_execute(shell))
-				break ;
+			break ;
 		shell->commands = del_command(shell->commands);
 	}
 	if (errno)
-		shell->commands = print_redirection_errors(shell->commands, &shell->prev_exit_status);
+		shell->commands = print_redirection_errors(
+			shell->commands, &shell->prev_exit_status);
 	else
 	{
 		parse_insertions(shell, false);
@@ -46,7 +47,12 @@ t_command	*execute_commands(t_shell *shell)
 }
 
 /*
-** TODO:
+** This function calls to other functions to check different options
+** It first checks if the token is a builtin
+** Then checks if the token is a directory
+** Then checks if the token is the path to an executable
+** Then creates a child process, calls a function in the forked child and
+** waits the child until it exits and gets its exits status
 */
 
 void		command_execution(t_shell *shell)
@@ -54,24 +60,24 @@ void		command_execution(t_shell *shell)
 	int			pid;
 	int			child_tatus;
 	t_bool		is_valid_file;
+	char		*token;
 
-	is_valid_file = false;
 	pid = 0;
-	if (!shell->commands->tokens[0] || is_builtin(shell) != -1 ||
-	is_directory(shell->commands->tokens[0], &shell->prev_exit_status))
+	token = shell->commands->tokens[0];
+	is_valid_file = false;
+	if (!token ||
+	is_builtin(shell, token) || is_directory(token, &(shell->prev_exit_status)))
 		return ;
-	if (ft_checkchar(shell->commands->tokens[0][0], "/.") &&
-	!(is_valid_file = is_valid_path(shell->commands->tokens[0], &shell->prev_exit_status)))
-		return ;
+	else if (ft_strchr("/.", token[0]))
+	{
+		is_valid_file = is_valid_path(token, &shell->prev_exit_status);
+		if (!is_valid_file)
+			return ;
+	}
 	if ((pid = fork()) == 0)
 		child_process(shell, is_valid_file);
 	else if (pid > 0 && wait(&child_tatus) != -1)
-	{
-		if (WIFEXITED(child_tatus))
-			shell->prev_exit_status = WEXITSTATUS(child_tatus);
-		else if (WIFSIGNALED(child_tatus))
-			shell->prev_exit_status = WTERMSIG(child_tatus);
-	}
+		get_child_exit_status(child_tatus, &(shell->prev_exit_status));
 }
 
 /*
@@ -108,6 +114,18 @@ void		child_process(t_shell *shell, t_bool is_file_path)
 	free_commands(shell->commands);
 	ft_lstdbl_clear(&shell->command_history, free);
 	exit(shell->prev_exit_status);
+}
+
+/*
+** Uses <sys/wait.h> macros in order to get the child exit status
+*/
+
+void		get_child_exit_status(int child_status, int *prev_exit_status)
+{
+	if (WIFEXITED(child_status))
+		*prev_exit_status = WEXITSTATUS(child_status);
+	else if (WIFSIGNALED(child_status))
+		*prev_exit_status = WTERMSIG(child_status);
 }
 
 /*

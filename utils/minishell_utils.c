@@ -6,11 +6,12 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 12:23:34 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/18 19:33:24 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 13:23:47 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 /*
 ** Transforms the t_list* list of environment variables elements to
 ** a double pointer of chars so that it can be used as the third argument in
@@ -64,7 +65,7 @@ char	*get_env_var(char *var, t_list *env_list)
 			var_value = ft_strdup((char *)(content + var_length));
 		env_list = env_list->next;
 	}
-	if (!var_value && !ft_strncmp("PWD", var, 4))//FIXME: maybe lo mismo para OLDPWD
+	if (!var_value && !ft_strncmp("PWD", var, 4))
 		var_value = getcwd(NULL, 0);
 	free(var_equal);
 	return (var_value);
@@ -81,8 +82,8 @@ char	**get_false_env_array(void)
 	env_list = malloc(sizeof(char**) * 6);
 	env_list[0] = ft_strdup("USER=user42");
 	env_list[1] = ft_strdup("PATH=/home/user42/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin");
-	env_list[2] = ft_strdup("PWD=/home/user42/Desktop/minishell");
-	env_list[3] = ft_strdup("LANGUAGE=en");
+	env_list[2] = ft_strdup("LANGUAGE=en");
+	env_list[3] = ft_strdup("SHLVL=1");
 	env_list[4] = ft_strdup("HOME=/home/user42");
 	env_list[5] = NULL;
 	return (env_list);

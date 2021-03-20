@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/19 11:01:03 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 17:23:56 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,18 @@
 /*
 ** Prints all the environment variables with values
 ** Adds a '\n' to the end of each variable
-** TODO: checkear
 */
 
-t_bool	env(t_list *env_list, char **args)
+void	env(t_list *env_list, char *args)
 {
 	char	*content;
 
-	if (*args)
+	if (args)
 	{
-		ft_printf(STDOUT_FILENO, "env: %s: No such file or directory\n", *args);
-		return (true);
+		ft_printf(STDERR_FILENO,
+		"env: ‘%s’: No such file or directory\n", args);
+		errno = 127;
+		return ;
 	}
 	while (env_list)
 	{
@@ -34,19 +35,16 @@ t_bool	env(t_list *env_list, char **args)
 			ft_printf(STDOUT_FILENO, "%s\n", content);
 		env_list = env_list->next;
 	}
-	return (true);
 }
 
 /*
 **	Prints all the arguments to standart output
 */
 
-t_bool	echo(char **args)
+void	echo(char **args, int i)
 {
 	t_bool	newline_flag;
-	int		i;
 
-	i = 1;
 	newline_flag = false;
 	while (*args && !ft_strncmp(*args, "-n", 2))
 	{
@@ -69,23 +67,20 @@ t_bool	echo(char **args)
 	}
 	if (!newline_flag)
 		write(STDOUT_FILENO, "\n", 1);
-	return (true);
 }
 
 /*
 ** Prints the current working directory to the standart output
 */
 
-t_bool	pwd(void)
+void	pwd(void)
 {
 	char	*cwd;
 
-	cwd = getcwd(NULL, 0);
-	if (cwd)
+	if ((cwd = getcwd(NULL, 0)))
 	{
 		ft_putstr_fd(cwd, STDOUT_FILENO);
 		write(STDOUT_FILENO, "\n", 1);
 		free(cwd);
 	}
-	return (true);
 }
