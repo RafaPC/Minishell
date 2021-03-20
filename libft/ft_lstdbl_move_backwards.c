@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncpy.c                                       :+:      :+:    :+:   */
+/*   ft_lstdbl_move_backwards.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/13 10:52:50 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/20 00:24:12 by rprieto-         ###   ########.fr       */
+/*   Created: 2021/03/20 00:37:25 by rprieto-          #+#    #+#             */
+/*   Updated: 2021/03/20 00:37:38 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strncpy(char *s2, int n)
+void	ft_lstdbl_move_backwards(t_list_dbl *lst)
 {
-	char	*s;
+	void *aux;
 
-	if (!s2)
-		return (ft_strdup(""));
-	if (!(s = malloc(n + 1)))
-		return (0);
-	ft_strlcpy(s, s2, n + 1);
-	return (s);
+	if (lst->next)
+	{
+		aux = lst->content;
+		lst->content = lst->next->content;
+		lst->next->content = aux;
+	}
 }

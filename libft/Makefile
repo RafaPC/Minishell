@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+         #
+#    By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/21 18:09:12 by rprieto-          #+#    #+#              #
-#    Updated: 2021/03/18 10:17:45 by aiglesia         ###   ########.fr        #
+#    Updated: 2021/03/20 00:53:35 by rprieto-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,6 @@ SRCS =	ft_atoi.c					\
 		ft_strncat_in.c				\
 		ft_array_size.c				\
 		ft_alloc.c					\
-		ft_buffer_fd.c				\
 		ft_array_clear.c			\
 		ft_strncpy.c				\
 		ft_lstadd_back_bonus.c		\
@@ -72,7 +71,14 @@ SRCS =	ft_atoi.c					\
 		ft_lstmap_bonus.c			\
 		ft_lstmove_backwards.c		\
 		ft_str_checkset.c			\
-		ft_lstdbl.c
+		ft_lstdbl_add_back.c		\
+		ft_lstdbl_add_front.c		\
+		ft_lstdbl_clear.c			\
+		ft_lstdbl_delone.c			\
+		ft_lstdbl_last.c			\
+		ft_lstdbl_move_backwards.c	\
+		ft_lstdbl_new.c				\
+		ft_lstdbl_size.c
 
 SRCS_PRINTF = 	ft_printf/ft_hex.c			\
 				ft_printf/ft_number.c		\

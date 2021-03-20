@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncpy.c                                       :+:      :+:    :+:   */
+/*   ft_lstdbl_clear.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/13 10:52:50 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/20 00:24:12 by rprieto-         ###   ########.fr       */
+/*   Created: 2021/03/20 00:39:15 by rprieto-          #+#    #+#             */
+/*   Updated: 2021/03/20 00:55:35 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strncpy(char *s2, int n)
+void	ft_lstdbl_clear(t_list_dbl **lst, void (*del)(void *))
 {
-	char	*s;
+	t_list_dbl		*aux;
 
-	if (!s2)
-		return (ft_strdup(""));
-	if (!(s = malloc(n + 1)))
-		return (0);
-	ft_strlcpy(s, s2, n + 1);
-	return (s);
+	if (lst == 0)
+		return ;
+	while ((*lst)->prev)
+		*lst = (*lst)->prev;
+	while (*lst)
+	{
+		aux = (*lst)->next;
+		ft_lstdbl_delone(*lst, del);
+		*lst = aux;
+	}
 }

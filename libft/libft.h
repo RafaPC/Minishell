@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/04 12:42:43 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/18 10:22:13 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/20 00:26:42 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ typedef struct		s_list
 typedef struct		s_list_dbl
 {
 	void				*content;
-	struct s_list_dbl 		*next;
+	struct s_list_dbl	*next;
 	struct s_list_dbl	*prev;
-}						t_list_dbl;
+}					t_list_dbl;
 
 typedef enum	e_bool
 {false, true}	t_bool;
@@ -50,17 +50,20 @@ typedef struct		s_gnl_bf
 	struct s_gnl_bf	*next;
 }					t_gnl_buffer;
 
-typedef enum				e_case_type
-{lower_case, upper_case}	t_case_type;
+typedef enum		e_case_type
+{
+	lower_case,
+	upper_case
+}					t_case_type;
 
-typedef	struct	s_modifiers
+typedef	struct		s_modifiers
 {
 	int				fd;
 	char			left_justified;
 	char			zero_padded;
 	int				width;
 	int				precision;
-}				t_modifiers;
+}					t_modifiers;
 
 void				*ft_memset(void *b, int c, size_t len);
 void				ft_bzero(void *s, size_t n);
@@ -140,56 +143,56 @@ t_bool				ft_str_checkset(char *string, char *set);
 **				FT_PRINTF.C
 */
 
-int				ft_printf(int fd, const char *format_string, ...);
-char			*read_modifiers(va_list args, char *format_string,
+int					ft_printf(int fd, const char *format_string, ...);
+char				*read_modifiers(va_list args, char *format_string,
 t_modifiers	*modifiers);
-void			format(va_list args, char specifier,
+void				format(va_list args, char specifier,
 t_modifiers modifiers, int *char_sum);
-t_modifiers		ft_initialize_struct(int fd);
-t_bool			is_flag(char c);
+t_modifiers			ft_initialize_struct(int fd);
+t_bool				is_flag(char c);
 
 /*
 **				FT_PRINTF_UTILS.C
 */
 
-char			*get_precision(va_list args, char *format_string,
+char				*get_precision(va_list args, char *format_string,
 t_modifiers *modifiers);
-char			*get_width(char *format_string, t_modifiers *modifiers);
-int				print_justification(int fd, char c, int times);
-t_bool			is_specifier(char c);
+char				*get_width(char *format_string, t_modifiers *modifiers);
+int					print_justification(int fd, char c, int times);
+t_bool				is_specifier(char c);
 /*
 **				FT_STRINGS.H
 */
 
-void			handle_string(char *string, t_modifiers modifiers,
+void				handle_string(char *string, t_modifiers modifiers,
 int *char_sum);
-void			print_string(char *string, t_modifiers modifiers,
+void				print_string(char *string, t_modifiers modifiers,
 int *char_sum);
-void			print_char(char c, t_modifiers modifiers, int *char_sum);
-void			print_symbol(t_modifiers modifiers, int *char_sum);
+void				print_char(char c, t_modifiers modifiers, int *char_sum);
+void				print_symbol(t_modifiers modifiers, int *char_sum);
 
 /*
 **				FT_NUMBERS.C
 */
 
-void			handle_number(long n, t_modifiers modifiers, int *char_sum);
-void			handle_number_no_prec(long n, t_modifiers modifiers,
+void				handle_number(long n, t_modifiers modifiers, int *char_sum);
+void				handle_number_no_prec(long n, t_modifiers modifiers,
 int *char_sum);
-void			handle_number_prec_width(long n, t_modifiers modifiers,
+void				handle_number_prec_width(long n, t_modifiers modifiers,
 int *char_sum);
-void			print_number(int fd, long n, int *char_sum);
+void				print_number(int fd, long n, int *char_sum);
 
 /*
 **				FT_HEX.C
 */
 
-void			handle_hex_number(unsigned int n, t_modifiers modifiers,
+void				handle_hex_number(unsigned int n, t_modifiers modifiers,
 int *char_sum, char letter_type);
-void			print_hex(int fd, unsigned long n, int *char_sum,
+void				print_hex(int fd, unsigned long n, int *char_sum,
 t_case_type case_type);
-int				get_hex_digits(unsigned long n);
-void			handle_pointer(void *pointer, t_modifiers modifiers,
+int					get_hex_digits(unsigned long n);
+void				handle_pointer(void *pointer, t_modifiers modifiers,
 int *char_sum);
-void			print_pointer(void *pointer, t_modifiers modifiers,
+void				print_pointer(void *pointer, t_modifiers modifiers,
 int *char_sum);
 #endif
