@@ -22,9 +22,9 @@ static int      set_terminal_mode(struct termios *term_save, const int canonical
          return (-1);
         tcgetattr(STDIN_FILENO, &term);
         tcgetattr(STDIN_FILENO, term_save);
-        term.c_lflag &= ~(ICANON | ECHO);
+        term.c_lflag &= ~(ICANON | ECHO | ISIG);
         term.c_cc[VMIN] = 1;
-        term.c_cc[VTIME] = 0;                                         
+        term.c_cc[VTIME] = 0;                                 
         tcsetattr(STDIN_FILENO, TCSANOW, &term);
     }
    if (canonical == 1)
@@ -32,32 +32,25 @@ static int      set_terminal_mode(struct termios *term_save, const int canonical
    return (0);
  }
 
-void    handle_signal()
+t_bool  handle_input(char **buffer, t_list_dbl **command_history) //Make terminal global?
 {
-    ft_putstr_fd("^C\n", STDIN_FILENO); //Change to ignore, detect Ctr input?
-    write_prompt();
-}
+    t_input_info terminal;
 
-t_bool  handle_input(char **buffer, t_list_dbl **command_history) //Make shell global?
-{
-    t_input_info shell;
-
-    signal(SIGINT, handle_signal);
-    ft_memset(&shell, 0, sizeof(t_input_info));
-    shell.line = ft_strdup("");
-    shell.history = *command_history;
-    shell.current_history = shell.history;
-    set_terminal_mode(&shell.term_cp, 0);
+    signal(SIGINT, SIG_IGN);
+    ft_memset(&terminal, 0, sizeof(t_input_info));
+    terminal.line = ft_strdup("");
+    terminal.history = *command_history;
+    terminal.current_history = terminal.history;
+    set_terminal_mode(&terminal.term_cp, 0);
     write_prompt();
-    if (!read_input(&shell))
+    if (!read_input(&terminal))
     {
-        free (shell.line);
-        set_terminal_mode(&shell.term_cp, 1);        
-        return (handle_input(buffer, command_history));
+        free (terminal.line);
+        set_terminal_mode(&terminal.term_cp, 1);
+        return (false);
     }
-    set_terminal_mode(&shell.term_cp, 1);
-    //handle memory stuff;
-    *command_history = shell.history;
-    *buffer = shell.line;
+    set_terminal_mode(&terminal.term_cp, 1);
+    *command_history = terminal.history;
+    *buffer = terminal.line;
     return (true);
 }

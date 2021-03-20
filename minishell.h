@@ -56,6 +56,7 @@ typedef struct	s_split_commands
 
 typedef enum	e_key_values
 {
+	ctrl_c = 3,
     end_of_transmission = 4,
     escape = 27,
     delete = 127,
@@ -95,13 +96,13 @@ char			**get_path(t_list *env_list);
 */
 //t_bool read_input(char **line);
 t_bool  handle_input(char **buffer, t_list_dbl **command_history);
-t_bool	read_input(t_input_info *shell);
-void	handle_keys(t_input_info *shell);
-void	handle_input_history(t_input_info *shell, char direction);
- void   delete_h_saved_line(t_input_info *shell);
+t_bool	read_input(t_input_info *terminal);
+void	handle_keys(t_input_info *terminal);
+void	handle_input_history(t_input_info *terminal, char direction);
+ void   delete_h_saved_line(t_input_info *terminal);
  int	write_prompt();
- void	move_cursor(t_input_info *shell, int direction, t_bool change_index, unsigned nb);
- void   delete_char(t_input_info *shell);
+ void	move_cursor(t_input_info *terminal, int direction, t_bool change_index, unsigned nb);
+ void   delete_char(t_input_info *terminal);
 /*
 ** 		COMMAND PARSING
 */
@@ -146,6 +147,7 @@ void			echo(char **args, int i);
 void			exit_command(t_shell *shell);
 void			pwd(void);
 void			cd(t_list **env_list, char **args);
+void			free_and_exit(t_shell *shell, int exit_code);
 /*
 **				EXPORT
 */

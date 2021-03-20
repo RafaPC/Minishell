@@ -20,6 +20,7 @@ int		main(int argc, char **argv, const char **env)
 	shell.prev_exit_status = errno;
 	shell.env_list = create_env_list(env, argv[0]);
 	shell.command_history = NULL;
+	shell.commands = NULL;
 	if (argc == 1)
 	{
 		while (true)
@@ -27,8 +28,7 @@ int		main(int argc, char **argv, const char **env)
 			if (!handle_input(&shell.buffer, &shell.command_history))
 			{
 				write(STDOUT_FILENO, "exit\n", 5);
-				free(shell.buffer);
-				exit_command(&shell);//Double check
+				free_and_exit(&shell, 130);
 			}
 			if (!print_parsing_error(split_commands(&shell), &shell.prev_exit_status))
 			{

@@ -12,55 +12,46 @@
 
 #include "minishell.h"
 
-void handle_keys(t_input_info *shell)
+void move_word_left(t_input_info *terminal)
 {
-    char    buffer[1];
-    char    aux[5];
-    int     i;
+    if(!ft_isspace(terminal->line[terminal->index]) &&
+    terminal->index && ft_isspace(terminal->line[terminal->index]))
+        move_cursor(terminal, left, true, 1);
+    while (terminal->index && ft_isspace(terminal->line[terminal->index]))
+        move_cursor(terminal, left, true, 1);
+    while (terminal->index && ft_isspace(terminal->line[terminal->index - 1]))
+        move_cursor(terminal, left, true, 1);   
+}
 
-    i = 0;
-    ft_memset(aux, 0, 5);
-    while (read(STDIN_FILENO, buffer, 1))
+void move_word_right(t_input_info *terminal)
+{
+    while (terminal->index < terminal->length &&
+    ft_isspace(terminal->line[terminal->index]))
+        move_cursor(terminal, right, true, 1);
+    while (terminal->index < terminal->length &&
+    !ft_isspace(terminal->line[terminal->index]))
+        move_cursor(terminal, right, true, 1);
+}
+
+void handle_keys(t_input_info *terminal)
+{
+    char    buffer[5];
+
+    ft_memset(buffer, 0, 5);
+    read(STDIN_FILENO, buffer, 5);
+    if (!ft_strncmp(buffer, "[D", 3))
+        move_cursor(terminal, left, true, 1);
+    else if (!ft_strncmp(buffer, "[C", 3))
+        move_cursor(terminal, right, true, 1);    
+    else if (!ft_strncmp(buffer, "[H", 3))
+        move_cursor(terminal, left, true, terminal->index);
+    else if (!ft_strncmp(buffer, "[F", 3) && terminal->index != terminal->length) //Not quite sure why it's needed...
+        move_cursor(terminal, right, true, terminal->length - terminal->index);
+    else if (!ft_strncmp(buffer, "[A", 3) || !ft_strncmp(buffer, "[B", 3))
+		handle_input_history(terminal, buffer[1]);
+    else if (!ft_strncmp(buffer, "[3~", 4) && (terminal->index < terminal->length))
     {
-        aux[i] = buffer[0];
-        if (i == 1) //check for ñ, because reasons!
-        {
-            if (!ft_strncmp(aux, "[D", 3))
-            {
-                move_cursor(shell, left, true, 1);
-                return ;
-            }
-            else if (!ft_strncmp(aux, "[C", 3))
-            {
-                move_cursor(shell, right, true, 1);    
-                return ;
-            }
-            else if (!ft_strncmp(aux, "[H", 3))
-            {
-                move_cursor(shell, left, true, shell->index);
-                return ;
-            }
-            else if (!ft_strncmp(aux, "[F", 3))
-            {
-                if (shell->index != shell->length) //Not quite sure why it's needed...
-                    move_cursor(shell, right, true, shell->length - shell->index);
-                return ; 
-            }
-            else if (!ft_strncmp(aux, "[A", 3) || !ft_strncmp(aux, "[B", 3))
-			{
-				handle_input_history(shell, aux[1]);
-				return ;
-			}
-        }
-        if (i == 2)
-        {
-            if (!ft_strncmp(aux, "[3~", 4) && (shell->index < shell->length))
-            {
-                move_cursor(shell, right, true, 1);
-                delete_char(shell);
-            }
-            return ;
-        }
-        i++;
+        move_cursor(terminal, right, true, 1);
+        delete_char(terminal);
     }
 }
