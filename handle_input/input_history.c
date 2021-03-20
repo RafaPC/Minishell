@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 20:22:18 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/20 23:10:55 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:24:14 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,13 @@ void	handle_input_history(t_input_info *terminal, char direction)
 		retrieve_older_command(terminal);
 	else
 		retrieve_newer_command(terminal);
+}
+
+void	delete_h_saved_line(t_input_info *terminal)
+{
+	if (terminal->h_saved_line)
+	{
+		free(terminal->h_saved_line);
+		terminal->h_saved_line = 0;
+	}
 }

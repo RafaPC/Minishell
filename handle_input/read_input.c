@@ -6,20 +6,11 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 20:24:45 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/20 23:12:46 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:24:07 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	delete_h_saved_line(t_input_info *terminal)
-{
-	if (terminal->h_saved_line)
-	{
-		free(terminal->h_saved_line);
-		terminal->h_saved_line = 0;
-	}
-}
 
 void	move_cursor(t_input_info *terminal, int direction, t_bool change_index,
 unsigned nb)
@@ -83,17 +74,6 @@ void	add_char(t_input_info *terminal, char c)
 		move_cursor(terminal, left, true, terminal->length - index);
 	}
 	delete_h_saved_line(terminal);
-}
-
-void	handle_ctr_c_signal(t_input_info *terminal)
-{
-	free(terminal->line);
-	terminal->line = ft_strdup("");
-	terminal->index = 0;
-	terminal->length = 0;
-	delete_h_saved_line(terminal);
-	ft_putchar_fd('\n', STDIN_FILENO);
-	write_prompt();
 }
 
 t_bool	read_input(t_input_info *terminal)

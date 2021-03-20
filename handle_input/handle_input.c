@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 23:05:49 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 23:08:14 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:22:50 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,15 @@ t_bool		handle_input(char **buffer, t_list_dbl **command_history) //Make termina
 	*command_history = terminal.history;
 	*buffer = terminal.line;
 	return (true);
+}
+
+void	handle_ctr_c_signal(t_input_info *terminal)
+{
+	free(terminal->line);
+	terminal->line = ft_strdup("");
+	terminal->index = 0;
+	terminal->length = 0;
+	delete_h_saved_line(terminal);
+	ft_putchar_fd('\n', STDIN_FILENO);
+	write_prompt();
 }

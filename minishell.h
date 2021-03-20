@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 19:59:22 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/20 23:37:13 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,6 @@
 # include <stdio.h>
 # include <errno.h>
 # include <termios.h>
-
-/*
-** Declares
-*/
 
 typedef enum	e_parser_flags
 {
@@ -57,33 +53,32 @@ typedef struct	s_split_commands
 typedef enum	e_key_values
 {
 	ctrl_c = 3,
-    end_of_transmission = 4,
-    escape = 27,
-    delete = 127,
-    left,
-    right
+	end_of_transmission = 4,
+	escape = 27,
+	delete = 127,
+	left,
+	right
 }				t_key_values;
 
-typedef struct          s_input_info
+typedef struct	s_input_info
 {
-	struct termios      term_cp;
-    char                *line;
-	t_list_dbl          *history;
-    t_list_dbl          *current_history;
-    char                *h_saved_line;
-    unsigned            index;
-    unsigned            length;
-}						t_input_info;    
+	struct termios		term_cp;
+	char				*line;
+	t_list_dbl			*history;
+	t_list_dbl			*current_history;
+	char				*h_saved_line;
+	unsigned			index;
+	unsigned			length;
+}				t_input_info;
 
-typedef struct			s_shell
+typedef struct	s_shell
 {
 	char		*buffer;
 	t_list		*env_list;
 	t_command	*commands;
 	int			prev_exit_status;
-	t_list_dbl 	*command_history;
+	t_list_dbl	*command_history;
 }				t_shell;
-
 /*
 **		EXECUTABLES PATHS
 */
@@ -94,39 +89,42 @@ char			**get_path(t_list *env_list);
 /*
 **		READ INPUT
 */
-//t_bool read_input(char **line);
-t_bool  handle_input(char **buffer, t_list_dbl **command_history);
-t_bool	read_input(t_input_info *terminal);
-void	handle_keys(t_input_info *terminal);
-void	handle_input_history(t_input_info *terminal, char direction);
- void   delete_h_saved_line(t_input_info *terminal);
- int	write_prompt();
- void	move_cursor(t_input_info *terminal, int direction, t_bool change_index, unsigned nb);
- void   delete_char(t_input_info *terminal);
+t_bool			handle_input(char **buffer, t_list_dbl **command_history);
+t_bool			read_input(t_input_info *terminal);
+void			handle_keys(t_input_info *terminal);
+void			handle_input_history(t_input_info *terminal, char direction);
+void			delete_h_saved_line(t_input_info *terminal);
+int				write_prompt(void);
+void			move_cursor(t_input_info *terminal, int direction,
+t_bool change_index, unsigned nb);
+void			delete_char(t_input_info *terminal);
+void			handle_ctr_c_signal(t_input_info *terminal);
 /*
-** 		COMMAND PARSING
+**		COMMAND PARSING
 */
 void			tabs_to_spaces(char *string);
 void			empty_buffer(char *buffer);
-int				insert_variable(char **input, int index, t_list *env_list, int prev_exit_status);
+int				insert_variable(char **input, int index, t_list *env_list,
+int prev_exit_status);
 int				split_commands(t_shell *shell);
-void			handle_quotations(char **input, int *index, t_list *env_list, int prev_exit_status);
+void			handle_quotations(char **input, int *index, t_list *env_list,
+int prev_exit_status);
 void			skip_quotations(char *input, t_command_parsing *cmd_pars);
 void			add_command(t_command **commands, char **arguments,
-					int relation);
+int relation);
 t_bool			command_split(t_command_parsing *cmd_pars, t_command
-					**commmands, char *input);
+**commmands, char *input);
 char			**load_command_args(t_command_parsing *cmd_pars, char *input);
 void			handle_redirections_split(t_command_parsing *cmd_pars,
-					t_command **commands, char **input);
+t_command **commands, char **input);
 void			handle_input_redirection(t_command_parsing *cmd_pars,
-				t_command **commands, char **input);
+t_command **commands, char **input);
 int				print_parsing_error(int return_value, int *prev_exit_status);
 void			parse_insertions(t_shell *shell, t_bool single_run);
 t_bool			not_preceeding_argument(char *input, int index);
 int				handle_backslash(char **args, int index, t_bool remove);
-char			**get_redirection_command(t_command_parsing *cmd_pars, char **input,
-				int index);
+char			**get_redirection_command(t_command_parsing *cmd_pars,
+char **input, int index);
 /*
 **		MINISHELL UTILS
 */
@@ -137,7 +135,8 @@ char			*get_command_path(char **paths, char *command);
 t_command		*del_command(t_command *command);
 void			free_commands(t_command *commands);
 t_command		*handle_errors(t_command *command);
-t_command		*print_redirection_errors(t_command *commands, int *prev_exit_status);
+t_command		*print_redirection_errors(t_command *commands,
+int *prev_exit_status);
 void			debug_minishell(t_shell *shell, t_bool verbose);
 /*
 **		BUILTINS
@@ -167,7 +166,7 @@ char *var_name, int compare_length);
 */
 void			child_process(t_shell *shell, t_bool is_file_path);
 t_bool			is_directory(char *token, int *prev_exit_status);
-t_bool			is_builtin(t_shell *t_shell, char *token);
+t_bool			is_builtin(t_shell *shell, char *token);
 t_bool			is_valid_path(char *path, int *prev_exit_status);
 void			command_execution(t_shell *shell);
 t_command		*execute_commands(t_shell *shell);
