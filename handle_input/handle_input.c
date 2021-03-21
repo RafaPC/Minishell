@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 23:05:49 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/21 12:38:54 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/21 22:13:14 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static int	set_terminal_mode(struct termios *term_save, const int canonical)
 	return (0);
 }
 
-t_bool		handle_input(char **buffer, t_list_dbl **command_history, char **copy_line)
+t_bool		handle_input(char **buffer, t_list_dbl **command_history,
+char **copy_line)
 {
 	t_input_info terminal;
 
