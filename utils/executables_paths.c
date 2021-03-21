@@ -10,9 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <fcntl.h>
-#include "libft.h"
 #include "minishell.h"
 
 /*
@@ -63,6 +60,9 @@ char	**get_path(t_list *env_list)
 	path_splitted = NULL;
 	path_value = get_env_var("PATH", env_list);
 	if (path_value)
+	{
 		path_splitted = ft_split(path_value, ':');
+		free(path_value);
+	}
 	return (path_splitted);
 }

@@ -39,6 +39,7 @@ int		main(int argc, char **argv, const char **env)
 	}
 	else if (argc == 2)
 	{
+		ft_lstclear(&shell.env_list, free); //FIXME: todo este bloque es temporal, borrar antes de entregar
 		shell.env_list = create_env_list((const char**)get_false_env_array(), argv[0]);
 		debug_minishell(&shell, !ft_strncmp(argv[1], "-v", 3));
 	}
