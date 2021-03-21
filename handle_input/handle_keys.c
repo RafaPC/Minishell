@@ -33,12 +33,8 @@ void	move_word_right(t_input_info *terminal)
 		move_cursor(terminal, right, true, 1);
 }
 
-void	handle_keys(t_input_info *terminal)
+void	handle_movement_keys(t_input_info *terminal, char *buffer)
 {
-	char	buffer[6];
-
-	ft_memset(buffer, 0, 6);
-	read(STDIN_FILENO, buffer, 6);
 	if (!ft_strncmp(buffer, "[D", 3))
 		move_cursor(terminal, left, true, 1);
 	else if (!ft_strncmp(buffer, "[C", 3))
@@ -48,7 +44,20 @@ void	handle_keys(t_input_info *terminal)
 	else if (!ft_strncmp(buffer, "[F", 3) &&
 	terminal->index != terminal->length)
 		move_cursor(terminal, right, true, terminal->length - terminal->index);
-	else if (!ft_strncmp(buffer, "[A", 3) || !ft_strncmp(buffer, "[B", 3))
+	else if (!ft_strncmp(buffer, "[1;5D", 6))
+		move_word_left(terminal);
+	else if (!ft_strncmp(buffer, "[1;5C", 6))
+		move_word_right(terminal);
+}
+
+void	handle_keys(t_input_info *terminal)
+{
+	char	buffer[6];
+
+	ft_memset(buffer, 0, 6);
+	read(STDIN_FILENO, buffer, 6);
+	handle_movement_keys(terminal, (char *)buffer);
+	if (!ft_strncmp(buffer, "[A", 3) || !ft_strncmp(buffer, "[B", 3))
 		handle_input_history(terminal, buffer[1]);
 	else if (!ft_strncmp(buffer, "[3~", 4) &&
 	(terminal->index < terminal->length))
@@ -56,10 +65,8 @@ void	handle_keys(t_input_info *terminal)
 		move_cursor(terminal, right, true, 1);
 		delete_char(terminal);
 	}
-	else if (!ft_strncmp(buffer, "[1;5D", 6))
-		move_word_left(terminal);
-	else if (!ft_strncmp(buffer, "[1;5C", 6))
-		move_word_right(terminal);
 	else if (!ft_strncmp(buffer, "[1;5A", 6))
 		copy_mode(terminal);
+	else if (!ft_strncmp(buffer, "[1;5B", 6))
+		paste(terminal);
 }

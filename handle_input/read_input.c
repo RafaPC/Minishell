@@ -101,8 +101,7 @@ t_bool	read_input(t_input_info *terminal)
 		}
 		else if (buffer[0] == '\n')
 			break ;
-		else
-			check_input_character(terminal, buffer[0]);
+		check_input_character(terminal, buffer[0]);
 	}
 	write(STDIN_FILENO, "\n", 1);
 	if (*(terminal->line) && (!terminal->history ||

@@ -44,7 +44,7 @@ static int	set_terminal_mode(struct termios *term_save, const int canonical)
 	return (0);
 }
 
-t_bool		handle_input(char **buffer, t_list_dbl **command_history)
+t_bool		handle_input(char **buffer, t_list_dbl **command_history, char **copy_line)
 {
 	t_input_info terminal;
 
@@ -54,6 +54,7 @@ t_bool		handle_input(char **buffer, t_list_dbl **command_history)
 	terminal.line = ft_strdup("");
 	terminal.history = *command_history;
 	terminal.current_history = terminal.history;
+	terminal.copy_line = *copy_line;
 	set_terminal_mode(&terminal.term_cp, 0);
 	write_prompt();
 	if (!read_input(&terminal))
@@ -65,6 +66,7 @@ t_bool		handle_input(char **buffer, t_list_dbl **command_history)
 	set_terminal_mode(&terminal.term_cp, 1);
 	*command_history = terminal.history;
 	*buffer = terminal.line;
+	*copy_line = terminal.copy_line;
 	return (true);
 }
 

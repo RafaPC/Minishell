@@ -14,17 +14,22 @@
 
 void	rewrite_copy_line(t_input_info *terminal, unsigned current_pos, unsigned start_pos, t_bool background)
 {
-	int start;
-	int end;
+	unsigned start;
+	unsigned end;
 
+
+	if (terminal->index == terminal->length)
+		return ;
+	start = current_pos <= start_pos ? current_pos : start_pos; 
+	end = current_pos <= start_pos ? start_pos : current_pos;
+	if (start < terminal->index)
+		move_cursor(terminal, left, true, terminal->index - start);
+	ft_putstr_fd("\33[0K", STDIN_FILENO); //Erases from the cursor to the right
 	if (background) //Sets writing to write in black with a white background;
 	{
 		ft_putstr_fd("\033[47m", STDIN_FILENO);
 		ft_putstr_fd("\033[30m", STDIN_FILENO);
 	}
-	ft_putstr_fd("\33[0K", STDIN_FILENO); //Erases from the cursor to the right
-	start = current_pos <= start_pos ? current_pos : start_pos; 
-	end = current_pos <= start_pos ? start_pos : current_pos;
 	while (start <= end)
 	{
 		ft_putchar_fd(terminal->line[start], STDIN_FILENO); //writes
@@ -36,63 +41,65 @@ void	rewrite_copy_line(t_input_info *terminal, unsigned current_pos, unsigned st
 	move_cursor(terminal, left, true, terminal->length - current_pos); //Moves cursor back to the appropiate position
 }
 
-
-int move_copy_cursor(t_input_info *terminal, unsigned current_pos, unsigned start_pos, unsigned direction)
+void	handle_copy_movement(t_input_info *terminal, unsigned start_pos)
 {
-	if (start_pos != current_pos || !direction)
-	{
-		if (direction == left && current_pos)
-		{
-			current_pos--;
-			rewrite_copy_line(terminal, current_pos, start_pos, true);
-		}
-		else if (current_pos < terminal->length - 1)
-		{
-			current_pos++;
-			rewrite_copy_line(terminal, current_pos, start_pos, true);
-		}
-	}
-	if (terminal->copy_line)
-		free(terminal->copy_line);
-	if (start_pos > current_pos)
-		terminal->copy_line = ft_strncpy(&terminal->line[current_pos],
-		start_pos - current_pos + 1);
-	else
-		terminal->copy_line = ft_strncpy(&terminal->line[start_pos],
-		current_pos - start_pos + 1);
-	return (current_pos);
-}
+	char 		buffer[6];
+	unsigned	aux;
 
+	ft_memset(buffer, 0, 6);
+ 	while (true)
+ 	{
+		buffer[0] = '\0';
+		read(STDIN_FILENO, buffer, 1);
+
+ 		if (buffer[0] == escape)
+ 		{
+			read(STDIN_FILENO, buffer, 6);
+ 			if (!ft_strncmp(buffer, "[1;5A", 6))
+ 			{
+ 				rewrite_copy_line(terminal, terminal->index, start_pos, false);
+ 				return ;
+ 			}
+			aux = terminal->index;
+			handle_movement_keys(terminal, (char *)buffer);
+			if (terminal->index == terminal->length)
+				move_cursor(terminal, left, true, 1);
+			if (aux < terminal->index)
+			{
+				aux = terminal->index;
+				rewrite_copy_line(terminal, 0, terminal->index, false);
+				move_cursor(terminal, right, true, aux);
+			}
+			rewrite_copy_line(terminal, terminal->index, start_pos, true);
+			free(terminal->copy_line);
+			if (terminal->index == start_pos)
+				terminal->copy_line = ft_strncpy(&terminal->line[terminal->index], 1);
+			else if (terminal->index < start_pos)
+				terminal->copy_line = ft_strncpy(&terminal->line[terminal->index], start_pos - terminal->index + 1);
+			else
+				terminal->copy_line = ft_strncpy(&terminal->line[start_pos], terminal->index - start_pos + 1);
+			ft_memset(buffer, 0, 6);
+ 		}
+		else if (buffer[0] == ctrl_c)
+		{
+			handle_ctr_c_signal(terminal);
+			return ;
+		}
+		//Enter as a different escape key?
+ 	}
+}
 
 void	copy_mode(t_input_info *terminal)
 {
-	unsigned	start_pos;
-	unsigned	current_pos;
-	char 		buffer[6];
-
-	ft_memset(buffer, 0, 4); //If index == length move cursor left?
 	if (terminal->index == terminal->length)
+	{
+		if (!terminal->index)
+			return ;
 		move_cursor(terminal, left, true, 1);
-	start_pos = terminal->index;
-	current_pos = terminal->index;
-	move_copy_cursor(terminal, current_pos, start_pos, 0);
-	rewrite_copy_line(terminal, current_pos, start_pos, true);
-
- 	while (true)
- 	{
-		ft_memset(buffer, 0, 6);
- 		read(STDIN_FILENO, buffer, 6);
- 		if (buffer[0] == escape)
- 		{
- 			if (!ft_strncmp(buffer, "[1;5A", 6))
- 			{
- 				rewrite_copy_line(terminal, current_pos, start_pos, false);
- 				return ;
- 			}
- 			if (!ft_strncmp(buffer, "[D", 3))
- 				current_pos = move_copy_cursor(terminal, current_pos, start_pos, left);
- 			else if (!ft_strncmp(buffer, "[C", 3))
- 				current_pos = move_copy_cursor(terminal, current_pos, start_pos, right);
- 		}
- 	}
+	}
+	rewrite_copy_line(terminal, terminal->index, terminal->index, true);
+	if (terminal->copy_line)
+		free(terminal->copy_line);
+	terminal->copy_line = ft_strncpy(&terminal->line[terminal->index], 1);
+	handle_copy_movement(terminal, terminal->index);
 }

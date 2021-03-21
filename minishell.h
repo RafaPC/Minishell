@@ -75,6 +75,7 @@ typedef struct	s_input_info
 typedef struct	s_shell
 {
 	char		*buffer;
+	char		*copy_line;
 	t_list		*env_list;
 	t_command	*commands;
 	int			prev_exit_status;
@@ -90,7 +91,7 @@ char			**get_path(t_list *env_list);
 /*
 **		READ INPUT
 */
-t_bool			handle_input(char **buffer, t_list_dbl **command_history);
+t_bool			handle_input(char **buffer, t_list_dbl **command_history, char **copy_line);
 t_bool			read_input(t_input_info *terminal);
 void			handle_keys(t_input_info *terminal);
 void			handle_input_history(t_input_info *terminal, char direction);
@@ -101,6 +102,8 @@ t_bool change_index, unsigned nb);
 void			delete_char(t_input_info *terminal);
 void			handle_ctr_c_signal(t_input_info *terminal);
 void			copy_mode(t_input_info *terminal);
+void			handle_movement_keys(t_input_info *terminal, char *buffer);
+void			paste(t_input_info *terminal);
 /*
 **		COMMAND PARSING
 */

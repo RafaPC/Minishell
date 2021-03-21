@@ -21,11 +21,12 @@ int		main(int argc, char **argv, const char **env)
 	shell.env_list = create_env_list(env, argv[0]);
 	shell.command_history = NULL;
 	shell.commands = NULL;
+	shell.copy_line = NULL;
 	if (argc == 1)
 	{
 		while (true)
 		{
-			if (!handle_input(&shell.buffer, &shell.command_history))
+			if (!handle_input(&shell.buffer, &shell.command_history, &shell.copy_line))
 			{
 				write(STDOUT_FILENO, "exit\n", 5);
 				free_and_exit(&shell, 130);

@@ -20,6 +20,7 @@ SRCS =	builtins/builtins.c						\
 		handle_input/handle_input.c				\
 		handle_input/handle_keys.c				\
 		handle_input/input_history.c			\
+		handle_input/paste.c 					\
 		handle_input/read_input.c				\
 		temp/debug_minishell.c					\
 		utils/environment.c						\
