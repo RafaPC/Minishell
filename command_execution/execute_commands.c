@@ -6,15 +6,17 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/21 12:22:16 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 19:21:01 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 22:38:54 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-** This function iterates through  the command list until it encounters a simple
-** command TODO:
+** This function iterates through the command list until it encounters a simple
+** command
+** Some functions are called depending on the type of relation
+** each list of token has
 */
 
 t_command	*execute_commands(t_shell *shell)

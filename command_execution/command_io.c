@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/11 16:15:36 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 17:08:30 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 22:34:53 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ t_bool	set_output(t_shell *shell, char *file, int mode)
 }
 
 /*
-** TODO: Might need to change the permits!
+** Opens the token as a file with reading permits if it's an input redirection
+** and write / append if its an output redirection
 */
 
 t_bool	set_input_and_output(t_shell *shell, int mode)
