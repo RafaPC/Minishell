@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 20:24:45 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/20 23:24:07 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 09:46:28 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,11 @@ t_bool	read_input(t_input_info *terminal)
 
 	while (read(STDIN_FILENO, buffer, 1))
 	{
-		if (buffer[0] == end_of_transmission && !(terminal->line[0]))
-			return (false);
+		if (buffer[0] == end_of_transmission)
+		{
+			if (!terminal->line[0])
+				return (false);
+		}
 		else if (buffer[0] == ctrl_c)
 			handle_ctr_c_signal(terminal);
 		else if (buffer[0] == '\n')
