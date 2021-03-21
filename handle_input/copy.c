@@ -41,7 +41,7 @@ void	rewrite_copy_line(t_input_info *terminal, unsigned current_pos,
 	move_cursor(terminal, left, true, terminal->length - current_pos);
 }
 
-void	copy_line(t_input_info *terminal, int start_pos)
+void	copy_line(t_input_info *terminal, unsigned int start_pos)
 {
 	if (terminal->index == start_pos)
 		terminal->copy_line = ft_strncpy(&terminal->line[terminal->index], 1);

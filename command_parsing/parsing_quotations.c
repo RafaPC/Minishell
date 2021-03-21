@@ -65,7 +65,7 @@ int		handle_backslash(char **args, int index, t_bool remove)
 		index = ft_extract(args, index, 1);
 	else
 		index++;
-	if (ft_strrchr("\"\'$\\", args[0][index]))
+	if (ft_strrchr("\"\'$\\|;><", args[0][index]))
 		index++;
 	return (index);
 }
