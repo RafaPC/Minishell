@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 20:22:18 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/20 23:24:14 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 11:15:36 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_bool duplicate_string)
 		terminal->line = line;
 	terminal->index = ft_strlen(terminal->line);
 	terminal->length = terminal->index;
-	ft_putstr_fd("\r\33[0J", STDIN_FILENO);// TODO: maybe: mover el cursor solo hasta index == no tener que reescribir el prompt
+	ft_putstr_fd("\r\33[0J", STDIN_FILENO);
 	write_prompt();
 	ft_putstr_fd(terminal->line, STDIN_FILENO);
 }
