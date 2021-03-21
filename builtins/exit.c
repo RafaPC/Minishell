@@ -56,6 +56,8 @@ void	free_and_exit(t_shell *shell, int exit_code)
 {
 	if (shell->command_history)
 		ft_lstdbl_clear(&(shell->command_history), free);
+	if (shell->copy_line)
+		free(shell->copy_line);
 	free_commands(shell->commands);
 	ft_lstclear(&shell->env_list, free);
 	exit(exit_code);
