@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   handle_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 23:05:49 by rprieto-          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2021/03/21 09:58:58 by aiglesia         ###   ########.fr       */
+=======
+/*   Updated: 2021/03/21 11:07:11 by rprieto-         ###   ########.fr       */
+>>>>>>> ea452bf1e1e6109b2c6a137fbe3678635f6cbe75
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +44,16 @@ static int	set_terminal_mode(struct termios *term_save, const int canonical)
 		tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	}
 	if (canonical == 1)
-		tcsetattr(STDIN_FILENO, TCSANOW, term_save); //handle un por si acaso
+		tcsetattr(STDIN_FILENO, TCSANOW, term_save);
 	return (0);
 }
 
-t_bool		handle_input(char **buffer, t_list_dbl **command_history) //Make terminal global?
+t_bool		handle_input(char **buffer, t_list_dbl **command_history)
 {
 	t_input_info terminal;
 
 	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	ft_memset(&terminal, 0, sizeof(t_input_info));
 	terminal.line = ft_strdup("");
 	terminal.history = *command_history;
@@ -67,7 +72,7 @@ t_bool		handle_input(char **buffer, t_list_dbl **command_history) //Make termina
 	return (true);
 }
 
-void	handle_ctr_c_signal(t_input_info *terminal)
+void		handle_ctr_c_signal(t_input_info *terminal)
 {
 	free(terminal->line);
 	terminal->line = ft_strdup("");

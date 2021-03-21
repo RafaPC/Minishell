@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 20:24:45 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/21 09:46:28 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/21 11:45:56 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,18 @@ void	add_char(t_input_info *terminal, char c)
 	delete_h_saved_line(terminal);
 }
 
+void	check_input_character(t_input_info *terminal, char c)
+{
+	if (c == ctrl_c)
+		handle_ctr_c_signal(terminal);
+	else if (c == escape)
+		handle_keys(terminal);
+	else if (c == delete)
+		delete_char(terminal);
+	else if (c != '\t')
+		add_char(terminal, c);
+}
+
 t_bool	read_input(t_input_info *terminal)
 {
 	char	buffer[1];
@@ -87,16 +99,10 @@ t_bool	read_input(t_input_info *terminal)
 			if (!terminal->line[0])
 				return (false);
 		}
-		else if (buffer[0] == ctrl_c)
-			handle_ctr_c_signal(terminal);
 		else if (buffer[0] == '\n')
 			break ;
-		else if (buffer[0] == escape)
-			handle_keys(terminal);
-		else if (buffer[0] == delete)
-			delete_char(terminal);
-		else if (buffer[0] != '\t')
-			add_char(terminal, buffer[0]);
+		else
+			check_input_character(terminal, buffer[0]);
 	}
 	write(STDIN_FILENO, "\n", 1);
 	if (*(terminal->line) && (!terminal->history ||
