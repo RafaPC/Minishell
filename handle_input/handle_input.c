@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 23:05:49 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 23:22:50 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 09:24:16 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,6 @@ void	handle_ctr_c_signal(t_input_info *terminal)
 	terminal->index = 0;
 	terminal->length = 0;
 	delete_h_saved_line(terminal);
-	ft_putchar_fd('\n', STDIN_FILENO);
+	ft_putstr_fd("^C\n", STDIN_FILENO);
 	write_prompt();
 }

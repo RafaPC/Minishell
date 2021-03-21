@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 15:20:50 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 19:28:26 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 09:28:12 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ int		exit_atoi(const char *str, t_bool *overflow, int i, u_int64_t number)
 
 void	free_and_exit(t_shell *shell, int exit_code)
 {
-	ft_lstdbl_clear(&(shell->command_history), free);
+	if (shell->command_history)
+		ft_lstdbl_clear(&(shell->command_history), free);
 	free_commands(shell->commands);
 	ft_lstclear(&shell->env_list, free);
 	exit(exit_code);
