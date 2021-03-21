@@ -16,6 +16,7 @@ SRCS =	builtins/builtins.c						\
 		command_parsing/parsing_utils.c			\
 		command_parsing/print_parsing_error.c	\
 		command_parsing/split_commands.c		\
+		handle_input/copy.c						\
 		handle_input/handle_input.c				\
 		handle_input/handle_keys.c				\
 		handle_input/input_history.c			\

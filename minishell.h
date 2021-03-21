@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 23:37:13 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 12:29:52 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,10 @@ typedef struct	s_input_info
 {
 	struct termios		term_cp;
 	char				*line;
+	char				*copy_line;
+	char				*h_saved_line;
 	t_list_dbl			*history;
 	t_list_dbl			*current_history;
-	char				*h_saved_line;
 	unsigned			index;
 	unsigned			length;
 }				t_input_info;
@@ -99,6 +100,7 @@ void			move_cursor(t_input_info *terminal, int direction,
 t_bool change_index, unsigned nb);
 void			delete_char(t_input_info *terminal);
 void			handle_ctr_c_signal(t_input_info *terminal);
+void			copy_mode(t_input_info *terminal);
 /*
 **		COMMAND PARSING
 */

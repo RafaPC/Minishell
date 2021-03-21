@@ -6,7 +6,7 @@
 /*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 20:37:04 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/21 01:06:27 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/21 12:30:03 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,6 @@ void	handle_keys(t_input_info *terminal)
 		move_word_left(terminal);
 	else if (!ft_strncmp(buffer, "[1;5C", 6))
 		move_word_right(terminal);
+	else if (!ft_strncmp(buffer, "[1;5A", 6))
+		copy_mode(terminal);
 }
