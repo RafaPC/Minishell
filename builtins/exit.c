@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 15:20:50 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/21 09:28:12 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/21 16:31:12 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,24 @@ t_bool overflow)
 }
 
 /*
+** Checks if there are no tokens, the token is null or the token is a null char
+** If on the conditions is true exits the program with the appropiate number
+*/
+
+void	check_token_errors(t_shell *shell)
+{
+	ft_putstr_fd("exit\n", STDERR_FILENO);
+	if (!shell->commands || !shell->commands->tokens[1])
+		free_and_exit(shell, 0);
+	else if (shell->commands->tokens[1][0] == '\0')
+	{
+		ft_printf(STDERR_FILENO,
+			"minishell: exit: : numeric argument required\n");
+		free_and_exit(shell, 2);
+	}
+}
+
+/*
 ** Called when "exit" is written in the shell
 ** Frees the t_list* list of environment variables elements
 ** and the t_command *commands struct before exiting
@@ -107,8 +125,7 @@ void	exit_command(t_shell *shell)
 	exit_code = 0;
 	signs = 0;
 	overflow = false;
-	if (!shell->commands || !shell->commands->tokens[1])
-		free_and_exit(shell, exit_code);
+	check_token_errors(shell);
 	c = shell->commands->tokens[1];
 	while (*c && (ft_strchr(" \t\f+-", *c) || ft_isdigit(*c)))
 	{

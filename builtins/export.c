@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 20:54:28 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 13:42:49 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 16:14:54 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,17 @@ t_bool	valid_env_characters(char *var_name)
 }
 
 /*
+** Prints an error message to standard error and set errno to EPERM
+*/
+
+void	export_identifier_error(char *identifier)
+{
+	ft_printf(STDERR_FILENO,
+		"minishell: export: `%s': not a valid identifier\n", identifier);
+	errno = EPERM;
+}
+
+/*
 ** If the argument is null it writes all the variables
 ** formatted as -> declare -x "NAME=VALUE"
 ** If it's not null, searches in the list for a variable with the arg name
@@ -45,24 +56,25 @@ void	export(t_list **env_list, char **args)
 	char	*str_aux;
 	int		equal_position;
 
-	if (*args == NULL || **args == '\0')
+	if (*args == NULL)
 		export_print(*env_list);
-	while (*args && **args)
+	while (*args)
 	{
-		equal_position = ft_get_index_of(*args, '=');
-		str_aux = (equal_position != -1)
-		? ft_strncpy(*args, equal_position) : ft_strdup(*args);
-		if (!str_aux)
-			return ;
-		if (**args == '=' || !valid_env_characters(str_aux))
+		if (**args == '\0')
+			export_identifier_error(*args);
+		else
 		{
-			ft_printf(STDERR_FILENO,
-			"minishell: export: `%s': not a valid identifier\n", *args);
-			errno = EPERM;
+			equal_position = ft_get_index_of(*args, '=');
+			str_aux = (equal_position != -1)
+			? ft_strncpy(*args, equal_position) : ft_strdup(*args);
+			if (!str_aux)
+				return ;
+			if (**args == '=' || !valid_env_characters(str_aux))
+				export_identifier_error(*args);
+			else if (!export_variable(env_list, *args))
+				return ;
+			free(str_aux);
 		}
-		else if (!export_variable(env_list, *args))
-			return ;
-		free(str_aux);
 		args++;
 	}
 }

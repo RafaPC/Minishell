@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 16:11:27 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 13:25:59 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 13:00:26 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ void	cd_set_pwds(t_list **env_list, char *old_pwd)
 
 t_bool	cd_dir(char *directory)
 {
-	if (chdir(directory) == -1)
+	if (directory[0] == '\0')
+		return (true);
+	else if (chdir(directory) == -1)
 	{
 		if (errno == ENOENT)
 			ft_printf(STDERR_FILENO,

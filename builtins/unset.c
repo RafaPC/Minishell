@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/02 14:39:56 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 13:33:23 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/21 14:53:16 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@ void	unset(t_list **env, char **args)
 {
 	while (*args)
 	{
-		if (!valid_env_characters(*args) || ft_strchr(*args, '='))
+		if (**args == '\0' || !valid_env_characters(*args) ||
+		ft_strchr(*args, '='))
 			ft_printf(STDERR_FILENO,
-			"unset: `%s': not a valid identifier\n", *args);
+			"minishell: unset: `%s': not a valid identifier\n", *args);
 		else if (*env)
 			unset_variable(env, *args);
 		args++;
