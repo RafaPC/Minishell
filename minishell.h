@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/21 12:29:52 by aiglesia         ###   ########.fr       */
+/*   Updated: 2021/03/22 00:24:15 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,12 @@ typedef struct	s_input_info
 
 typedef struct	s_shell
 {
-	char		*buffer;
-	char		*copy_line;
-	t_list		*env_list;
-	t_command	*commands;
-	int			prev_exit_status;
-	t_list_dbl	*command_history;
+	char				*buffer;
+	char				*copy_line;
+	t_list				*env_list;
+	t_command			*commands;
+	int					prev_exit_status;
+	t_list_dbl			*command_history;
 }				t_shell;
 /*
 **		EXECUTABLES PATHS
@@ -91,7 +91,8 @@ char			**get_path(t_list *env_list);
 /*
 **		READ INPUT
 */
-t_bool			handle_input(char **buffer, t_list_dbl **command_history, char **copy_line);
+t_bool			handle_input(char **buffer, t_list_dbl **command_history,
+char **copy_line);
 t_bool			read_input(t_input_info *terminal);
 void			handle_keys(t_input_info *terminal);
 void			handle_input_history(t_input_info *terminal, char direction);

@@ -34,7 +34,7 @@ LIBFT_A = libft.a
 FLAGS = -Wall -Wextra -Werror -g
 
 all: ${NAME}
-bonus: ${NAME}
+bonus: all
 
 ${NAME}: main.c ${SRCS} ${LIBFT_A}
 			gcc ${INCLUDES} ${FLAGS} main.c ${SRCS} ${LIBFT_A} -o ${NAME}
