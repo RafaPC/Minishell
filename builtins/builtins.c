@@ -6,11 +6,30 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 19:30:41 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 17:23:56 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/22 09:51:41 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+** Receives a string and returns false if it contains a char that is not
+** alphanumeric or '_' (underscore)
+*/
+
+t_bool	valid_env_characters(char *var_name)
+{
+	if (ft_isdigit(*var_name))
+		return (false);
+	while (*var_name)
+	{
+		if (!ft_isalpha(*var_name) && !ft_isdigit(*var_name)
+			&& *var_name != '_')
+			return (false);
+		var_name++;
+	}
+	return (true);
+}
 
 /*
 ** Prints all the environment variables with values

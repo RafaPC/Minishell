@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 00:21:15 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/22 00:24:15 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/22 09:59:32 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void			free_and_exit(t_shell *shell, int exit_code);
 /*
 **				EXPORT
 */
-void			export(t_list **env_list, char **args);
+void			export(t_list **env_list, char **args, int equal_position);
 void			export_print(t_list *env_list);
 t_bool			export_variable(t_list **env_list, char *arg);
 t_bool			valid_env_characters(char *var_name);

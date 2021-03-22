@@ -22,7 +22,6 @@ SRCS =	builtins/builtins.c						\
 		handle_input/input_history.c			\
 		handle_input/paste.c 					\
 		handle_input/read_input.c				\
-		temp/debug_minishell.c					\
 		utils/environment.c						\
 		utils/executables_paths.c				\
 		utils/handle_error.c					\

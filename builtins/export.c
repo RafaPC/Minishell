@@ -6,40 +6,37 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 20:54:28 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/21 16:14:54 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/22 09:58:54 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-** Receives a string and returns false if it contains a char that is not
-** alphanumeric or '_' (underscore)
+** Prints an error message to standard error and set errno to EPERM if
+** the token is an empty string
+** If the token is a variable without value and the variable al ready exists,
+** it does nothing
 */
 
-t_bool	valid_env_characters(char *var_name)
+t_bool	check_export_error(char *identifier, t_list *env_list)
 {
-	if (ft_isdigit(*var_name))
-		return (false);
-	while (*var_name)
+	char	*aux;
+
+	if (*identifier == '\0')
 	{
-		if (!ft_isalpha(*var_name) && !ft_isdigit(*var_name)
-			&& *var_name != '_')
-			return (false);
-		var_name++;
+		ft_printf(STDERR_FILENO,
+			"minishell: export: `%s': not a valid identifier\n", identifier);
+		errno = EPERM;
+		return (true);
 	}
-	return (true);
-}
-
-/*
-** Prints an error message to standard error and set errno to EPERM
-*/
-
-void	export_identifier_error(char *identifier)
-{
-	ft_printf(STDERR_FILENO,
-		"minishell: export: `%s': not a valid identifier\n", identifier);
-	errno = EPERM;
+	else if (!ft_strchr(identifier, '=') &&
+		(aux = get_env_var(identifier, env_list)))
+	{
+		free(aux);
+		return (true);
+	}
+	return (false);
 }
 
 /*
@@ -51,18 +48,15 @@ void	export_identifier_error(char *identifier)
 ** to the list with arg as its content
 */
 
-void	export(t_list **env_list, char **args)
+void	export(t_list **env_list, char **args, int equal_position)
 {
 	char	*str_aux;
-	int		equal_position;
 
 	if (*args == NULL)
 		export_print(*env_list);
 	while (*args)
 	{
-		if (**args == '\0')
-			export_identifier_error(*args);
-		else
+		if (!check_export_error(*args, *env_list))
 		{
 			equal_position = ft_get_index_of(*args, '=');
 			str_aux = (equal_position != -1)
@@ -70,7 +64,11 @@ void	export(t_list **env_list, char **args)
 			if (!str_aux)
 				return ;
 			if (**args == '=' || !valid_env_characters(str_aux))
-				export_identifier_error(*args);
+			{
+				ft_printf(STDERR_FILENO,
+					"minishell: export: `%s': not a valid identifier\n", *args);
+				errno = EPERM;
+			}
 			else if (!export_variable(env_list, *args))
 				return ;
 			free(str_aux);

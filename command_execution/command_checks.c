@@ -6,7 +6,7 @@
 /*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/14 12:57:24 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 18:20:44 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/22 09:58:42 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_bool		is_builtin(t_shell *shell, char *token)
 	else if (!ft_strncmp(token, "pwd", 4))
 		pwd();
 	else if (!ft_strncmp(token, "export", 7))
-		export(&shell->env_list, &shell->commands->tokens[1]);
+		export(&shell->env_list, &shell->commands->tokens[1], 0);
 	else if (!ft_strncmp(token, "unset", 6))
 		unset(&shell->env_list, &shell->commands->tokens[1]);
 	else if (!ft_strncmp(token, "env", 4))
