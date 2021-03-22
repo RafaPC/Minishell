@@ -3,14 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   paste.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/21 10:00:28 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/21 22:13:23 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/22 11:37:21 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+** Pastes the contents of copy_line, if they exist.
+** Input line is updated through ft_insert,
+** are is the index and lenght values.
+**
+** The terminal is rewritten, by deleting everything
+** from the cursor position rightward. The copy_line
+** is then written, as is the remaining of the original
+** string;
+**
+** Finally, the index is set to the lenght value
+** (which is the position of the screen cursor)
+** and both are set to the position following the
+** insertion through the use of move_cursor set to
+** update index = true;
+*/
 
 void	paste(t_input_info *terminal)
 {
@@ -28,4 +45,5 @@ void	paste(t_input_info *terminal)
 	terminal->length += str_lenght;
 	terminal->index = terminal->length;
 	move_cursor(terminal, left, true, terminal->length - aux);
+	delete_h_saved_line(terminal);
 }

@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   handle_input.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/20 23:05:49 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/21 22:13:14 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/22 11:38:13 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+** Self explanatory, really;
+** Of note is that "\033[32m" is the ANSI code to colour the text green;
+**
+** On the other hand, "\033[0m" resets the colour to white;
+*/
 
 int			write_prompt(void)
 {
@@ -23,12 +30,32 @@ int			write_prompt(void)
 	return (ft_strlen(str));
 }
 
-static int	set_terminal_mode(struct termios *term_save, const int canonical)
+/*
+** Functionality varies based on the canonical field;
+**
+** If false, the terminal is set to non canonical mode,
+** with the following implications:
+**
+** ICANON: The read function will now output read bytes
+** instantly, instead of waiting for a page jump or the EOF
+**
+** ECHO: input character will NOT output to the console.
+**
+** ISIG: Signals will be IGNORED;
+**
+** Additionally, a copy of the terminal settings prior to
+** the change are stored in term_save.
+**
+** If on false mode, terminal settings are restored based on
+** the copy made in term save;
+*/
+
+static int	set_terminal_mode(struct termios *term_save, t_bool canonical)
 {
 	char				*term_name;
 	struct termios		term;
 
-	if (canonical == 0)
+	if (canonical == false)
 	{
 		if ((term_name = getenv("TERM")) == NULL)
 			return (-1);
@@ -39,10 +66,21 @@ static int	set_terminal_mode(struct termios *term_save, const int canonical)
 		term.c_cc[VTIME] = 0;
 		tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	}
-	if (canonical == 1)
+	if (canonical == true)
 		tcsetattr(STDIN_FILENO, TCSANOW, term_save);
 	return (0);
 }
+
+/*
+** Sets terminal mode to non chanonical (see set terminal mode)
+** and reads input until said function returns;
+** If it returns a false, the ctrl + D signal has been triggered
+** and the function returns accordingly.
+** Alternatively, working info, such as command history or copy line
+** is saved to the main structure through pointers.
+**
+** Either way the terminal is reset to its previous status
+*/
 
 t_bool		handle_input(char **buffer, t_list_dbl **command_history,
 char **copy_line)
@@ -56,15 +94,15 @@ char **copy_line)
 	terminal.history = *command_history;
 	terminal.current_history = terminal.history;
 	terminal.copy_line = *copy_line;
-	set_terminal_mode(&terminal.term_cp, 0);
+	set_terminal_mode(&terminal.term_cp, false);
 	write_prompt();
 	if (!read_input(&terminal))
 	{
 		free(terminal.line);
-		set_terminal_mode(&terminal.term_cp, 1);
+		set_terminal_mode(&terminal.term_cp, true);
 		return (false);
 	}
-	set_terminal_mode(&terminal.term_cp, 1);
+	set_terminal_mode(&terminal.term_cp, true);
 	*command_history = terminal.history;
 	*buffer = terminal.line;
 	*copy_line = terminal.copy_line;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/07 12:23:34 by rprieto-          #+#    #+#             */
-/*   Updated: 2021/03/20 13:23:47 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/22 11:46:56 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,4 @@ char	*get_env_var(char *var, t_list *env_list)
 		var_value = getcwd(NULL, 0);
 	free(var_equal);
 	return (var_value);
-}
-
-/*
-**	FIXME: ESTO SOLO TIENE FINES DEBUGILES
-*/
-
-char	**get_false_env_array(void)
-{
-	char	**env_list;
-
-	env_list = malloc(sizeof(char**) * 6);
-	env_list[0] = ft_strdup("USER=user42");
-	env_list[1] = ft_strdup("PATH=/home/user42/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin");
-	env_list[2] = ft_strdup("LANGUAGE=en");
-	env_list[3] = ft_strdup("SHLVL=1");
-	env_list[4] = ft_strdup("HOME=/home/user42");
-	env_list[5] = NULL;
-	return (env_list);
 }

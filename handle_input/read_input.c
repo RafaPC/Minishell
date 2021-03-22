@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   read_input.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aiglesia <aiglesia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/18 20:24:45 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/21 11:45:56 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/03/22 11:39:55 by aiglesia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+** Holy grail of the read input; Like, really...
+**
+** Functionality changes based on input;
+**
+** Moves the cursor to the left or right nb times,
+** based on the value of direction.
+** When moving to the right, the cursor will move up to terminal->lenght;
+** Similarly, when moving to the left the
+** cursor will only move up to index = 0;
+**
+** This avoids the cursor moving freely through the line,
+** instead being limited to the actual input information.
+**
+** Additionally, if change index is set to true,
+** the index value will not be changed;
+*/
 
 void	move_cursor(t_input_info *terminal, int direction, t_bool change_index,
 unsigned nb)
@@ -35,6 +53,20 @@ unsigned nb)
 	}
 }
 
+/*
+** Removes a character to the input line (through ft_insert),
+** modifiying lenght and index accordingly.
+**
+** The console display is also updated by erasing from the current
+** position to the right.
+**
+** Note that if the index is smaller than the lenght, the
+** terminal line needs to be updated after the current position
+** is erased (through ft_putstr_fd).
+** In this case, the cursor position needs to be updated,
+** which is done inside the if;
+*/
+
 void	delete_char(t_input_info *terminal)
 {
 	int index;
@@ -55,6 +87,18 @@ void	delete_char(t_input_info *terminal)
 	}
 	delete_h_saved_line(terminal);
 }
+
+/*
+** Adds a character to the input line (through ft_insert),
+** modifiying lenght and index accordingly.
+**
+** The console display is also updated;
+** Note that if the index is smaller than the lenght, the
+** terminal line needs to be updated after the input char
+** is written (through ft_putstr_fd).
+** In this case, the cursor position needs to be updated,
+** which is done inside the if;
+*/
 
 void	add_char(t_input_info *terminal, char c)
 {
@@ -87,6 +131,17 @@ void	check_input_character(t_input_info *terminal, char c)
 	else if (c != '\t')
 		add_char(terminal, c);
 }
+
+/*
+** Processes input until stopped; this can happen either
+** through the ctrl + D signal (on an empty line) or by
+** pressing enter.
+**
+** On the first case, false is returned, which ends up ending
+** the program. On enter, however, the input line is saved to
+** the history struct, and true is returned, so the input string
+** may be processed;
+*/
 
 t_bool	read_input(t_input_info *terminal)
 {
