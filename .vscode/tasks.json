@@ -14,7 +14,7 @@
                 "${workspaceFolder}/utils/*.c",
                 "${workspaceFolder}/builtins/*.c",
                 "${workspaceFolder}/command_parsing/*.c",
-                "${workspaceFolder}/temp/*.c",
+                "${workspaceFolder}/debug/debug_minishell.c",
 				"${workspaceFolder}/command_execution/*.c",
 				"${workspaceFolder}/handle_input/*.c",
                 "-o",
