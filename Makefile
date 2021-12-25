@@ -1,8 +1,8 @@
 # PROGRAM NAME
 NAME = minishell
-# HEADER FILES DIRECTORIES
-INCLUDES = -Ilibft/ -I.
-SRCS =	builtins/builtins.c						\
+
+SRCS =	main.c									\
+		builtins/builtins.c						\
 		builtins/cd.c							\
 		builtins/exit.c							\
 		builtins/export.c						\
@@ -28,25 +28,26 @@ SRCS =	builtins/builtins.c						\
 		utils/memory_handling.c					\
 		utils/minishell_utils.c
 
+OBJS	= $(SRCS:.c=.o)
 LIBFT_A = libft.a
 # COMPILER FLAGS
-FLAGS = -Wall -Wextra -Werror -g
+CC		= gcc
+CFLAGS	= -Wall -Werror -Wextra -Ilibft -I.
 
-all: ${NAME}
+all: $(NAME)
 bonus: all
 
-${NAME}: main.c ${SRCS} ${LIBFT_A}
-			gcc ${INCLUDES} ${FLAGS} main.c ${SRCS} ${LIBFT_A} -o ${NAME}
+$(NAME): $(OBJS) $(LIBFT_A)
+			$(CC) $(CCFLAGS) $(OBJS) $(LIBFT_A) -o $(NAME)
 
-${LIBFT_A}:
+$(LIBFT_A):
 		make -C libft
 		cp libft/libft.a .
 clean:
 		make -C libft clean
-		rm -f *.o
+		rm -f $(OBJS)
 fclean: clean
 		make -C libft fclean
 		rm -f libft.a
-		rm -f ${NAME}
-		rm -f debug.out
+		rm -f $(NAME)
 re: fclean all

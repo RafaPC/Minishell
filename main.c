@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rprieto- <rprieto-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rprieto- <rprieto-@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/26 19:16:07 by aiglesia          #+#    #+#             */
-/*   Updated: 2021/03/31 15:27:27 by rprieto-         ###   ########.fr       */
+/*   Updated: 2021/12/25 16:59:20 by rprieto-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,5 @@ int		main(int argc, char **argv, const char **env)
 					shell.commands = execute_commands(&shell);
 			}
 		}
-	}
-	else if (argc == 2)
-	{
-		ft_lstclear(&shell.env_list, free);
-		shell.env_list = create_env_list((const char**)get_false_env_array(), argv[0]);
-		debug_minishell(&shell, !ft_strncmp(argv[1], "-v", 3));
-	}
-	else //PARA EL TESTER, COGE EL INPUT POR EL ARGUMENTO
-	{
-		shell.env_list = create_env_list(env, argv[0]);
-		shell.buffer = ft_strdup(argv[argc - 1]);
-		if (!print_parsing_error(split_commands(&shell), &shell.prev_exit_status))
-			while (shell.commands)
-				shell.commands = execute_commands(&shell);
-		return (shell.prev_exit_status);
 	}
 }
